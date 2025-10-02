@@ -1,0 +1,135 @@
+{
+    "@@locale": "fr",
+    "title": "RedFlags",
+    "@title": {
+        "description": "Le titre de l'application"
+    },
+    "checkLoading": "Vérification des données en cours",
+    "@checkLoading": {
+        "description": "Message de chargement et de vérification de l'accès au serveur et de l'application. Une petite animation stylax est visible."
+    },
+    "checkSuccess": "Chargement terminé!",
+    "@checkSuccess": {
+        "description": "Message signifiant que l'application est prête à être utilisé."
+    },
+    "netFailure": "Impossible d'accéder au serveur",
+    "@netFailure": {
+        "description": "Message signifiant que l'application n'arrive pas à se connecter au serveur."
+    },
+    "applicationFailure": "Une erreur interne s'est produite…",
+    "@applicationFailure": {
+        "description": "Message signifiant que l'application a détecté une erreur et ne peux pas continuer l'action en cours."
+    },
+    "accessButton": "Accéder",
+    "@accessButton": {
+        "description": "Texte de bouton d'accès à une ressource (vue, page, données…)."
+    },
+    "searchButton": "Rechercher",
+    "@searchButton": {
+        "description": "Texte de bouton d'accès à une recherche (vue, page, données…)."
+    },
+    "okButton": "Ok",
+    "@okButton": {
+        "description": "Texte de bouton OKAY."
+    },
+    "nextButton": "Suivant",
+    "@nextButton": {
+        "description": "Texte de bouton Suivant."
+    },
+    "backButton": "Retour",
+    "@backButton": {
+        "description": "Texte de bouton Retour."
+    },
+    "previousButton": "Précédent",
+    "@previousButton": {
+        "description": "Texte de bouton Précédent."
+    },
+    "createButton": "Créer",
+    "@createButton": {
+        "description": "Texte de bouton Créer."
+    },
+    "personCreationSuccess": "Personne ajoutée avec succès.",
+    "@personCreationSuccess": {
+        "description": "Réponse lorsqu'une personne a été créée par l'utilisateur."
+    },
+    "createScreenTitle": "Création",
+    "@createScreenTitle": {
+        "description": "Texte de titre de la page d'ajout d'un redflag."
+    },
+    "createScreenSubTitle": "Ajoute un potenciel redflag",
+    "@createScreenSubTitle": {
+        "description": "Sous-Texte de titre de la page d'ajout d'un redflag."
+    },
+    "homeAddOption": "Ajouter",
+    "@homeAddOption": {
+        "description": "Texte de menu : Ajoute une personne."
+    },
+    "homeSearchOption": "Rechercher",
+    "@homeSearchOption": {
+        "description": "Texte de menu : Recherche quelqu'un."
+    },
+    "homeNews": "News",
+    "@homeNews": {
+        "description": "Texte de menu : Regarder les nouvelles data."
+    },
+    "homeOptions": "Options",
+    "@homeOptions": {
+        "description": "Texte de menu : Regarder les Options."
+    },
+    "descriptionTitle": "Description",
+    "@descriptionTitle": {
+        "description": "Texte de titre de description d'une data."
+    },
+    "homeScreenTitle": "Bonjour",
+    "@homeScreenTitle": {
+        "description": "Titre de la homepage."
+    },
+    "homeScreenSubTitle": "Comment vas-tu ?",
+    "@homeScreenSubTitle": {
+        "description": "Sous-titre de la homepage."
+    },
+    "searchScreenTitle": "Exploration",
+    "@searchScreenTitle": {
+        "description": "Titre Navigation de la page de recherche par nom/prénom."
+    },
+    "searchScreenSubTitle": "Recherche précise",
+    "@searchScreenSubTitle": {
+        "description": "Sous-titre Navigation de la page de recherche."
+    },
+    "personListViewScreenTitle": "Résultats",
+    "@personListViewScreenTitle": {
+        "description": "Titre Navigation de la page de résultats de la recherche."
+    },
+    "personListViewScreenSubTitle": "Personnes Trouvées",
+    "@personListViewScreenSubTitle": {
+        "description": "Sous-Titre Navigation de la page de résultats de la recherche."
+    },
+    "lastname": "Nom",
+    "@lastname": {
+        "description": "Label du champ de texte pour le nom de la ou les personnes recherchées."
+    },
+    "firstname": "Prénom",
+    "@firstname": {
+        "description": "Label du champ de texte pour le prénom de la ou les personnes recherchées."
+    },
+    "birthDate": "Date de Naissance",
+    "@birthDate": {
+        "description": "Label du champ de texte pour la date de naissance de la ou les personnes recherchées."
+    },
+    "zoneName": "Ville/Région actuelle",
+    "@zoneName": {
+        "description": "Label du champ de la ville actuelle de la ou les personnes recherchées."
+    },
+    "companyName": "Entreprise/société",
+    "@companyName": {
+        "description": "Label du champ de l'entreprise dans laquelle travaille cette personne."
+    },
+    "activityName": "Métier/Activité",
+    "@activityName": {
+        "description": "Label du champ de texte d'activité ou métier actuelle de la ou les personnes recherchées."
+    },
+    "personDuplicationError": "Cette personne semble déjà exister dans notre base de données.",
+    "@personDuplicationError": {
+        "description": "Un message d'erreur lorsque l'utilisateur rentre un utilisateur qui existe déjà en DB."
+    }
+}
