@@ -19,6 +19,8 @@ dependencies:
   dio: ^5.9.0 # To make http request.
   flutter_dotenv: ^6.0.0 # Env manager.
 
+  flutter_p2p_connection: ^3.0.3 # Communication for Street Path
+
 dev_dependencies:
   flutter_test:
       sdk: flutter
