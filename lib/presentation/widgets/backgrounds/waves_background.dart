@@ -23,7 +23,7 @@ class _State extends State<WaveBackground> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (_, __) {
+      builder: (_, _) {
         return CustomPaint(painter: WavyPuddlePainter(animationValue: _controller.value, color: widget.color), size: Size.infinite);
       },
     );
