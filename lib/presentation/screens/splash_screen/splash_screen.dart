@@ -4,8 +4,6 @@ import 'package:poc_street_path/presentation/screens/home_screen/home_screen.dar
 import 'package:poc_street_path/presentation/widgets/shakles/shakle_text.dart';
 import 'dart:async';
 
-import 'package:poc_street_path/core/l10n/app_localizations.dart';
-
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -44,8 +42,8 @@ class _State extends ConsumerState<SplashScreen> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ShakleText(AppLocalizations.of(context)!.title, style: Theme.of(context).textTheme.displayLarge),
-              ShakleText(AppLocalizations.of(context)!.title, style: Theme.of(context).textTheme.displayLarge),
+              ShakleText("", style: Theme.of(context).textTheme.displayLarge),
+              ShakleText("", style: Theme.of(context).textTheme.displayLarge),
             ],
           ),
         ),

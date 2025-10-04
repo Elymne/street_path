@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/presentation/widgets/backgrounds/waves_background.dart';
 import 'package:poc_street_path/presentation/widgets/shakles/shakle_home_item.dart';
-import 'package:poc_street_path/core/l10n/app_localizations.dart';
-import 'package:poc_street_path/core/themes/global_ui_options.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -49,7 +48,7 @@ class _State extends ConsumerState<HomeScreen> {
                         Expanded(
                           child: ShakleHomeItem(
                             iconData: Icons.add_moderator_outlined,
-                            title: AppLocalizations.of(context)!.homeAddOption,
+                            title: "",
                             onTap: () {
                               Navigator.of(context).push(
                                 PageRouteBuilder(
@@ -62,33 +61,15 @@ class _State extends ConsumerState<HomeScreen> {
                           ),
                         ),
                         SizedBox(width: 10),
-                        Expanded(
-                          child: ShakleHomeItem(
-                            iconData: Icons.person_search_outlined,
-                            title: AppLocalizations.of(context)!.homeSearchOption,
-                            onTap: () {},
-                          ),
-                        ),
+                        Expanded(child: ShakleHomeItem(iconData: Icons.person_search_outlined, title: "", onTap: () {})),
                       ],
                     ),
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        Expanded(
-                          child: ShakleHomeItem(
-                            iconData: Icons.perm_camera_mic_outlined,
-                            title: AppLocalizations.of(context)!.homeNews,
-                            onTap: () {},
-                          ),
-                        ),
+                        Expanded(child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: "", onTap: () {})),
                         SizedBox(width: 10),
-                        Expanded(
-                          child: ShakleHomeItem(
-                            iconData: Icons.perm_camera_mic_outlined,
-                            title: AppLocalizations.of(context)!.homeOptions,
-                            onTap: () {},
-                          ),
-                        ),
+                        Expanded(child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: "", onTap: () {})),
                       ],
                     ),
                     Expanded(child: SizedBox()),

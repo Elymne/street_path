@@ -1,53 +1,84 @@
 // The callback function should always be a top-level or static function.
+import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
+// * Obligé d'utiliser une fonction statique pour le callback lors de démarrage du service.
 @pragma('vm:entry-point')
-void startCallback() {
+void streetPathTaskHandlerCallback() {
   FlutterForegroundTask.setTaskHandler(StreetPathTaskHandler());
 }
 
+/// Classe utilisé par l'implémentation de l'interface StreetPathGateway : StreetPathGatewayImpl
+/// Libs : flutter_reactive_ble, flutter_foreground_task
 class StreetPathTaskHandler extends TaskHandler {
-  // Called when the task is started.
+  final FlutterReactiveBle _ble = FlutterReactiveBle();
+
+  /// Cette appel de fonction ne sert pour l'instant juste à log et à tester la librairie.
+  /// todo : Check si il y a des choses à regarder.
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    print('onStart(starter: ${starter.name})');
+    if (kDebugMode) print('StreetPath Service starting at : ${starter.name})');
   }
 
-  // Called based on the eventAction set in ForegroundTaskOptions.
+  /// ! Cette fonction de callback sera appellé à une intervale de temps x défini dans la classe StreetPathGatewayImpl (fonction d'initialisation).
+  /// Chaque x intervale de temps : Récupération de tous les devices détecté à proximité (class DiscoveredDevice).
   @override
   void onRepeatEvent(DateTime timestamp) {
-    // Send data to main isolate.
-    final Map<String, dynamic> data = {"timestampMillis": timestamp.millisecondsSinceEpoch};
-    FlutterForegroundTask.sendDataToMain(data);
+    _ble.scanForDevices(withServices: [], scanMode: ScanMode.lowPower).listen((device) {
+      if (kDebugMode) print('Device found: ${device.name} (${device.id})');
+    });
   }
 
-  // Called when the task is destroyed.
+  /// Permet la connexion à l'appareil rentré en paramètre.
+  /// todo : checker si l'appareil à l'app, si elle emet, si elle veut transmettre et veut recevoir.
+  Future connectToDevice(DiscoveredDevice device) async {
+    late QualifiedCharacteristic characteristic;
+
+    // 1. Connect.
+    final connection = _ble.connectToDevice(id: device.id);
+
+    connection.listen((connectionState) async {
+      // 2. Définir la caractéristique (tu dois connaître les UUID)
+      const serviceUuid = "0000180f-0000-1000-8000-00805f9b34fb";
+      const characteristicUuid = "00002a19-0000-1000-8000-00805f9b34fb";
+
+      characteristic = QualifiedCharacteristic(
+        serviceId: serviceUuid as Uuid,
+        characteristicId: characteristicUuid as Uuid,
+        deviceId: device.id,
+      );
+
+      // 3. Envoyer des données (ici on envoie un tableau d’octets)
+      final payload = [0x01, 0x02, 0x03]; // tes données
+      await _ble.writeCharacteristicWithResponse(characteristic, value: payload);
+
+      print("📡 Data sent: $payload");
+    });
+  }
+
+  // ----------------------------------
+  // -- NON USED
+  // ----------------------------------
+
+  /// Détruire la co BLE imo.
+  /// todo : Destruction de tout ce qui concerne les outils BLE.
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
-    print('onDestroy(isTimeout: $isTimeout)');
+    if (kDebugMode) print('onDestroy(isTimeout: $isTimeout)');
   }
 
-  // Called when data is sent using `FlutterForegroundTask.sendDataToTask`.
   @override
   void onReceiveData(Object data) {
-    print('onReceiveData: $data');
+    if (kDebugMode) print('onReceiveData: $data');
   }
 
-  // Called when the notification button is pressed.
   @override
-  void onNotificationButtonPressed(String id) {
-    print('onNotificationButtonPressed: $id');
-  }
+  void onNotificationButtonPressed(String id) {}
 
-  // Called when the notification itself is pressed.
   @override
-  void onNotificationPressed() {
-    print('onNotificationPressed');
-  }
+  void onNotificationPressed() {}
 
-  // Called when the notification itself is dismissed.
   @override
-  void onNotificationDismissed() {
-    print('onNotificationDismissed');
-  }
+  void onNotificationDismissed() {}
 }
