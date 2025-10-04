@@ -15,9 +15,12 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   intl: any # To manage string data.
-  flutter_riverpod: any # To manage state and DI.
   dio: any # To make http request.
   flutter_dotenv: any # Env manager.
+
+  uuid: any
+
+  flutter_riverpod: any # To manage state and DI.
 
   flutter_nearby_connections: any # Communication for my StreetPath.
 

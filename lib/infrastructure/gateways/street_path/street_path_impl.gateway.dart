@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
-import 'package:poc_street_path/infrastructure/gateways/street_path/flutter_foreground_task.dart';
+import 'package:poc_street_path/infrastructure/gateways/street_path/street_path_task_handler.dart';
 
 /// Implémentation de l'interface StreetPathGateway.
 /// Cette implémentation utilise la lib flutter_reactive_ble pour gérer les transferts BLE à travers la classe StreetPathTaskHandler.
@@ -26,7 +26,7 @@ class StreetPathGatewayImpl implements StreetPathGateway {
       }
     }
 
-    // * Initialisation du service en background.
+    // * Initialisation du background service en background.
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: streetPathServiceName,
@@ -42,7 +42,6 @@ class StreetPathGatewayImpl implements StreetPathGateway {
         allowWakeLock: true,
         allowWifiLock: true,
       ),
-
       // ! Je ne compte pas gérer le cas IOS pour l'instant (protocole BLE compliqué via les restriction apple).
       iosNotificationOptions: const IOSNotificationOptions(showNotification: false, playSound: false),
     );
