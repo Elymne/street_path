@@ -19,7 +19,7 @@ dependencies:
   dio: any # To make http request.
   flutter_dotenv: any # Env manager.
 
-  flutter_reactive_ble: any # Communication for my StreetPath.
+  flutter_nearby_connections: any # Communication for my StreetPath.
 
   objectbox: any # Data storage.
   objectbox_flutter_libs: any # Data storage.
