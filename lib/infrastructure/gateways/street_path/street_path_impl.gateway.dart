@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:poc_street_path/core/globals.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
 import 'package:poc_street_path/infrastructure/gateways/street_path/street_path_task_handler.dart';
 
@@ -65,5 +65,11 @@ class StreetPathGatewayImpl implements StreetPathGateway {
   @override
   Future stop() async {
     FlutterForegroundTask.stopService();
+  }
+
+  @override
+  Future onReceivedData(Object data) {
+    // TODO: implement onReceivedData
+    throw UnimplementedError();
   }
 }

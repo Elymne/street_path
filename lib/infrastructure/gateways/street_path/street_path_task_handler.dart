@@ -119,6 +119,10 @@ class StreetPathTaskHandler extends TaskHandler {
   @override
   void onReceiveData(Object data) {}
 
+  /// * Jamais call actuellement.
+  @override
+  void onRepeatEvent(DateTime timestamp) {}
+
   /// Le service a été cancel, détruit, soit par l'utilisateur, soit par un crash de l'app, soit par la fermeture complète de l'app.
   /// Par sécurité, on cancel alors tout les listeners.
   @override
@@ -140,10 +144,6 @@ class StreetPathTaskHandler extends TaskHandler {
 
   @override
   void onNotificationDismissed() {}
-
-  /// * Jamais call actuellement.
-  @override
-  void onRepeatEvent(DateTime timestamp) {}
 }
 
 class _Seen {
