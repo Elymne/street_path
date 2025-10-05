@@ -5,8 +5,11 @@ const String appName = 'StreetPath';
 // * Marge globale de tous mes écrans.
 const double screenMargin = 12.0;
 
-// * Nom global/Identifiant de mon service StreetPath.
+// * Nom du service/runner streetpath qui tourne en background.
 const String streetPathServiceName = 'street_path_service';
+
+// * Nom de la signature du service de communication pour que les apps puissent se reconnaître.
+const String streetPathSignatureName = 'streetpath-connect';
 
 // * Nom de la notif du service StreetPath.
 const String streetPathChannelName = 'StreetPath Service';
