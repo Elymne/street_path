@@ -1,9 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:poc_street_path/core/globals.dart';
+import 'package:poc_street_path/core/logger/sp_log.dart';
+import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
+import 'dart:async';
 
 class NearbyServiceImpl {
   late final NearbyService _nearbySevice = NearbyService();
@@ -11,17 +12,19 @@ class NearbyServiceImpl {
   late final StreamSubscription _receivedDataSubscription;
   late final Timer dutyCycler; // *  http://iot-strasbourg.strataggem.com/ref/duty-cycle.html
   final List<_SeenDevice> _seenDevices = [];
+  late final Store _store;
 
   NearbyServiceImpl();
 
-  Future init() async {
-    if (kDebugMode) print('StreetPath Service starting…');
+  Future init(Store store) async {
+    SpLog.instance.i('StreetPath scan starting…');
+    _store = store;
     await _nearbySevice.init(
       serviceType: 'com.cyneila.streetpath',
       strategy: Strategy.P2P_CLUSTER,
       deviceName: '$streetPathSignatureName:${Uuid().v4()}',
       callback: (dynamic _) async {
-        if (kDebugMode) print('StreetPath Service has started.');
+        SpLog.instance.i('StreetPath scan has started.');
       },
     );
   }
@@ -35,7 +38,9 @@ class NearbyServiceImpl {
       callback: (devicesList) {
         final seensId = _seenDevices.map((elem) => elem.deviceId);
         for (final device in devicesList) {
-          print("Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}");
+          SpLog.instance.i(
+            "Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}",
+          );
 
           if (seensId.contains(device.deviceId)) {
             continue; // * Déjà vu, on skip.
@@ -68,7 +73,7 @@ class NearbyServiceImpl {
     // * Reception de data.
     _receivedDataSubscription = _nearbySevice.dataReceivedSubscription(
       callback: (data) {
-        print("Data fetched from device : ${jsonEncode(data)}");
+        SpLog.instance.i("Data fetched from device : ${jsonEncode(data)}");
       },
     );
 

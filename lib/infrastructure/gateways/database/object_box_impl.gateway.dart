@@ -1,38 +1,38 @@
-import 'package:flutter/foundation.dart';
+import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 
 class ObjectBoxGateway implements DatabaseGateway<Store?> {
-  Store? store;
+  Store? _store;
 
   @override
   Future init() async {
-    if (store != null) {
-      if (kDebugMode) print("Attempt to create another ObjectBox store.");
+    if (_store != null) {
+      SpLog.instance.w("Attempt to create another ObjectBox store.");
       return;
     }
-    if (kDebugMode) print("Starting initialisation of ObjectBox…");
+    SpLog.instance.i("Starting initialisation of ObjectBox store…");
     final dir = await getApplicationCacheDirectory();
-    store = await openStore(directory: p.join(dir.path, "object_box_database"));
-    if (kDebugMode) print("Connexion to ObjectBox.");
+    _store = await openStore(directory: p.join(dir.path, "object_box_database"));
+    SpLog.instance.i("Connection to ObjectBox store.");
   }
 
   @override
   Future close() async {
-    if (store == null) {
-      if (kDebugMode) print("Attempt to closing an non existant ObjectBox store.");
+    if (_store == null) {
+      SpLog.instance.w("Attempt to closing an non existant ObjectBox store.");
       return;
     }
   }
 
   @override
-  Future<Store?> getConnector() async {
-    if (store == null) {
-      if (kDebugMode) print("Attempt to access Store without init it. Creating it on the fly.");
-      await init();
+  Store? getConnector() {
+    if (_store == null) {
+      SpLog.instance.w("Attempt to access Store without init it. Creating it on the fly.");
+      return null;
     }
-    return store;
+    return _store!;
   }
 }

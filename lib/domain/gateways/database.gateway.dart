@@ -4,7 +4,7 @@
 abstract class DatabaseGateway<T> {
   Future init();
 
-  Future<T> getConnector();
+  T getConnector();
 
   Future close();
 }

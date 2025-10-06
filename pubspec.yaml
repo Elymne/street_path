@@ -18,6 +18,8 @@ dependencies:
   dio: any # To make http request.
   flutter_dotenv: any # Env manager.
 
+  logger: any
+
   path_provider: any
   path: any
 
