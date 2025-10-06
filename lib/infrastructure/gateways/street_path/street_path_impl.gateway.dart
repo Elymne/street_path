@@ -12,7 +12,6 @@ class StreetPathGatewayImpl implements StreetPathGateway {
   Future init() async {
     FlutterForegroundTask.initCommunicationPort();
 
-    // * Check des permissions.
     final NotificationPermission notifPerms = await FlutterForegroundTask.checkNotificationPermission();
     if (notifPerms != NotificationPermission.granted) {
       await FlutterForegroundTask.requestNotificationPermission();
@@ -22,7 +21,6 @@ class StreetPathGatewayImpl implements StreetPathGateway {
       await FlutterForegroundTask.requestIgnoreBatteryOptimization();
     }
 
-    // * Initialisation du background service en background.
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: streetPathServiceName,
@@ -38,7 +36,6 @@ class StreetPathGatewayImpl implements StreetPathGateway {
         allowWakeLock: true,
         allowWifiLock: true,
       ),
-      // ! Je ne compte pas gérer le cas IOS pour l'instant (protocole BLE compliqué via les restriction apple).
       iosNotificationOptions: const IOSNotificationOptions(showNotification: false, playSound: false),
     );
   }
@@ -65,11 +62,5 @@ class StreetPathGatewayImpl implements StreetPathGateway {
   @override
   Future stop() async {
     FlutterForegroundTask.stopService();
-  }
-
-  @override
-  Future onReceivedData(Object data) {
-    // TODO: implement onReceivedData
-    throw UnimplementedError();
   }
 }
