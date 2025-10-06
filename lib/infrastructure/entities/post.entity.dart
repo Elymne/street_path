@@ -18,9 +18,7 @@ class PostEntity {
 
   int? bounces;
 
-  @Backlink()
   final reactions = ToMany<ReactionEntity>();
 
-  @Backlink()
   final subposts = ToMany<SubpostEntity>();
 }

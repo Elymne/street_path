@@ -46,3 +46,7 @@ app.*.map.json
 
 # Untracked env file.
 .env
+
+# ObjectBox related.
+/lib/objectbox-model.json
+/lib/objectbox.g.dart

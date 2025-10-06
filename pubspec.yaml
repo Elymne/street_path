@@ -18,6 +18,9 @@ dependencies:
   dio: any # To make http request.
   flutter_dotenv: any # Env manager.
 
+  path_provider: any
+  path: any
+
   uuid: any
 
   flutter_riverpod: any # To manage state and DI.
