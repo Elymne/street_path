@@ -5,6 +5,7 @@ import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl
 import 'package:poc_street_path/infrastructure/gateways/street_path/nearby_service_impl.dart';
 
 // * Obligé d'utiliser une fonction statique pour le callback lors de démarrage du service.
+/// ! Riverpod est inutilisable dans ce contexte : vous ne pouvez pas utiliser de Provider !
 @pragma('vm:entry-point')
 void streetPathTaskHandlerCallback() {
   FlutterForegroundTask.setTaskHandler(StreetPathTaskHandler());

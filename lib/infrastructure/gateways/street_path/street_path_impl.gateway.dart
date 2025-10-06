@@ -7,6 +7,7 @@ import 'package:poc_street_path/infrastructure/gateways/street_path/street_path_
 /// Implémentation de l'interface StreetPathGateway.
 /// Cette implémentation utilise la lib flutter_foreground_task pour créer le service qui tourne en background.
 /// Documentation forescan_foreground_task : https://pub.dev/packages/flutter_foreground_task/example
+/// ! Riverpod est inutilisable dans ce contexte : vous ne pouvez pas utiliser de Provider !
 class StreetPathGatewayImpl implements StreetPathGateway {
   @override
   Future init() async {
@@ -30,7 +31,7 @@ class StreetPathGatewayImpl implements StreetPathGateway {
         onlyAlertOnce: true,
       ),
       foregroundTaskOptions: ForegroundTaskOptions(
-        eventAction: ForegroundTaskEventAction.nothing(),
+        eventAction: ForegroundTaskEventAction.repeat(600_000),
         autoRunOnBoot: true,
         autoRunOnMyPackageReplaced: true,
         allowWakeLock: true,
