@@ -15,7 +15,7 @@ void streetPathTaskHandlerCallback() {
 /// Classe utilisé par l'implémentation de l'interface StreetPathGateway : StreetPathGatewayImpl
 /// Comporte une liste de callback de la classe TaskHandler pour créer un service qui tourne en background.
 /// C'est elle qui va s'occuper de récupérer les appareils proches détectés.
-/// Libs : flutter_foreground_task, flutter_nearby_connections.
+/// Cette classe tourne sur un autre thread que la mainUI.
 class StreetPathTaskHandler extends TaskHandler {
   late final NearbyService _nearbySevice = NearbyService();
 
