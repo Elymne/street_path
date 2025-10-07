@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_street_path/core/globals.dart';
-import 'package:poc_street_path/presentation/widgets/backgrounds/waves_background.dart';
-import 'package:poc_street_path/presentation/widgets/shakles/shakle_home_item.dart';
+import 'package:poc_street_path/presentation/application/widgets/backgrounds/waves_background.dart';
+import 'package:poc_street_path/presentation/application/widgets/shakles/shakle_home_item.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

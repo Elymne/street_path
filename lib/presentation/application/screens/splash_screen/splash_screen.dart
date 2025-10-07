@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poc_street_path/presentation/screens/home_screen/home_screen.dart';
-import 'package:poc_street_path/presentation/widgets/shakles/shakle_text.dart';
+import 'package:poc_street_path/presentation/application/screens/home_screen/home_screen.dart';
+import 'package:poc_street_path/presentation/application/widgets/shakles/shakle_text.dart';
 import 'dart:async';
 
 class SplashScreen extends ConsumerStatefulWidget {

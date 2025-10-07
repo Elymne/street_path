@@ -1,7 +1,7 @@
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
-import 'package:poc_street_path/domain/models/raw/raw_data.model.dart';
+import 'package:poc_street_path/domain/models/post/raw_post_data.model.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';

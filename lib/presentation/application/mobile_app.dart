@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:poc_street_path/core/l10n/app_localizations.dart';
 import 'package:poc_street_path/core/themes/light_theme.dart';
-import 'package:poc_street_path/presentation/screens/splash_screen/splash_screen.dart';
+import 'package:poc_street_path/presentation/application/screens/splash_screen/splash_screen.dart';
 
 class MobileApp extends StatelessWidget {
   const MobileApp({super.key});

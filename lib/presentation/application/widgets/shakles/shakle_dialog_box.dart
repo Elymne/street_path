@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:poc_street_path/presentation/widgets/shakles/abstract_shakle_state.dart';
-import 'package:poc_street_path/presentation/widgets/shakles/shakle_outlined_button.dart';
+import 'package:poc_street_path/presentation/application/widgets/shakles/abstract_shakle_state.dart';
+import 'package:poc_street_path/presentation/application/widgets/shakles/shakle_outlined_button.dart';
 
 class ShakleDialogBox extends StatefulWidget {
   final String? title;
