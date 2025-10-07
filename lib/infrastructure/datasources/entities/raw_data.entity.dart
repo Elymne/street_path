@@ -6,6 +6,5 @@ class RawData {
   int obId = 0;
 
   int? createdAt;
-
   String? data;
 }

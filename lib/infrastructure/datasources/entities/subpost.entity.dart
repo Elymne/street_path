@@ -9,8 +9,6 @@ class SubpostEntity {
   String? id;
 
   int? createdAt;
-
   String? userId;
-
   String? comment;
 }

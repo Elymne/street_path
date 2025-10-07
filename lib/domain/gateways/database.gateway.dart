@@ -1,10 +1,18 @@
-/// Interface d'implémentation d'une instance de moteur de base de données.
-/// Plusieurs instance peuvent tourner sur l'app (forcément puisqu'on a un runner en background qui doit tourner à côté).
-/// T correspond à une classe qui permet d'effectuer des call sur une database. Soit c'est une classe custom, soit elle provient d'une lib.
+/// Interface décrivant les opérations disponibles pour gérer une base de données.
+/// Toutes classes implémentant cette interface doit-être ensuite utilisé par la partie domaine du projet.
+///
+/// T correspond à la classe qui permettra d'effectuer des actions sur la base de données.
+/// Elle peut provenir d'une lib ou de vous.
 abstract class DatabaseGateway<T> {
-  Future init();
+  /// Se connecte à une base de données.
+  /// La configuration doit-être géré par l'implémentation.
+  /// Pour accéder aux fonctionnalités de la base de données, il faudra utiliser la fonction getConnector()
+  Future<void> connect();
 
-  T getConnector();
+  /// Ferme la connexion à la base de données.
+  Future<void> disconnect();
 
-  Future close();
+  /// récupère l'instance permettant d'effectuer des actions sur la base de données.
+  /// Peut retourner `null` si il n'y a pas de connexion avec la base de données.
+  T? getConnector();
 }

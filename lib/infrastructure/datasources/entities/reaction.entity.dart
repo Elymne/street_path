@@ -9,10 +9,7 @@ class ReactionEntity {
   String? id;
 
   int? createdAt;
-
   String? userId;
-
   bool? isLiked;
-
   int? flag;
 }
