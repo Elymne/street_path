@@ -16,7 +16,7 @@ class ConnectToDatabase extends Usecase<ConnectToDatabaseParams, void> {
       await _databaseGateway.connect();
       return Success(null);
     } catch (err, stack) {
-      SpLog.instance.e("ConnectToDatabase: Une exception a été levée.", err, stack: stack);
+      SpLog().e("ConnectToDatabase: Une exception a été levée.", err, stack: stack);
       return Failure("Une erreur s'est produite lors de la connexion à la base de données.");
     }
   }

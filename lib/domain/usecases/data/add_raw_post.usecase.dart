@@ -19,7 +19,7 @@ class AddRawData extends Usecase<AddRawDataParams, RawData> {
     try {
       return Success(await _rawDataRepository.add(params.data));
     } catch (err, stack) {
-      SpLog.instance.e("AddRawData: Une exception a été levée.", err, stack: stack);
+      SpLog().e("AddRawData: Une exception a été levée.", err, stack: stack);
       return Failure("Une erreur s'est produite lors de l'ajout d'une donnée brute…");
     }
   }

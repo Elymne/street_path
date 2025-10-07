@@ -16,7 +16,7 @@ class DisconnectToDatabase extends Usecase<DisconnectToDatabaseParams, void> {
       await _databaseGateway.connect();
       return Success(null);
     } catch (err, stack) {
-      SpLog.instance.e("DisconnectToDatabase: Une exception a été levée.", err, stack: stack);
+      SpLog().e("DisconnectToDatabase: Une exception a été levée.", err, stack: stack);
       return Failure("Une erreur s'est produite lors de la déconnexion à la base de données.");
     }
   }

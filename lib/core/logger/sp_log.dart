@@ -1,10 +1,7 @@
 import 'package:logger/logger.dart';
 
 class SpLog {
-  late final Logger _logger;
-
-  static final SpLog instance = SpLog._private();
-  SpLog._private() {
+  SpLog._internal() {
     _logger = Logger(
       printer: PrettyPrinter(
         methodCount: null,
@@ -16,6 +13,12 @@ class SpLog {
       ),
     );
   }
+  static final SpLog _instance = SpLog._internal();
+  factory SpLog() {
+    return _instance;
+  }
+
+  late final Logger _logger;
 
   void t(String message) {
     _logger.t(message);

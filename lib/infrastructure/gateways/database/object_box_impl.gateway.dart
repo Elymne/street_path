@@ -5,38 +5,53 @@ import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 
 /// Implémentation du [DatabaseGateway] en utilisant la librairie objectbox.
-/// TODO : Y a un truc qui va pas là. Il me faut une nouvelle classe singleton pour gérer le store sinon on va juste recréer des instances dans le vents. Débile mec qui a écrit ça (c'est moi hein).
 class ObjectBoxGateway implements DatabaseGateway<Store> {
-  Store? _store;
-
   @override
   Future connect() async {
-    if (_store != null) {
-      SpLog.instance.w("ObjectBoxGateway.connect: Instance de Store déjà existant.");
+    if (_SingletonStore().store != null) {
+      SpLog().w("ObjectBoxGateway.connect: Instance de Store déjà existant.");
       return;
     }
 
-    SpLog.instance.i("ObjectBoxGateway.connect: Tentative d'accès au Store…");
-    final dir = await getApplicationCacheDirectory();
-    _store = await openStore(directory: p.join(dir.path, "object_box_database"));
-    SpLog.instance.i("ObjectBoxGateway.connect: Store instancié.");
+    SpLog().i("ObjectBoxGateway.connect: Tentative d'accès au Store…");
+    _SingletonStore().init();
+    SpLog().i("ObjectBoxGateway.connect: Store instancié.");
   }
 
   @override
   Future disconnect() async {
-    if (_store == null) {
-      SpLog.instance.w("ObjectBoxGateway.disconnect: Il n'y a aucun Store d'instancié.");
-      return;
-    }
-    _store = null;
+    _SingletonStore().close();
+    SpLog().i("ObjectBoxGateway.connect: Store détruit.");
   }
 
   @override
   Store? getConnector() {
-    if (_store == null) {
-      SpLog.instance.w("ObjectBoxGateway.getConnector: Il n'y a aucun Store d'instancié.");
+    if (_SingletonStore().store == null) {
+      SpLog().w("ObjectBoxGateway.getConnector: Il n'y a aucun Store d'instancié.");
       return null;
     }
-    return _store!;
+    return _SingletonStore().store!;
+  }
+}
+
+class _SingletonStore {
+  _SingletonStore._internal();
+  static final _SingletonStore _instance = _SingletonStore._internal();
+  factory _SingletonStore() {
+    return _instance;
+  }
+
+  Store? _store;
+  Store? get store => _store;
+
+  Future<void> init() async {
+    if (_store != null) return;
+    final dir = await getApplicationCacheDirectory();
+    _store = await openStore(directory: p.join(dir.path, "object_box_database"));
+  }
+
+  void close() {
+    store?.close();
+    _store = null;
   }
 }

@@ -15,18 +15,18 @@ class StreetPathTaskHandler extends TaskHandler {
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    SpLog.instance.i('Streetpath Service : Initialize…');
+    SpLog().i('Streetpath Service : Initialize…');
     await _connectToDatabase.execute(ConnectToDatabaseParams());
     await _nearbyServiceImpl.init(_objectBoxGateway.getConnector()!);
-    SpLog.instance.i('Streetpath Service : Started.');
+    SpLog().i('Streetpath Service : Started.');
     await _nearbyServiceImpl.run();
-    SpLog.instance.i('Streetpath Service : Running.');
+    SpLog().i('Streetpath Service : Running.');
   }
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
     await Future.wait([_objectBoxGateway.disconnect(), _nearbyServiceImpl.stop()]);
-    SpLog.instance.i('StreetPath Service : Stoped');
+    SpLog().i('StreetPath Service : Stoped');
   }
 
   @override

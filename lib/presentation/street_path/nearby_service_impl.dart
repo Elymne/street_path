@@ -19,7 +19,7 @@ class NearbyServiceImpl {
   NearbyServiceImpl();
 
   Future init(Store store) async {
-    SpLog.instance.i('StreetPath scan starting…');
+    SpLog().i('StreetPath scan starting…');
     _rawDataBox = store.box<RawData>();
 
     await _nearbySevice.init(
@@ -27,7 +27,7 @@ class NearbyServiceImpl {
       strategy: Strategy.P2P_CLUSTER,
       deviceName: '$streetPathSignatureName:${Uuid().v4()}',
       callback: (dynamic _) async {
-        SpLog.instance.i('StreetPath scan has started.');
+        SpLog().i('StreetPath scan has started.');
       },
     );
   }
@@ -41,9 +41,7 @@ class NearbyServiceImpl {
       callback: (devicesList) {
         final seensId = _seenDevices.map((elem) => elem.deviceId);
         for (final device in devicesList) {
-          SpLog.instance.i(
-            "Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}",
-          );
+          SpLog().i("Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}");
 
           if (seensId.contains(device.deviceId)) {
             continue; // * Déjà vu, on skip.
@@ -76,7 +74,7 @@ class NearbyServiceImpl {
     // * Reception de data.
     _receivedDataSubscription = _nearbySevice.dataReceivedSubscription(
       callback: (data) {
-        SpLog.instance.i("Data fetched from device : ${jsonEncode(data)}");
+        SpLog().i("Data fetched from device : ${jsonEncode(data)}");
       },
     );
 

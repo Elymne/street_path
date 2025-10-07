@@ -16,7 +16,7 @@ class GetShareablePosts extends Usecase<GetShareablePostsParams, List<Post>> {
     try {
       return Success(await _postRepository.findShareables());
     } catch (err, stack) {
-      SpLog.instance.e("GetShareablePosts: Une exception a été levée.", err, stack: stack);
+      SpLog().e("GetShareablePosts: Une exception a été levée.", err, stack: stack);
       return Failure("Une erreur s'est produite en voulant récupérer les posts partageables…");
     }
   }

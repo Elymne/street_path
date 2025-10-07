@@ -16,7 +16,7 @@ class StopStreetPath extends Usecase<StopStreetPathParams, void> {
       await _streetPathGateway.stop();
       return Success(null);
     } catch (err, stack) {
-      SpLog.instance.e("StopStreetPath: Une exception a été levée.", err, stack: stack);
+      SpLog().e("StopStreetPath: Une exception a été levée.", err, stack: stack);
       return Failure("Une erreur s'est produite lors du démarrage du StreetPath…");
     }
   }
