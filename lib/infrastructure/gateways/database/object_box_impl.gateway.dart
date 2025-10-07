@@ -12,7 +12,6 @@ class ObjectBoxGateway implements DatabaseGateway<Store> {
       SpLog().w("ObjectBoxGateway.connect: Instance de Store déjà existant.");
       return;
     }
-
     SpLog().i("ObjectBoxGateway.connect: Tentative d'accès au Store…");
     _SingletonStore().init();
     SpLog().i("ObjectBoxGateway.connect: Store instancié.");
@@ -31,6 +30,12 @@ class ObjectBoxGateway implements DatabaseGateway<Store> {
       return null;
     }
     return _SingletonStore().store!;
+  }
+
+  @override
+  Future<int> getCurrentSize() {
+    // TODO: implement getCurrentSize
+    throw UnimplementedError();
   }
 }
 

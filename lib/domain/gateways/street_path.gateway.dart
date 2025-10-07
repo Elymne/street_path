@@ -1,7 +1,12 @@
-/// Interface décrivant les opérations disponibles pour manipuler le service de StreetPath.
+/// ------------------------------------------------------------
+/// Class: StreetPathGateway
+/// Layer: Infrastructure
 ///
-/// Un service de StreetPath doit tourner en dehors de l'application.
-/// Elle peut utiliser n'importe quelle librairie.
+/// Description:
+///   Interface décrivant les opérations disponibles pour manipuler le service de StreetPath.
+///   Un service de StreetPath doit tourner en dehors de l'application.
+///   Elle peut utiliser n'importe quelle librairie.
+/// ------------------------------------------------------------
 abstract class StreetPathGateway {
   /// Démarre le service StreetPath.
   /// La manière dont le service est créé et tourne ne concerne pas la partie domaine.
