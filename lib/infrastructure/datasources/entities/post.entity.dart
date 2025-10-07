@@ -16,4 +16,18 @@ class PostEntity {
   int? bounces;
   final reactions = ToMany<ReactionEntity>();
   final subposts = ToMany<SubpostEntity>();
+
+  // static PostEntity fromPost(Post post) {
+  //   final entity =
+  //       PostEntity()
+  //         ..id = post.id
+  //         ..createdAt = post.createdAt
+  //         ..userId = post.userId
+  //         ..flowName = post.flowName
+  //         ..bounces = post.bounces;
+
+  //   entity.reactions.addAll(post.reactions.map((r) => ReactionEntity.fromReaction(r)));
+  //   entity.subposts.addAll(post.subposts.map((s) => SubpostEntity.fromSubpost(s)));
+  //   return entity;
+  // }
 }
