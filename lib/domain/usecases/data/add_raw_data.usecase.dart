@@ -1,7 +1,6 @@
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
-import 'package:poc_street_path/domain/models/post/raw_post_data.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 
 class AddRawDataParams {
@@ -9,13 +8,13 @@ class AddRawDataParams {
   AddRawDataParams({required this.data});
 }
 
-class AddRawData extends Usecase<AddRawDataParams, RawData> {
+class AddRawData extends Usecase<AddRawDataParams, String> {
   final RawDataRepository _rawDataRepository;
 
   AddRawData(this._rawDataRepository);
 
   @override
-  Future<Result<RawData>> execute(AddRawDataParams params) async {
+  Future<Result<String>> execute(AddRawDataParams params) async {
     try {
       return Success(await _rawDataRepository.add(params.data));
     } catch (err, stack) {

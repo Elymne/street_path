@@ -1,8 +1,6 @@
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
-import 'package:poc_street_path/domain/models/post/raw_post_data.model.dart';
-import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import 'dart:async';
@@ -10,18 +8,16 @@ import 'dart:async';
 /// ! Riverpod est inutilisable dans ce contexte : vous ne pouvez pas utiliser de Provider !
 class NearbyServiceImpl {
   late final NearbyService _nearbySevice = NearbyService();
+
   late final StreamSubscription _subscription;
   late final StreamSubscription _receivedDataSubscription;
   late final Timer dutyCycler; // *  http://iot-strasbourg.strataggem.com/ref/duty-cycle.html
   final List<_SeenDevice> _seenDevices = [];
-  late final Box<RawData> _rawDataBox;
 
   NearbyServiceImpl();
 
-  Future init(Store store) async {
+  Future init() async {
     SpLog().i('StreetPath scan starting…');
-    _rawDataBox = store.box<RawData>();
-
     await _nearbySevice.init(
       serviceType: 'com.cyneila.streetpath',
       strategy: Strategy.P2P_CLUSTER,
