@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
-import 'package:poc_street_path/presentation/street_path/street_path_task_handler.dart';
+import 'package:poc_street_path/presentation/services/street_path_task_handler.dart';
 
 class StreetPathGatewayImpl implements StreetPathGateway {
   @override

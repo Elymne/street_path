@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:poc_street_path/domain/models/contents/comment.model.dart';
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
 import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
 import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';

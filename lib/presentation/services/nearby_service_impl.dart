@@ -1,6 +1,12 @@
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
+import 'package:poc_street_path/domain/models/contents/comment.model.dart';
+import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
+import 'package:poc_street_path/domain/usecases/data/add_raw_data.usecase.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
+import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import 'dart:async';
@@ -9,12 +15,22 @@ import 'dart:async';
 class NearbyServiceImpl {
   late final NearbyService _nearbySevice = NearbyService();
 
+  late final _databaseGateway = ObjectBoxGateway();
+  late final _rawDataRepository = RawDataRepositoryImpl(_databaseGateway);
+  late final _addRawData = AddRawData(_rawDataRepository);
+
   late final StreamSubscription _subscription;
   late final StreamSubscription _receivedDataSubscription;
-  late final Timer dutyCycler; // *  http://iot-strasbourg.strataggem.com/ref/duty-cycle.html
+  // *  http://iot-strasbourg.strataggem.com/ref/duty-cycle.html
+  late final Timer dutyCycler;
   final List<_SeenDevice> _seenDevices = [];
 
+  // * Data à share.
+  String _jsonShare = jsonEncode([]);
+
   NearbyServiceImpl();
+
+  void updateShares(List<Content> contents, List<Comment> comments, List<Reaction> reactions) {}
 
   Future init() async {
     SpLog().i('StreetPath scan starting…');
@@ -59,7 +75,7 @@ class NearbyServiceImpl {
           }
 
           if (device.state == SessionState.connected) {
-            _nearbySevice.sendMessage(device.deviceId, 'This is a dumb message.');
+            _nearbySevice.sendMessage(device.deviceId, _jsonShare);
             _seenDevices.add(_SeenDevice(deviceId: device.deviceId, at: DateTime.now().millisecondsSinceEpoch));
             continue; // * On est connecté. On envoie la data qu'on peut en fonction du mode d'envoie puis on ajoute aux déjà vu et on skip.
           }
@@ -71,6 +87,8 @@ class NearbyServiceImpl {
     _receivedDataSubscription = _nearbySevice.dataReceivedSubscription(
       callback: (data) {
         SpLog().i("Data fetched from device : ${jsonEncode(data)}");
+        _addRawData.execute(AddRawDataParams(data: jsonEncode(data)));
+        SpLog().i("Data injected into device");
       },
     );
 

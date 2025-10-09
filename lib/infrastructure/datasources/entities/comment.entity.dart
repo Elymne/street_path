@@ -7,17 +7,15 @@ class CommentEntity {
   int obId = 0;
 
   @Unique()
-  String? id;
+  String id;
 
-  int? createdAt;
-  String? authorName;
-  String? text;
+  int createdAt;
+  String authorName;
+  String text;
+
+  CommentEntity({required this.id, required this.createdAt, required this.authorName, required this.text});
 
   static CommentEntity fromModel(Comment comment) {
-    return CommentEntity()
-      ..id = comment.id
-      ..createdAt = comment.createdAt
-      ..authorName = comment.authorName
-      ..text = comment.text;
+    return CommentEntity(id: comment.id, createdAt: comment.createdAt, authorName: comment.authorName, text: comment.text);
   }
 }

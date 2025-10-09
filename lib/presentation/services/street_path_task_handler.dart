@@ -4,7 +4,7 @@ import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/domain/usecases/database/connectToDatabase.usecase.dart';
 import 'package:poc_street_path/domain/usecases/database/disconnectToDatabase.usecase.dart';
 import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';
-import 'package:poc_street_path/presentation/street_path/nearby_service_impl.dart';
+import 'package:poc_street_path/presentation/services/nearby_service_impl.dart';
 
 class StreetPathTaskHandler extends TaskHandler {
   late final ObjectBoxGateway _objectBoxGateway = ObjectBoxGateway();

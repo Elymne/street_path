@@ -11,7 +11,7 @@ import 'package:poc_street_path/domain/models/contents/content.model.dart';
 abstract class ContentRepository {
   /// Ajoute un nouveau contenu dans la base de données.
   /// Retourne : [String] L'id généré par la création d'un post.
-  Future<String> add(Content post);
+  Future<String> add(Content content);
 
   /// Récupére la liste des contenus qui seront à envoyer en priorité via le système de gamepass.
   /// Retourne : Liste [Content] La liste des posts.
