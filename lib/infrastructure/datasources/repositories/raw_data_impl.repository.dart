@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:poc_street_path/domain/models/contents/comment.model.dart';
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
 import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/comment.entity.dart';
@@ -13,13 +14,13 @@ import 'package:uuid/uuid.dart';
 
 class RawDataRepositoryImpl implements RawDataRepository {
   late final Box<RawDataEntity> _boxRawData;
-  late final Box<ContentEntity> _boxContent;
+  late final Box<ContentTextEntity> _boxContent;
   late final Box<CommentEntity> _boxComment;
   late final Box<ReactionEntity> _boxReaction;
 
   RawDataRepositoryImpl(ObjectBoxGateway objectboxGateway) {
     _boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
-    _boxContent = objectboxGateway.getConnector()!.box<ContentEntity>();
+    _boxContent = objectboxGateway.getConnector()!.box<ContentTextEntity>();
     _boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
     _boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
   }
@@ -42,12 +43,12 @@ class RawDataRepositoryImpl implements RawDataRepository {
       }
 
       for (final data in dataList) {
-        if (Content.isValidJson(data)) {
-          final content = Content.fromJson(data);
-          if (_boxContent.query(ContentEntity_.id.equals(content.id)).build().find().isNotEmpty) {
+        if (ContentText.isValidJson(data)) {
+          final content = ContentText.fromJson(data);
+          if (_boxContent.query(ContentTextEntity_.id.equals(content.id)).build().find().isNotEmpty) {
             continue;
           }
-          _boxContent.put(ContentEntity.fromModel(content));
+          _boxContent.put(ContentTextEntity.fromModel(content));
           added++;
         }
 

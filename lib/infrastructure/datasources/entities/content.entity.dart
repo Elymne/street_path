@@ -1,8 +1,9 @@
 import 'package:objectbox/objectbox.dart';
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
 
 @Entity()
-class ContentEntity {
+class ContentTextEntity {
   @Id()
   int obId = 0;
 
@@ -13,17 +14,30 @@ class ContentEntity {
   String? authorName;
   String? flowName;
   int? bounces;
+  String? title;
 
-  static ContentEntity fromModel(Content content) {
-    return ContentEntity()
-      ..id = content.id
-      ..createdAt = content.createdAt
-      ..authorName = content.authorName
-      ..flowName = content.flowName
-      ..bounces = content.bounces;
+  String? text;
+
+  static ContentTextEntity fromModel(ContentText contentText) {
+    return ContentTextEntity()
+      ..id = contentText.id
+      ..createdAt = contentText.createdAt
+      ..authorName = contentText.authorName
+      ..flowName = contentText.flowName
+      ..bounces = contentText.bounces
+      ..title = contentText.title
+      ..text = contentText.text;
   }
 
   Content toPost() {
-    return Content(id: id ?? '', createdAt: createdAt ?? 0, authorName: authorName ?? '', flowName: flowName ?? '', bounces: bounces ?? 0);
+    return ContentText(
+      id: id!,
+      createdAt: createdAt!,
+      authorName: authorName!,
+      flowName: flowName!,
+      bounces: bounces!,
+      title: title!,
+      text: text!,
+    );
   }
 }
