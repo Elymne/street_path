@@ -3,8 +3,6 @@ import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 
-class DisconnectToDatabaseParams {}
-
 class DisconnectToDatabase extends Usecase<DisconnectToDatabaseParams, void> {
   final DatabaseGateway _databaseGateway;
 
@@ -21,3 +19,5 @@ class DisconnectToDatabase extends Usecase<DisconnectToDatabaseParams, void> {
     }
   }
 }
+
+class DisconnectToDatabaseParams {}

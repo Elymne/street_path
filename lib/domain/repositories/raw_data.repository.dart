@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/post/raw_data.model.dart';
+import 'package:poc_street_path/domain/models/contents/raw_data.model.dart';
 
 /// ------------------------------------------------------------
 /// Interface: RawDataRepository

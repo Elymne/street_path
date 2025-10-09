@@ -4,7 +4,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 
-/// Implémentation du [DatabaseGateway] en utilisant la librairie objectbox.
 class ObjectBoxGateway implements DatabaseGateway<Store> {
   @override
   Future connect() async {

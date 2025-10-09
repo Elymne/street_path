@@ -3,8 +3,6 @@ import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
 
-class GetStreetPathStatusParams {}
-
 class GetStreetPathStatus extends Usecase<GetStreetPathStatusParams, StreetPathStatus> {
   final StreetPathGateway _streetPathGateway;
 
@@ -20,3 +18,5 @@ class GetStreetPathStatus extends Usecase<GetStreetPathStatusParams, StreetPathS
     }
   }
 }
+
+class GetStreetPathStatusParams {}

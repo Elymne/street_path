@@ -3,8 +3,6 @@ import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 
-class SyncPostParams {}
-
 class SyncPost extends Usecase<SyncPostParams, int> {
   final RawDataRepository _rawDataRepository;
 
@@ -20,3 +18,5 @@ class SyncPost extends Usecase<SyncPostParams, int> {
     }
   }
 }
+
+class SyncPostParams {}

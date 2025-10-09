@@ -3,11 +3,6 @@ import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 
-class AddRawDataParams {
-  final String data;
-  AddRawDataParams({required this.data});
-}
-
 class AddRawData extends Usecase<AddRawDataParams, String> {
   final RawDataRepository _rawDataRepository;
 
@@ -22,4 +17,9 @@ class AddRawData extends Usecase<AddRawDataParams, String> {
       return Failure("Une erreur s'est produite lors de l'ajout d'une donnée brute…");
     }
   }
+}
+
+class AddRawDataParams {
+  final String data;
+  AddRawDataParams({required this.data});
 }

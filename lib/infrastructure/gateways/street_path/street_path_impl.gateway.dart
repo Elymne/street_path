@@ -4,7 +4,6 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
 import 'package:poc_street_path/presentation/street_path/street_path_task_handler.dart';
 
-/// Implémentation du [StreetPathGateway] en utilisant la lib flutter_foreground_task
 class StreetPathGatewayImpl implements StreetPathGateway {
   @override
   Future start(String notificationTitle, String notificationText) async {

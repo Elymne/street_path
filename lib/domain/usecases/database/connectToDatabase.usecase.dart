@@ -3,8 +3,6 @@ import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 
-class ConnectToDatabaseParams {}
-
 class ConnectToDatabase extends Usecase<ConnectToDatabaseParams, void> {
   final DatabaseGateway _databaseGateway;
 
@@ -21,3 +19,5 @@ class ConnectToDatabase extends Usecase<ConnectToDatabaseParams, void> {
     }
   }
 }
+
+class ConnectToDatabaseParams {}

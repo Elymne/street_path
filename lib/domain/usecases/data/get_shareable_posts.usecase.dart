@@ -1,18 +1,16 @@
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
-import 'package:poc_street_path/domain/models/post/post.model.dart';
-import 'package:poc_street_path/domain/repositories/post.repository.dart';
+import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/repositories/content.repository.dart';
 
-class GetShareablePostsParams {}
-
-class GetShareablePosts extends Usecase<GetShareablePostsParams, List<Post>> {
-  final PostRepository _postRepository;
+class GetShareablePosts extends Usecase<GetShareablePostsParams, List<Content>> {
+  final ContentRepository _postRepository;
 
   GetShareablePosts(this._postRepository);
 
   @override
-  Future<Result<List<Post>>> execute(GetShareablePostsParams params) async {
+  Future<Result<List<Content>>> execute(GetShareablePostsParams params) async {
     try {
       return Success(await _postRepository.findShareables());
     } catch (err, stack) {
@@ -21,3 +19,5 @@ class GetShareablePosts extends Usecase<GetShareablePostsParams, List<Post>> {
     }
   }
 }
+
+class GetShareablePostsParams {}
