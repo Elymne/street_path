@@ -1,7 +1,8 @@
 import 'package:objectbox/objectbox.dart';
+import 'package:poc_street_path/domain/models/contents/comment.model.dart';
 
 @Entity()
-class SubpostEntity {
+class CommentEntity {
   @Id()
   int obId = 0;
 
@@ -9,6 +10,14 @@ class SubpostEntity {
   String? id;
 
   int? createdAt;
-  String? userId;
-  String? comment;
+  String? authorName;
+  String? text;
+
+  static CommentEntity fromModel(Comment comment) {
+    return CommentEntity()
+      ..id = comment.id
+      ..createdAt = comment.createdAt
+      ..authorName = comment.authorName
+      ..text = comment.text;
+  }
 }

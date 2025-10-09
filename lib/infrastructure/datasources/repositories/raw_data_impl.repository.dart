@@ -1,63 +1,75 @@
 import 'dart:convert';
+import 'package:poc_street_path/domain/models/contents/comment.model.dart';
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/content.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/raw_data.entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/reaction.entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
 
 class RawDataRepositoryImpl implements RawDataRepository {
-  final ObjectBoxGateway _objectBoxGateway;
+  late final Box<RawDataEntity> _boxRawData;
+  late final Box<ContentEntity> _boxContent;
+  late final Box<CommentEntity> _boxComment;
+  late final Box<ReactionEntity> _boxReaction;
 
-  RawDataRepositoryImpl(this._objectBoxGateway);
+  RawDataRepositoryImpl(ObjectBoxGateway objectboxGateway) {
+    _boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
+    _boxContent = objectboxGateway.getConnector()!.box<ContentEntity>();
+    _boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
+    _boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
+  }
 
   @override
   Future<String> add(String data) async {
-    final box = _objectBoxGateway.getConnector()!.box<RawDataEntity>();
     final id = Uuid().v4();
-    box.put(RawDataEntity(id: id, createdAt: DateTime.now().millisecondsSinceEpoch, data: data), mode: PutMode.insert);
+    _boxRawData.put(RawDataEntity(id: id, createdAt: DateTime.now().millisecondsSinceEpoch, data: data), mode: PutMode.insert);
     return id;
   }
 
   @override
-  Future<bool> delete(String id) async {
-    final box = _objectBoxGateway.getConnector()!.box<RawDataEntity>();
-    final rawDataEntity = box.query(RawDataEntity_.id.equals(id)).build().findUnique();
-    if (rawDataEntity == null) {
-      return false;
-    }
-    return box.remove(rawDataEntity.obId);
-  }
-
-  @override
-  Future<int> syncPosts() async {
-    final boxRawData = _objectBoxGateway.getConnector()!.box<RawDataEntity>();
-    final boxPost = _objectBoxGateway.getConnector()!.box<PostEntity>();
-
+  Future<int> syncData() async {
     var added = 0;
-    final rawDataList = boxRawData.getAll();
+    final rawDataList = _boxRawData.getAll();
     for (final rawData in rawDataList) {
-      final jsonData = jsonDecode(rawData.data);
-      if (jsonData is! List) {
+      final dataList = jsonDecode(rawData.data);
+      if (dataList is! List) {
         continue;
       }
 
-      for (final rawPost in jsonData) {
-        if (!Content.isValidJson(rawPost)) {
-          continue;
+      for (final data in dataList) {
+        if (Content.isValidJson(data)) {
+          final content = Content.fromJson(data);
+          if (_boxContent.query(ContentEntity_.id.equals(content.id)).build().find().isNotEmpty) {
+            continue;
+          }
+          _boxContent.put(ContentEntity.fromModel(content));
+          added++;
         }
 
-        final postTrans = Content.fromJson(rawPost);
-        final postFromDB = boxPost.query(PostEntity_.id.equals(postTrans.id)).build().findFirst();
-        if (postFromDB != null) {
-          // todo : delete raw data.
-          continue; // * Data exists.
+        if (Comment.isValidJson(data)) {
+          final comment = Comment.fromJson(data);
+          if (_boxComment.query(CommentEntity_.id.equals(comment.id)).build().find().isNotEmpty) {
+            continue;
+          }
+          _boxComment.put(CommentEntity.fromModel(comment));
+          added++;
         }
 
-        // TODO : Puis ajouter tout ça en DB.
-        added++;
+        if (Reaction.isValidJson(data)) {
+          final reaction = Reaction.fromJson(data);
+          if (_boxReaction.query(ReactionEntity_.id.equals(reaction.id)).build().find().isNotEmpty) {
+            continue;
+          }
+          _boxReaction.put(ReactionEntity.fromModel(reaction));
+          added++;
+        }
       }
+      _boxRawData.remove(rawData.obId);
     }
 
     return added;

@@ -2,7 +2,7 @@ import 'package:objectbox/objectbox.dart';
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
 
 @Entity()
-class PostEntity {
+class ContentEntity {
   @Id()
   int obId = 0;
 
@@ -10,20 +10,20 @@ class PostEntity {
   String? id;
 
   int? createdAt;
-  String? userId;
+  String? authorName;
   String? flowName;
   int? bounces;
 
-  static PostEntity fromPost(Content post) {
-    return PostEntity()
-      ..id = post.id
-      ..createdAt = post.createdAt
-      ..userId = post.authorName
-      ..flowName = post.flowName
-      ..bounces = post.bounces;
+  static ContentEntity fromModel(Content content) {
+    return ContentEntity()
+      ..id = content.id
+      ..createdAt = content.createdAt
+      ..authorName = content.authorName
+      ..flowName = content.flowName
+      ..bounces = content.bounces;
   }
 
   Content toPost() {
-    return Content(id: id ?? '', createdAt: createdAt ?? 0, authorName: userId ?? '', flowName: flowName ?? '', bounces: bounces ?? 0);
+    return Content(id: id ?? '', createdAt: createdAt ?? 0, authorName: authorName ?? '', flowName: flowName ?? '', bounces: bounces ?? 0);
   }
 }

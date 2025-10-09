@@ -13,12 +13,8 @@ abstract class RawDataRepository {
   /// Retourne : [String] L'id généré par la création d'une data brute.
   Future<String> add(String data);
 
-  /// Supprime une donnée brute en base de données.
-  /// Retourne : [bool] Si l'opération a abouti ou non.
-  Future<bool> delete(String id);
-
-  /// Synchronise les données brutes correspondant à des posts.
+  /// Synchronise les données brutes correspondant à du contenu abstrait ??? T'es con mec.
   /// Supprime les données brutes synchronisés.
   /// Retourne : [int] Nombre d'éléments synchronisés.
-  Future<int> syncPosts();
+  Future<int> syncData();
 }

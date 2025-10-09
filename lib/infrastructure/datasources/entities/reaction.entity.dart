@@ -1,4 +1,5 @@
 import 'package:objectbox/objectbox.dart';
+import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 
 @Entity()
 class ReactionEntity {
@@ -9,7 +10,16 @@ class ReactionEntity {
   String? id;
 
   int? createdAt;
-  String? userId;
+  String? authorName;
   bool? isLiked;
   int? flag;
+
+  static ReactionEntity fromModel(Reaction reaction) {
+    return ReactionEntity()
+      ..id = reaction.id
+      ..createdAt = reaction.createdAt
+      ..authorName = reaction.authorName
+      ..isLiked = reaction.isLiked
+      ..flag = reaction.flag;
+  }
 }
