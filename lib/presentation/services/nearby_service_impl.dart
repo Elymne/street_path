@@ -1,9 +1,6 @@
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
-import 'package:poc_street_path/domain/models/contents/comment.model.dart';
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
-import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/usecases/data/add_raw_data.usecase.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
 import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';

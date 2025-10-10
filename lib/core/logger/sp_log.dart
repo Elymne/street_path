@@ -4,7 +4,7 @@ class SpLog {
   SpLog._internal() {
     _logger = Logger(
       printer: PrettyPrinter(
-        methodCount: null,
+        methodCount: 0,
         errorMethodCount: null,
         lineLength: 120,
         colors: true,

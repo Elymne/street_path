@@ -12,7 +12,7 @@ class ObjectBoxGateway implements DatabaseGateway<Store> {
       return;
     }
     SpLog().i("ObjectBoxGateway.connect: Tentative d'accès au Store…");
-    _SingletonStore().init();
+    await _SingletonStore().init();
     SpLog().i("ObjectBoxGateway.connect: Store instancié.");
   }
 

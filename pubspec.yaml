@@ -19,6 +19,7 @@ dependencies:
   flutter_dotenv: any # Env manager.
 
   logger: any
+  mocktail: any
 
   path_provider: any
   path: any
