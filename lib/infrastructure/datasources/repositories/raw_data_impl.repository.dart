@@ -4,7 +4,7 @@ import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/comment.entity.dart';
-import 'package:poc_street_path/infrastructure/datasources/entities/content.entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/content_text.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/raw_data.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/reaction.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/wrap.entity.dart';
@@ -37,8 +37,26 @@ class RawDataRepositoryImpl implements RawDataRepository {
 
   @override
   Future<String> findShareableData() async {
-    // TODO: implement findShareableData
-    throw UnimplementedError();
+    final List<String> ids = [];
+
+    final condition1 = WrapEntity_.shippingMode.equals(ShippingMode.creator.value);
+    ids.addAll((_boxWrap.query(condition1).order(WrapEntity_.createdAt).build()..limit = 10).find().map((elem) => elem.id));
+    if (ids.length >= 10) {
+      final contentTextEntities = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find();
+      return jsonEncode([...contentTextEntities.map((elem) => elem.toModel())]);
+    }
+
+    final condition2 = WrapEntity_.shippingMode.equals(ShippingMode.important.value);
+    ids.addAll((_boxWrap.query(condition2).build()..limit = 10 - ids.length).find().map((elem) => elem.id));
+    if (ids.length >= 10) {
+      final contentTextEntities = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find();
+      return jsonEncode([...contentTextEntities.map((elem) => elem.toModel())]);
+    }
+
+    final condition3 = WrapEntity_.shippingMode.equals(ShippingMode.normal.value);
+    ids.addAll((_boxWrap.query(condition3).build()..limit = 10 - ids.length).find().map((elem) => elem.id).toList());
+    final contentTextEntities = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find();
+    return jsonEncode([...contentTextEntities.map((elem) => elem.toModel())]);
   }
 
   @override

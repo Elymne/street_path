@@ -29,8 +29,8 @@ class NearbyServiceImpl {
 
   NearbyServiceImpl();
 
-  void setShareableData(List<Content> contents, List<Comment> comments, List<Reaction> reactions) {
-    _shareableData = jsonEncode([...contents, ...comments, ...reactions]);
+  void setShareableData(String contentData) {
+    _shareableData = contentData;
   }
 
   Future init() async {

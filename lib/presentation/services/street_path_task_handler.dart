@@ -2,9 +2,6 @@ import 'dart:async';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
-import 'package:poc_street_path/domain/models/contents/comment.model.dart';
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
-import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/domain/usecases/data/get_shareable_posts.usecase.dart';
 import 'package:poc_street_path/domain/usecases/database/connectToDatabase.usecase.dart';
@@ -26,7 +23,6 @@ class StreetPathTaskHandler extends TaskHandler {
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     SpLog().i('Streetpath Service: Initialize…');
     await _connectToDatabase.execute(ConnectToDatabaseParams());
-    _nearbyServiceImpl.setShareableData([], [], []);
     await _nearbyServiceImpl.init();
     SpLog().i('Streetpath Service: Started.');
     await _nearbyServiceImpl.run();
@@ -47,11 +43,7 @@ class StreetPathTaskHandler extends TaskHandler {
       SpLog().w('Streetpath Service: Error catched while using GetShareableContents.');
       return;
     }
-
-    final List<Content> contents = [];
-    final List<Comment> comments = [];
-    final List<Reaction> reactions = [];
-    _nearbyServiceImpl.setShareableData(contents, comments, reactions);
+    _nearbyServiceImpl.setShareableData((result as Success<String>).data);
   }
 
   @override
