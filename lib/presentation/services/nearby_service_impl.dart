@@ -21,16 +21,17 @@ class NearbyServiceImpl {
 
   late final StreamSubscription _subscription;
   late final StreamSubscription _receivedDataSubscription;
-  // *  http://iot-strasbourg.strataggem.com/ref/duty-cycle.html
-  late final Timer dutyCycler;
   final List<_SeenDevice> _seenDevices = [];
 
-  // * Data à share.
-  String _jsonShare = jsonEncode([]);
+  late final Timer dutyCycler; // *  http://iot-strasbourg.strataggem.com/ref/duty-cycle.html
+
+  String _shareableData = jsonEncode([]); // * Data à share.
 
   NearbyServiceImpl();
 
-  void updateShares(List<Content> contents, List<Comment> comments, List<Reaction> reactions) {}
+  void setShareableData(List<Content> contents, List<Comment> comments, List<Reaction> reactions) {
+    _shareableData = jsonEncode([...contents, ...comments, ...reactions]);
+  }
 
   Future init() async {
     SpLog().i('StreetPath scan starting…');
@@ -75,7 +76,7 @@ class NearbyServiceImpl {
           }
 
           if (device.state == SessionState.connected) {
-            _nearbySevice.sendMessage(device.deviceId, _jsonShare);
+            _nearbySevice.sendMessage(device.deviceId, _shareableData);
             _seenDevices.add(_SeenDevice(deviceId: device.deviceId, at: DateTime.now().millisecondsSinceEpoch));
             continue; // * On est connecté. On envoie la data qu'on peut en fonction du mode d'envoie puis on ajoute aux déjà vu et on skip.
           }

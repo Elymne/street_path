@@ -17,4 +17,7 @@ abstract class RawDataRepository {
   /// Supprime les données brutes synchronisés.
   /// Retourne : [int] Nombre d'éléments synchronisés.
   Future<int> syncData();
+
+  /// Retourne les données partageable via le streetpath sous format JSON.
+  Future<String> findShareableData();
 }

@@ -40,7 +40,7 @@ class ContentTextEntity {
     );
   }
 
-  Content toPost() {
+  Content toModel() {
     return ContentText(
       id: id,
       createdAt: createdAt,

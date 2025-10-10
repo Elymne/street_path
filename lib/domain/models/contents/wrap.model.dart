@@ -21,15 +21,15 @@ import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 /// - storageMode [int]: Code de mode de stockage.
 /// - shippingMode [int]: Code de mode de propagation.
 /// ------------------------------------------------------------
-class PostWraper extends Model {
+class Wrap extends Model {
   final Content content;
   final List<Reaction> reaction;
   final List<Comment> comments;
 
-  final int storageMode;
-  final int shippingMode;
+  final StorageMode storageMode;
+  final ShippingMode shippingMode;
 
-  PostWraper({
+  Wrap({
     required super.id,
     required super.createdAt,
     required this.content,
@@ -38,4 +38,22 @@ class PostWraper extends Model {
     required this.storageMode,
     required this.shippingMode,
   });
+}
+
+enum ShippingMode {
+  normal(0),
+  important(1),
+  creator(2),
+  blocked(3);
+
+  final int value;
+  const ShippingMode(this.value);
+}
+
+enum StorageMode {
+  normal(0),
+  save(1);
+
+  final int value;
+  const StorageMode(this.value);
 }

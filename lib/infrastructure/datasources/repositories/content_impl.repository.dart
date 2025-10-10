@@ -34,10 +34,4 @@ class ContentRepositoryImpl implements ContentRepository {
 
     throw Exception("ContentRepositoryImpl"); // TODO: exception nulle genre, TypeDebinusCarnigusAnalus.
   }
-
-  @override
-  Future<List<Content>> findShareables() {
-    // TODO: implement findShareables
-    throw UnimplementedError();
-  }
 }

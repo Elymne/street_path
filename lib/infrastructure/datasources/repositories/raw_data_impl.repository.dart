@@ -1,27 +1,31 @@
-import 'dart:convert';
 import 'package:poc_street_path/domain/models/contents/comment.model.dart';
 import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
 import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
+import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/content.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/raw_data.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/reaction.entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/wrap.entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
 
 class RawDataRepositoryImpl implements RawDataRepository {
   late final Box<RawDataEntity> _boxRawData;
-  late final Box<ContentTextEntity> _boxContent;
+  late final Box<WrapEntity> _boxWrap;
+  late final Box<ContentTextEntity> _boxContentText;
   late final Box<CommentEntity> _boxComment;
   late final Box<ReactionEntity> _boxReaction;
 
   RawDataRepositoryImpl(ObjectBoxGateway objectboxGateway) {
-    _boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
-    _boxContent = objectboxGateway.getConnector()!.box<ContentTextEntity>();
-    _boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
+    _boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
+    _boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
     _boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
+    _boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
+    _boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
   }
 
   @override
@@ -29,6 +33,12 @@ class RawDataRepositoryImpl implements RawDataRepository {
     final id = Uuid().v4();
     _boxRawData.put(RawDataEntity(id: id, createdAt: DateTime.now().millisecondsSinceEpoch, data: data), mode: PutMode.insert);
     return id;
+  }
+
+  @override
+  Future<String> findShareableData() async {
+    // TODO: implement findShareableData
+    throw UnimplementedError();
   }
 
   @override
@@ -44,10 +54,19 @@ class RawDataRepositoryImpl implements RawDataRepository {
       for (final data in dataList) {
         if (ContentText.isValidJson(data)) {
           final content = ContentText.fromJson(data);
-          if (_boxContent.query(ContentTextEntity_.id.equals(content.id)).build().find().isNotEmpty) {
+          if (_boxContentText.query(ContentTextEntity_.id.equals(content.id)).build().find().isNotEmpty) {
             continue;
           }
-          _boxContent.put(ContentTextEntity.fromModel(content));
+          _boxContentText.put(ContentTextEntity.fromModel(content));
+          _boxWrap.put(
+            WrapEntity(
+              id: Uuid().v4(),
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              contentId: content.id,
+              storageMode: StorageMode.normal.value,
+              shippingMode: ShippingMode.normal.value,
+            ),
+          );
           added++;
         }
 
