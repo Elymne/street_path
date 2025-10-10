@@ -16,4 +16,8 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
-Run this please : dart run build_runner build
+Run this please: 
+    dart run build_runner build
+
+And for tests, run in git bash:
+    bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh)

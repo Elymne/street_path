@@ -50,3 +50,8 @@ app.*.map.json
 # ObjectBox related.
 /lib/objectbox-model.json
 /lib/objectbox.g.dart
+
+# Tests related.
+/download
+/lib/objectbox.dll
+/lib/objectbox.lib
