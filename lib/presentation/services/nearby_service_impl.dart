@@ -3,7 +3,8 @@ import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/domain/usecases/data/add_raw_data.usecase.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
-import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';
+import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
+import 'package:poc_street_path/infrastructure/gateways/path_provider_impl.gateway.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import 'dart:async';
@@ -12,7 +13,8 @@ import 'dart:async';
 class NearbyServiceImpl {
   late final NearbyService _nearbySevice = NearbyService();
 
-  late final _databaseGateway = ObjectBoxGateway();
+  late final _pathProviderGatewayImpl = PathProviderGatewayImpl();
+  late final _databaseGateway = ObjectBoxGateway(_pathProviderGatewayImpl);
   late final _rawDataRepository = RawDataRepositoryImpl(_databaseGateway);
   late final _addRawData = AddRawData(_rawDataRepository);
 

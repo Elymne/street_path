@@ -1,10 +1,14 @@
 import 'package:poc_street_path/core/logger/sp_log.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
+import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
+import 'package:path/path.dart' as p;
 
 class ObjectBoxGateway implements DatabaseGateway<Store> {
+  late final PathGateway _pathGateway;
+
+  ObjectBoxGateway(this._pathGateway);
+
   @override
   Future connect() async {
     if (_SingletonStore().store != null) {
@@ -12,7 +16,7 @@ class ObjectBoxGateway implements DatabaseGateway<Store> {
       return;
     }
     SpLog().i("ObjectBoxGateway.connect: Tentative d'accès au Store…");
-    await _SingletonStore().init();
+    await _SingletonStore().init(await _pathGateway.getBaseDir());
     SpLog().i("ObjectBoxGateway.connect: Store instancié.");
   }
 
@@ -48,10 +52,9 @@ class _SingletonStore {
   Store? _store;
   Store? get store => _store;
 
-  Future<void> init() async {
+  Future<void> init(String path) async {
     if (_store != null) return;
-    final dir = await getApplicationCacheDirectory();
-    _store = await openStore(directory: p.join(dir.path, "object_box_database"));
+    _store = await openStore(directory: p.join(path, "object_box_database"));
   }
 
   void close() {

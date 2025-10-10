@@ -3,7 +3,7 @@ import 'package:poc_street_path/domain/models/contents/content.model.dart';
 import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/content_text.entity.dart';
-import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';
+import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:uuid/uuid.dart';
 
 class ContentRepositoryImpl implements ContentRepository {

@@ -30,13 +30,13 @@ dependencies:
 
   flutter_nearby_connections: any # Communication for my StreetPath.
 
-  objectbox: any # Data storage.
-  objectbox_flutter_libs: any # Data storage.
+  objectbox: any # NAtive dart Data storage.
+  objectbox_flutter_libs: any # Data storage for flutter.
 
   flutter_foreground_task: any # Background service runner (Android).
 
 dev_dependencies:
-  build_runner: any # Flutter build runner (code gen).
+  build_runner: any # dart build runner (code gen).
   objectbox_generator: any # Data storage gen.
   flutter_lints: ^6.0.0
   flutter_test:

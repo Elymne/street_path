@@ -2,20 +2,21 @@ import 'dart:async';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
-import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/domain/usecases/data/get_shareable_posts.usecase.dart';
 import 'package:poc_street_path/domain/usecases/database/connectToDatabase.usecase.dart';
 import 'package:poc_street_path/domain/usecases/database/disconnectToDatabase.usecase.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
-import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';
+import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
+import 'package:poc_street_path/infrastructure/gateways/path_provider_impl.gateway.dart';
 import 'package:poc_street_path/presentation/services/nearby_service_impl.dart';
 
 class StreetPathTaskHandler extends TaskHandler {
-  late final ObjectBoxGateway _objectBoxGateway = ObjectBoxGateway();
-  late final RawDataRepository _rawDataRepository = RawDataRepositoryImpl(_objectBoxGateway);
-  late final GetShareableContents _getShareableContents = GetShareableContents(_rawDataRepository);
-  late final ConnectToDatabase _connectToDatabase = ConnectToDatabase(_objectBoxGateway);
-  late final DisconnectToDatabase _disconnectToDatabase = DisconnectToDatabase(_objectBoxGateway);
+  late final _pathProviderGatewayImpl = PathProviderGatewayImpl();
+  late final _objectBoxGateway = ObjectBoxGateway(_pathProviderGatewayImpl);
+  late final _rawDataRepository = RawDataRepositoryImpl(_objectBoxGateway);
+  late final _getShareableContents = GetShareableContents(_rawDataRepository);
+  late final _connectToDatabase = ConnectToDatabase(_objectBoxGateway);
+  late final _disconnectToDatabase = DisconnectToDatabase(_objectBoxGateway);
 
   late final _nearbyServiceImpl = NearbyServiceImpl();
 

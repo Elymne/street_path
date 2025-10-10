@@ -1,25 +1,29 @@
+import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
+import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:poc_street_path/infrastructure/gateways/database/object_box_impl.gateway.dart';
+import 'package:mocktail/mocktail.dart';
+import 'dart:io';
+
+class MockPathGateway extends Mock implements PathGateway {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // setUpAll(() async {});
+  late final pathGateway = MockPathGateway();
+  late final ObjectBoxGateway objectboxGateway;
 
-  // tearDownAll(() {});
-
-  // setUp(() {});
-
-  // tearDown(() {});
+  setUpAll(() async {
+    final dir = Directory.systemTemp.createTempSync('test_path_provider')..path;
+    when(() => pathGateway.getBaseDir()).thenAnswer((invocationMalefiqueBouuuuuu) async => dir.path);
+    objectboxGateway = ObjectBoxGateway(pathGateway);
+  });
 
   test("Connexion à la base de données. On doit avoir accès au connector.", () async {
-    final ObjectBoxGateway objectboxGateway = ObjectBoxGateway();
     await objectboxGateway.connect();
     expect(objectboxGateway.getConnector(), isNotNull);
   });
 
   test("Connexion puis déconnexion à la base de donnée. On ne doit plus avoir au connector.", () async {
-    final ObjectBoxGateway objectboxGateway = ObjectBoxGateway();
     await objectboxGateway.connect();
     await objectboxGateway.disconnect();
     expect(objectboxGateway.getConnector(), isNull);
