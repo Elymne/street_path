@@ -29,7 +29,7 @@ class ObjectBoxGateway implements DatabaseGateway<Store> {
   @override
   Store? getConnector() {
     if (_SingletonStore().store == null) {
-      SpLog().w("ObjectBoxGateway.getConnector: Il n'y a aucun Store d'instancié.");
+      SpLog().w("ObjectBoxGateway.getConnector: Tentative d'accès au Store alors qu'il n'est pas initialisé.");
       return null;
     }
     return _SingletonStore().store!;

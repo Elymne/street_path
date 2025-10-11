@@ -13,8 +13,8 @@ void main() {
   late final ObjectBoxGateway objectboxGateway;
 
   setUpAll(() async {
-    final dir = Directory.systemTemp.createTempSync('test_path_provider')..path;
-    when(() => pathGateway.getBaseDir()).thenAnswer((invocationMalefiqueBouuuuuu) async => dir.path);
+    final dir = Directory.systemTemp.createTempSync('object_box_test')..path;
+    when(() => pathGateway.getBaseDir()).thenAnswer((maleficumInvocationDelaMuerteJeSaisPasAQuoiSertCeTruc) async => dir.path);
     objectboxGateway = ObjectBoxGateway(pathGateway);
   });
 
