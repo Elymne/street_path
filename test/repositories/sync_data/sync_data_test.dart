@@ -30,7 +30,9 @@ void main() {
 
   // * Contenu de tests.
   List<RawDataEntity> currentCache = [];
-  List<ContentTextEntity> currentTextContent = [];
+  List<ContentTextEntity> currentTextContents = [];
+  List<CommentEntity> currentComments = [];
+  List<ReactionEntity> currentReactions = [];
 
   setUpAll(() async {
     final dir = Directory.systemTemp.createTempSync('shareable_data_test')..path;
@@ -54,9 +56,13 @@ void main() {
     boxReaction.removeAll();
 
     currentCache = boxRawData.getAll();
-    currentTextContent = boxContentText.getAll();
-    expect(currentCache.isEmpty, true, reason: "Cache vide au début du test.");
-    expect(currentTextContent.isEmpty, true, reason: "Contenu vide au début du test.");
+    currentTextContents = boxContentText.getAll();
+    currentComments = boxComment.getAll();
+    currentReactions = boxReaction.getAll();
+    expect(currentCache.isEmpty, true, reason: "Empty on start");
+    expect(currentTextContents.isEmpty, true, reason: "Empty on start");
+    expect(currentComments.isEmpty, true, reason: "Empty on start");
+    expect(currentReactions.isEmpty, true, reason: "Empty on start");
   });
 
   tearDownAll(() async {
@@ -104,9 +110,9 @@ void main() {
     expect(result, 1, reason: "Sync +1");
 
     currentCache = boxRawData.getAll();
-    currentTextContent = boxContentText.getAll();
+    currentTextContents = boxContentText.getAll();
     expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentTextContent.length, 1, reason: "content_text = 1");
+    expect(currentTextContents.length, 1, reason: "content_text = 1");
   });
 
   test("Sync: La donnée dans le json dans le cache est une liste contenant plusieurs valeurs content_text.", () async {
@@ -168,9 +174,9 @@ void main() {
     expect(result, 5, reason: "Sync +5");
 
     currentCache = boxRawData.getAll();
-    currentTextContent = boxContentText.getAll();
+    currentTextContents = boxContentText.getAll();
     expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentTextContent.length, 5, reason: "content_text = 5");
+    expect(currentTextContents.length, 5, reason: "content_text = 5");
   });
 
   test("Sync: La donnée json dans le cache n'est pas une liste.", () async {
@@ -194,9 +200,9 @@ void main() {
     expect(result, 0, reason: "Sync +0");
 
     currentCache = boxRawData.getAll();
-    currentTextContent = boxContentText.getAll();
+    currentTextContents = boxContentText.getAll();
     expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentTextContent.isEmpty, true, reason: "content_text = 0");
+    expect(currentTextContents.isEmpty, true, reason: "content_text = 0");
   });
 
   test("Sync: Une data dans le cache de type content_text mais mal formé.", () async {
@@ -231,9 +237,9 @@ void main() {
     expect(result, 1, reason: "Sync +1");
 
     currentCache = boxRawData.getAll();
-    currentTextContent = boxContentText.getAll();
+    currentTextContents = boxContentText.getAll();
     expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentTextContent.length, 1, reason: "content_text = 1");
+    expect(currentTextContents.length, 1, reason: "content_text = 1");
   });
 
   test("Sync: Une data dans le cache de type content_text. Data content_text déjà existant.", () async {
@@ -271,12 +277,12 @@ void main() {
     expect(result, 1, reason: "Sync +1");
 
     currentCache = boxRawData.getAll();
-    currentTextContent = boxContentText.getAll();
+    currentTextContents = boxContentText.getAll();
     expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentTextContent.length, 2, reason: "content_text = 2");
+    expect(currentTextContents.length, 2, reason: "content_text = 2");
   });
 
-  test("Sync: LE nombre de rebons augmente après une sync.", () async {
+  test("Sync: Le nombre de rebons augmente après une sync.", () async {
     final id = Uuid().v4();
     final initialBounce = 24;
 
@@ -303,5 +309,207 @@ void main() {
 
     final contentText = boxContentText.query(ContentTextEntity_.id.equals(id)).build().findFirst();
     expect(contentText!.bounces, initialBounce + 1, reason: "content_text.bounce = 25");
+  });
+
+  test("Sync: 2 content_text avec la même ID.", () async {
+    final id = Uuid().v4();
+
+    boxContentText.put(
+      ContentTextEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: "Alice Dupont",
+        bounces: 2,
+        flowName: "MarketingFlow",
+        title: "Nouvelle campagne automnale",
+        text: "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+      ),
+    );
+
+    boxRawData.put(
+      RawDataEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        data: jsonEncode([
+          {
+            "id": id,
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "authorName": "Alice Dupont",
+            "bounces": 2,
+            "flowName": "MarketingFlow",
+            "title": "Nouvelle campagne automnale",
+            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+          },
+        ]),
+      ),
+    );
+
+    final result = await rawDataRepositoryImpl.syncData();
+    expect(result, 0, reason: "Sync +0");
+
+    currentCache = boxRawData.getAll();
+    currentTextContents = boxContentText.getAll();
+    expect(currentCache.isEmpty, true, reason: "Empty cache");
+    expect(currentTextContents.length, 1, reason: "content_text = 1");
+  });
+
+  test("Sync: La donnée dans le json dans le cache est une liste contenant une valeur comment.", () async {
+    final id = Uuid().v4();
+    boxRawData.put(
+      RawDataEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        data: jsonEncode([
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "authorName": "Alice Dupont",
+            "bounces": 2,
+            "flowName": "MarketingFlow",
+            "title": "Nouvelle campagne automnale",
+            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+          },
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "contentId": id,
+            "authorName": "Alice Dupont",
+            "text": "Un commentaire oui",
+          },
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "authorName": "Alice Dupont",
+            "bounces": 2,
+            "flowName": "MarketingFlow",
+            "title": "Nouvelle campagne automnale",
+            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+          },
+        ]),
+      ),
+    );
+
+    final result = await rawDataRepositoryImpl.syncData();
+    expect(result, 3, reason: "Sync +3");
+
+    currentCache = boxRawData.getAll();
+    currentComments = boxComment.getAll();
+    expect(currentCache.isEmpty, true, reason: "Empty cache");
+    expect(currentComments.length, 1, reason: "comment = 1");
+  });
+
+  test("Sync: La donnée json est un commentaire affilié à aucun contenu.", () async {
+    boxRawData.put(
+      RawDataEntity(
+        id: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        data: jsonEncode([
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "contentId": Uuid().v4(),
+            "authorName": "Alice Dupont",
+            "text": "Un commentaire oui",
+          },
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "authorName": "Alice Dupont",
+            "bounces": 2,
+            "flowName": "MarketingFlow",
+            "title": "Nouvelle campagne automnale",
+            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+          },
+        ]),
+      ),
+    );
+
+    final result = await rawDataRepositoryImpl.syncData();
+    expect(result, 1, reason: "Sync +1");
+
+    currentCache = boxRawData.getAll();
+    currentComments = boxComment.getAll();
+    expect(currentCache.isEmpty, true, reason: "Empty cache");
+    expect(currentComments.length, 0, reason: "comment = 0");
+  });
+
+  test("Sync: La donnée dans le json dans le cache est une liste contenant une valeur reaction.", () async {
+    final id = Uuid().v4();
+    boxRawData.put(
+      RawDataEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        data: jsonEncode([
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "authorName": "Alice Dupont",
+            "bounces": 2,
+            "flowName": "MarketingFlow",
+            "title": "Nouvelle campagne automnale",
+            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+          },
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "contentId": id,
+            "authorName": "Alice Dupont Machin bidule",
+            "flag": 1,
+          },
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "authorName": "Alice Dupont",
+            "bounces": 2,
+            "flowName": "MarketingFlow",
+            "title": "Nouvelle campagne automnale",
+            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+          },
+        ]),
+      ),
+    );
+
+    final result = await rawDataRepositoryImpl.syncData();
+    expect(result, 3, reason: "Sync +3");
+
+    currentCache = boxRawData.getAll();
+    currentReactions = boxReaction.getAll();
+    expect(currentCache.isEmpty, true, reason: "Empty cache");
+    expect(currentReactions.length, 1, reason: "reaction = 1");
+  });
+
+  test("Sync: La donnée json est une reaction affilié à aucun contenu.", () async {
+    boxRawData.put(
+      RawDataEntity(
+        id: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        data: jsonEncode([
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "contentId": Uuid().v4(),
+            "authorName": "Alice Dupont",
+            "flag": 1000,
+          },
+          {
+            "id": Uuid().v4(),
+            "createdAt": DateTime.now().millisecondsSinceEpoch,
+            "authorName": "Alice Dupont",
+            "bounces": 2,
+            "flowName": "MarketingFlow",
+            "title": "Nouvelle campagne automnale",
+            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+          },
+        ]),
+      ),
+    );
+
+    final result = await rawDataRepositoryImpl.syncData();
+    expect(result, 1, reason: "Sync +1");
+
+    currentCache = boxRawData.getAll();
+    currentReactions = boxReaction.getAll();
+    expect(currentCache.isEmpty, true, reason: "Empty cache");
+    expect(currentReactions.length, 0, reason: "reaction = 0");
   });
 }

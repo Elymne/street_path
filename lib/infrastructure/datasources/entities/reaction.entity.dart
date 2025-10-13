@@ -9,13 +9,20 @@ class ReactionEntity {
   @Unique()
   String id;
 
+  String contentId;
   int createdAt;
   String authorName;
   int? flag;
 
-  ReactionEntity({required this.id, required this.createdAt, required this.authorName, required this.flag});
+  ReactionEntity({required this.id, required this.contentId, required this.createdAt, required this.authorName, required this.flag});
 
   static ReactionEntity fromModel(Reaction reaction) {
-    return ReactionEntity(id: reaction.id, createdAt: reaction.createdAt, authorName: reaction.authorName, flag: reaction.flag.value);
+    return ReactionEntity(
+      id: reaction.id,
+      contentId: reaction.contentId,
+      createdAt: reaction.createdAt,
+      authorName: reaction.authorName,
+      flag: reaction.flag.value,
+    );
   }
 }

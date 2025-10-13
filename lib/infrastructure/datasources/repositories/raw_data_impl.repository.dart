@@ -95,6 +95,9 @@ class RawDataRepositoryImpl implements RawDataRepository {
           if (_boxComment.query(CommentEntity_.id.equals(comment.id)).build().find().isNotEmpty) {
             continue;
           }
+          if (_boxContentText.query(ContentTextEntity_.id.equals(comment.contentId)).build().find().isEmpty) {
+            continue;
+          }
           _boxComment.put(CommentEntity.fromModel(comment));
           added++;
         }
@@ -102,6 +105,9 @@ class RawDataRepositoryImpl implements RawDataRepository {
         if (Reaction.isValidJson(data)) {
           final reaction = Reaction.fromJson(data);
           if (_boxReaction.query(ReactionEntity_.id.equals(reaction.id)).build().find().isNotEmpty) {
+            continue;
+          }
+          if (_boxContentText.query(ContentTextEntity_.id.equals(reaction.contentId)).build().find().isEmpty) {
             continue;
           }
           _boxReaction.put(ReactionEntity.fromModel(reaction));

@@ -51,6 +51,10 @@ class ContentText extends Content {
     final allowedKey = allowed.keys.toSet();
     final jsonKeys = json.keys.toSet();
 
+    if (allowedKey.length != jsonKeys.length) {
+      return false;
+    }
+
     final extraKeys = jsonKeys.difference(allowedKey);
     if (extraKeys.isNotEmpty) {
       return false;
