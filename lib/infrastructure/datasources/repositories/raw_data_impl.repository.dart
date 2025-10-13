@@ -75,7 +75,9 @@ class RawDataRepositoryImpl implements RawDataRepository {
           if (_boxContentText.query(ContentTextEntity_.id.equals(content.id)).build().find().isNotEmpty) {
             continue;
           }
-          _boxContentText.put(ContentTextEntity.fromModel(content));
+          final model = ContentTextEntity.fromModel(content);
+          model.bounces++;
+          _boxContentText.put(model);
           _boxWrap.put(
             WrapEntity(
               id: Uuid().v4(),
@@ -106,9 +108,8 @@ class RawDataRepositoryImpl implements RawDataRepository {
           added++;
         }
       }
-      _boxRawData.remove(rawData.obId);
     }
-
+    _boxRawData.removeAll(); // * Cler du cache.
     return added;
   }
 }
