@@ -1,3 +1,6 @@
+// Copyright 2024 Sacha Djurdjevic
+// Licensed under the Apache License, Version 2.0
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
