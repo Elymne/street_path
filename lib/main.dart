@@ -1,4 +1,4 @@
-// Copyright 2024 Sacha Djurdjevic
+// Copyright 2025 Sacha Djurdjevic
 // Licensed under the Apache License, Version 2.0
 
 import 'package:flutter/foundation.dart';
