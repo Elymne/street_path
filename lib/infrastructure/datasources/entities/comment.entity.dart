@@ -25,4 +25,8 @@ class CommentEntity {
       text: comment.text,
     );
   }
+
+  Comment toModel() {
+    return Comment(id: id, createdAt: createdAt, authorName: authorName, contentId: contentId, text: text);
+  }
 }

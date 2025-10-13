@@ -25,4 +25,8 @@ class ReactionEntity {
       flag: reaction.flag.value,
     );
   }
+
+  Reaction toModel() {
+    return Reaction(id: id, createdAt: createdAt, authorName: authorName, contentId: contentId, flag: ReactionType.fromValue(flag ?? -1));
+  }
 }

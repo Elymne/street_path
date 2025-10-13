@@ -11,7 +11,7 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
   @override
   Future<Result<String>> execute(GetShareableContentsParams params) async {
     try {
-      return Success(await _rawDataRepository.findShareableData());
+      return Success(await _rawDataRepository.findShareableData(params.dataLimit, params.dayLimit));
     } catch (err, stack) {
       SpLog().e("GetShareablePosts: Une exception a été levée.", err, stack: stack);
       return Failure("Une erreur s'est produite en voulant récupérer les posts partageables…");
@@ -19,4 +19,8 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
   }
 }
 
-class GetShareableContentsParams {}
+class GetShareableContentsParams {
+  final int dataLimit;
+  final int dayLimit;
+  GetShareableContentsParams({required this.dataLimit, required this.dayLimit});
+}

@@ -1,7 +1,3 @@
-import 'dart:io';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/content_text.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/raw_data.entity.dart';
@@ -9,7 +5,14 @@ import 'package:poc_street_path/infrastructure/datasources/entities/reaction.ent
 import 'package:poc_street_path/infrastructure/datasources/entities/wrap.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
+import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
+import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:uuid/uuid.dart';
+import 'dart:convert';
+import 'dart:io';
 
 /// Jeux de rests des différents comportements de l'applications avec des jeux de données étranges, valides ou non.
 void main() {
@@ -34,7 +37,7 @@ void main() {
 
   setUpAll(() async {
     final dir = Directory.systemTemp.createTempSync('shareable_data_test')..path;
-    when(() => pathGateway.getBaseDir()).thenAnswer((maleficumInvocationDelaMuerteJeSaisPasAQuoiSertCeTruc) async => dir.path);
+    when(() => pathGateway.getBaseDir()).thenAnswer((_) async => dir.path);
     objectboxGateway = ObjectBoxGateway(pathGateway);
     await objectboxGateway.connect();
     rawDataRepositoryImpl = RawDataRepositoryImpl(objectboxGateway);
@@ -72,10 +75,72 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test("OMG LE TEST DE BAISé WESH", () async {
-    await rawDataRepositoryImpl.syncData();
-    // * Enorme la blague.
-    expect("caca", "pipi");
+  test("Shareable: pas d'contenus, pas d'échanges.", () async {
+    final json = await rawDataRepositoryImpl.findShareableData(10, 7);
+    final data = jsonDecode(json);
+    expect(data.length, 0);
+  });
+
+  test("Shareable: juste un contenu quelconque.", () async {
+    final id = Uuid().v4();
+    boxContentText.put(
+      ContentTextEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: "Author",
+        flowName: "flowName",
+        bounces: 0,
+        title: "title",
+        text: "text",
+      ),
+    );
+    boxWrap.put(
+      WrapEntity(
+        id: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        contentId: id,
+        storageMode: StorageMode.normal.value,
+        shippingMode: ShippingMode.normal.value,
+      ),
+    );
+
+    final json = await rawDataRepositoryImpl.findShareableData(10, 7);
+    final data = jsonDecode(json);
+    expect(data.length, 1);
+  });
+
+  test("Shareable: juste un contenu quelconque + des commentaires et des réactions.", () async {
+    final id = Uuid().v4();
+    boxContentText.put(
+      ContentTextEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: "Author",
+        flowName: "flowName",
+        bounces: 0,
+        title: "title",
+        text: "text",
+      ),
+    );
+    boxWrap.put(
+      WrapEntity(
+        id: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        contentId: id,
+        storageMode: StorageMode.normal.value,
+        shippingMode: ShippingMode.normal.value,
+      ),
+    );
+    boxComment.put(
+      CommentEntity(id: Uuid().v4(), contentId: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: "Someone", text: "text"),
+    );
+    boxReaction.put(
+      ReactionEntity(id: Uuid().v4(), contentId: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: "Someone", flag: -1),
+    );
+
+    final json = await rawDataRepositoryImpl.findShareableData(10, 7);
+    final data = jsonDecode(json);
+    expect(data.length, 3);
   });
 }
 

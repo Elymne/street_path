@@ -39,7 +39,7 @@ class StreetPathTaskHandler extends TaskHandler {
 
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
-    final result = await _getShareableContents.execute(GetShareableContentsParams());
+    final result = await _getShareableContents.execute(GetShareableContentsParams(dataLimit: 10, dayLimit: 7));
     if (result is Failure) {
       SpLog().w('Streetpath Service: Error catched while using GetShareableContents.');
       return;

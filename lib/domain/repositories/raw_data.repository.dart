@@ -19,5 +19,5 @@ abstract class RawDataRepository {
   Future<int> syncData();
 
   /// Retourne les données partageable via le streetpath sous format JSON.
-  Future<String> findShareableData();
+  Future<String> findShareableData(int dataLimit, int dayLimit);
 }

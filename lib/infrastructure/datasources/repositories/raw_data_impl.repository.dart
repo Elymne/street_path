@@ -36,27 +36,37 @@ class RawDataRepositoryImpl implements RawDataRepository {
   }
 
   @override
-  Future<String> findShareableData() async {
+  Future<String> findShareableData(int dataLimit, int dayLimit) async {
     final List<String> ids = [];
+    final List<Object> data = [];
 
-    final condition1 = WrapEntity_.shippingMode.equals(ShippingMode.creator.value);
-    ids.addAll((_boxWrap.query(condition1).order(WrapEntity_.createdAt).build()..limit = 10).find().map((elem) => elem.id));
-    if (ids.length >= 10) {
-      final contentTextEntities = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find();
-      return jsonEncode([...contentTextEntities.map((elem) => elem.toModel())]);
+    final query = WrapEntity_.shippingMode.equals(ShippingMode.creator.value);
+    final contents = (_boxWrap.query(query).order(WrapEntity_.createdAt).build()..limit = 10).find();
+    ids.addAll(contents.map((elem) => elem.contentId));
+
+    if (ids.length < dataLimit) {
+      final query = WrapEntity_.shippingMode.equals(ShippingMode.important.value);
+      final contents = (_boxWrap.query(query).build()..limit = 10 - ids.length).find();
+      ids.addAll(contents.map((elem) => elem.contentId));
     }
 
-    final condition2 = WrapEntity_.shippingMode.equals(ShippingMode.important.value);
-    ids.addAll((_boxWrap.query(condition2).build()..limit = 10 - ids.length).find().map((elem) => elem.id));
-    if (ids.length >= 10) {
-      final contentTextEntities = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find();
-      return jsonEncode([...contentTextEntities.map((elem) => elem.toModel())]);
+    if (ids.length < dataLimit) {
+      final query = WrapEntity_.shippingMode.equals(ShippingMode.normal.value);
+      final contents = (_boxWrap.query(query).build()..limit = 10 - ids.length).find();
+      ids.addAll(contents.map((elem) => elem.contentId));
     }
 
-    final condition3 = WrapEntity_.shippingMode.equals(ShippingMode.normal.value);
-    ids.addAll((_boxWrap.query(condition3).build()..limit = 10 - ids.length).find().map((elem) => elem.id).toList());
-    final contentTextEntities = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find();
-    return jsonEncode([...contentTextEntities.map((elem) => elem.toModel())]);
+    final textContents = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find().map((elem) => elem.toModel());
+    data.addAll(textContents);
+    // todo : Ajouter tous les types de contenus.
+
+    final reactions = _boxReaction.query(ReactionEntity_.contentId.oneOf(ids)).build().find().map((elem) => elem.toModel());
+    data.addAll(reactions);
+
+    final comments = _boxComment.query(CommentEntity_.contentId.oneOf(ids)).build().find().map((elem) => elem.toModel());
+    data.addAll(comments);
+
+    return jsonEncode(data);
   }
 
   @override
