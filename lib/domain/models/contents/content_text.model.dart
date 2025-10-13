@@ -1,6 +1,16 @@
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
 
 class ContentText extends Content {
+  static final Map<String, Type> allowed = {
+    'id': String,
+    'createdAt': int,
+    'authorName': String,
+    'bounces': int,
+    'flowName': String,
+    'title': String,
+    'text': String,
+  };
+
   final String text;
 
   ContentText({
@@ -38,19 +48,23 @@ class ContentText extends Content {
   }
 
   static bool isValidJson(Map<String, dynamic> json) {
-    return json.containsKey('id') &&
-        json.containsKey('createdAt') &&
-        json.containsKey('authorName') &&
-        json.containsKey('bounces') &&
-        json.containsKey('flowName') &&
-        json.containsKey('title') &&
-        json.containsKey('text') &&
-        json['id'] is String &&
-        json['createdAt'] is int &&
-        json['authorName'] is String &&
-        json['bounces'] is int &&
-        json['flowName'] is String &&
-        json['title'] is String &&
-        json['text'] is String;
+    final allowedKey = allowed.keys.toSet();
+    final jsonKeys = json.keys.toSet();
+
+    final extraKeys = jsonKeys.difference(allowedKey);
+    if (extraKeys.isNotEmpty) {
+      return false;
+    }
+
+    for (final key in allowedKey.intersection(jsonKeys)) {
+      final expectedType = allowed[key];
+      final value = json[key];
+
+      if (value != null && value.runtimeType != expectedType) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

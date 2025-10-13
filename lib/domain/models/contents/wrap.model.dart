@@ -48,6 +48,13 @@ enum ShippingMode {
 
   final int value;
   const ShippingMode(this.value);
+
+  static ShippingMode fromValue(int value) {
+    return ShippingMode.values.firstWhere(
+      (type) => type.value == value,
+      orElse: () => throw ArgumentError('Valeur inconnue pour ReactionType: $value'),
+    );
+  }
 }
 
 enum StorageMode {
@@ -56,4 +63,11 @@ enum StorageMode {
 
   final int value;
   const StorageMode(this.value);
+
+  static StorageMode fromValue(int value) {
+    return StorageMode.values.firstWhere(
+      (type) => type.value == value,
+      orElse: () => throw ArgumentError('Valeur inconnue pour ReactionType: $value'),
+    );
+  }
 }

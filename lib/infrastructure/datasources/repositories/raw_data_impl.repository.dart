@@ -21,10 +21,10 @@ class RawDataRepositoryImpl implements RawDataRepository {
   late final Box<ReactionEntity> _boxReaction;
 
   RawDataRepositoryImpl(ObjectBoxGateway objectboxGateway) {
-    _boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
-    _boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
-    _boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
     _boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
+    _boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
+    _boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
+    _boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
     _boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
   }
 

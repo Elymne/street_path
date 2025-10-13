@@ -1,6 +1,8 @@
 import 'package:poc_street_path/core/model.dart';
 
 class Comment extends Model {
+  static final Map<String, Type> allowed = {'id': String, 'createdAt': int, 'authorName': String, 'text': String};
+
   final String authorName;
   final String text;
 
@@ -10,7 +12,7 @@ class Comment extends Model {
     return Comment(
       id: json['id'] as String,
       createdAt: json['createdAt'],
-      authorName: json['authorId'] as String,
+      authorName: json['authorName'] as String,
       text: json['text'] as String,
     );
   }
@@ -20,13 +22,23 @@ class Comment extends Model {
   }
 
   static bool isValidJson(Map<String, dynamic> json) {
-    return json.containsKey('id') &&
-        json.containsKey('createdAt') &&
-        json.containsKey('authorName') &&
-        json.containsKey('text') &&
-        json['id'] is String &&
-        json['createdAt'] is int &&
-        json['authorName'] is String &&
-        json['text'] is String;
+    final allowedKey = allowed.keys.toSet();
+    final jsonKeys = json.keys.toSet();
+
+    final extraKeys = jsonKeys.difference(allowedKey);
+    if (extraKeys.isNotEmpty) {
+      return false;
+    }
+
+    for (final key in allowedKey.intersection(jsonKeys)) {
+      final expectedType = allowed[key];
+      final value = json[key];
+
+      if (value != null && value.runtimeType != expectedType) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
