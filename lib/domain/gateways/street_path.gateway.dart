@@ -1,15 +1,24 @@
+/// ------------------------------------------------------------
+/// Class: StreetPathGateway
+/// Layer: Infrastructure
+///
+/// Description:
+///   Interface décrivant les opérations disponibles pour manipuler le service de StreetPath.
+///   Un service de StreetPath doit tourner en dehors de l'application.
+///   Elle peut utiliser n'importe quelle librairie.
+/// ------------------------------------------------------------
 abstract class StreetPathGateway {
-  /// Initialisation à faire au lancement de l'application.
-  /// String notificationDesc :
-  ///  - La description texte de la notif lorsque le service sera démarré et en cours d'utilisation.
-  Future init();
-
-  /// Démarre le service de scan et transfert automatique de data entre plusieurs appareils.
-  /// A utiliser si vous devez démarrer ou redémarrer le service.
-  /// Si le service est déjà actif, ne fais rien.
+  /// Démarre le service StreetPath.
+  /// La manière dont le service est créé et tourne ne concerne pas la partie domaine.
   Future start(String notificationTitle, String notificationText);
 
-  /// Met le service en pause.
-  /// Pour le relancer, il faut simplement lancer la fonction start().
+  /// Coupe le service StreetPath.
+  /// La manière dont le service est stoppé ne concerne pas la partie domaine.
   Future stop();
+
+  /// Récupère le status courant du StreetPath
+  /// Il est soit actif ou inactif.
+  Future<StreetPathStatus> getStatus();
 }
+
+enum StreetPathStatus { active, inactive }
