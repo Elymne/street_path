@@ -4,12 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'dart:io';
 
-class MockPathGateway extends Mock implements PathGateway {}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  late final pathGateway = MockPathGateway();
+  late final pathGateway = _MockPathGateway();
   late final ObjectBoxGateway objectboxGateway;
 
   setUpAll(() async {
@@ -29,3 +27,5 @@ void main() {
     expect(objectboxGateway.getConnector(), isNull);
   });
 }
+
+class _MockPathGateway extends Mock implements PathGateway {}

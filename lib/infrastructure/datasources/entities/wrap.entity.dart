@@ -8,9 +8,10 @@ class WrapEntity {
   @Unique()
   String id;
 
-  int createdAt;
+  @Unique()
   String contentId;
 
+  int createdAt;
   int storageMode;
   int shippingMode;
 

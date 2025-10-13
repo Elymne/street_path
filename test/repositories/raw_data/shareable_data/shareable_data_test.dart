@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/content_text.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/raw_data.entity.dart';
@@ -9,14 +10,12 @@ import 'package:poc_street_path/infrastructure/datasources/entities/wrap.entity.
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
-import '../../gateways/object_box_test.dart';
 
 /// Jeux de rests des différents comportements de l'applications avec des jeux de données étranges, valides ou non.
-///
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  late final pathGateway = MockPathGateway();
+  late final pathGateway = _MockPathGateway();
   late final ObjectBoxGateway objectboxGateway;
   late final RawDataRepositoryImpl rawDataRepositoryImpl;
 
@@ -79,3 +78,5 @@ void main() {
     expect("caca", "pipi");
   });
 }
+
+class _MockPathGateway extends Mock implements PathGateway {}

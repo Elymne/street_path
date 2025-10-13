@@ -78,6 +78,10 @@ class RawDataRepositoryImpl implements RawDataRepository {
           final model = ContentTextEntity.fromModel(content);
           model.bounces++;
           _boxContentText.put(model);
+          final wrap = _boxWrap.query(WrapEntity_.contentId.equals(content.id)).build().findFirst();
+          if (wrap != null) {
+            _boxWrap.remove(wrap.obId);
+          }
           _boxWrap.put(
             WrapEntity(
               id: Uuid().v4(),

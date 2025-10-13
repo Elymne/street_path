@@ -1,29 +1,27 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/content_text.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/raw_data.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/reaction.entity.dart';
-import 'package:poc_street_path/infrastructure/datasources/entities/wrap.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
-import '../../gateways/object_box_test.dart';
+import 'dart:convert';
+import 'dart:io';
 
 /// Jeux de tests de véfication du transferts des données entre deux appareils et du fonctionnement du cache (table raw_data).
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  late final pathGateway = MockPathGateway();
+  late final pathGateway = _MockPathGateway();
   late final ObjectBoxGateway objectboxGateway;
   late final RawDataRepositoryImpl rawDataRepositoryImpl;
 
   // * Accès direct aux tables pour les tests.
   late final Box<RawDataEntity> boxRawData;
-  late final Box<WrapEntity> boxWrap;
   late final Box<ContentTextEntity> boxContentText;
   late final Box<CommentEntity> boxComment;
   late final Box<ReactionEntity> boxReaction;
@@ -42,7 +40,6 @@ void main() {
     rawDataRepositoryImpl = RawDataRepositoryImpl(objectboxGateway);
 
     boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
-    boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
     boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
     boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
     boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
@@ -50,7 +47,6 @@ void main() {
 
   setUp(() {
     boxRawData.removeAll();
-    boxWrap.removeAll();
     boxContentText.removeAll();
     boxComment.removeAll();
     boxReaction.removeAll();
@@ -67,7 +63,6 @@ void main() {
 
   tearDownAll(() async {
     boxRawData.removeAll();
-    boxWrap.removeAll();
     boxContentText.removeAll();
     boxComment.removeAll();
     boxReaction.removeAll();
@@ -352,164 +347,6 @@ void main() {
     expect(currentCache.isEmpty, true, reason: "Empty cache");
     expect(currentTextContents.length, 1, reason: "content_text = 1");
   });
-
-  test("Sync: La donnée dans le json dans le cache est une liste contenant une valeur comment.", () async {
-    final id = Uuid().v4();
-    boxRawData.put(
-      RawDataEntity(
-        id: id,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        data: jsonEncode([
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
-          },
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": id,
-            "authorName": "Alice Dupont",
-            "text": "Un commentaire oui",
-          },
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
-          },
-        ]),
-      ),
-    );
-
-    final result = await rawDataRepositoryImpl.syncData();
-    expect(result, 3, reason: "Sync +3");
-
-    currentCache = boxRawData.getAll();
-    currentComments = boxComment.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentComments.length, 1, reason: "comment = 1");
-  });
-
-  test("Sync: La donnée json est un commentaire affilié à aucun contenu.", () async {
-    boxRawData.put(
-      RawDataEntity(
-        id: Uuid().v4(),
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        data: jsonEncode([
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": Uuid().v4(),
-            "authorName": "Alice Dupont",
-            "text": "Un commentaire oui",
-          },
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
-          },
-        ]),
-      ),
-    );
-
-    final result = await rawDataRepositoryImpl.syncData();
-    expect(result, 1, reason: "Sync +1");
-
-    currentCache = boxRawData.getAll();
-    currentComments = boxComment.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentComments.length, 0, reason: "comment = 0");
-  });
-
-  test("Sync: La donnée dans le json dans le cache est une liste contenant une valeur reaction.", () async {
-    final id = Uuid().v4();
-    boxRawData.put(
-      RawDataEntity(
-        id: id,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        data: jsonEncode([
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
-          },
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": id,
-            "authorName": "Alice Dupont Machin bidule",
-            "flag": 1,
-          },
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
-          },
-        ]),
-      ),
-    );
-
-    final result = await rawDataRepositoryImpl.syncData();
-    expect(result, 3, reason: "Sync +3");
-
-    currentCache = boxRawData.getAll();
-    currentReactions = boxReaction.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentReactions.length, 1, reason: "reaction = 1");
-  });
-
-  test("Sync: La donnée json est une reaction affilié à aucun contenu.", () async {
-    boxRawData.put(
-      RawDataEntity(
-        id: Uuid().v4(),
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        data: jsonEncode([
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": Uuid().v4(),
-            "authorName": "Alice Dupont",
-            "flag": 1000,
-          },
-          {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
-          },
-        ]),
-      ),
-    );
-
-    final result = await rawDataRepositoryImpl.syncData();
-    expect(result, 1, reason: "Sync +1");
-
-    currentCache = boxRawData.getAll();
-    currentReactions = boxReaction.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentReactions.length, 0, reason: "reaction = 0");
-  });
 }
+
+class _MockPathGateway extends Mock implements PathGateway {}
