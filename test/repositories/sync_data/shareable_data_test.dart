@@ -27,6 +27,12 @@ void main() {
   late final Box<CommentEntity> boxComment;
   late final Box<ReactionEntity> boxReaction;
 
+  // * Contenu de tests.
+  List<RawDataEntity> currentCache = [];
+  List<ContentTextEntity> currentTextContents = [];
+  List<CommentEntity> currentComments = [];
+  List<ReactionEntity> currentReactions = [];
+
   setUpAll(() async {
     final dir = Directory.systemTemp.createTempSync('shareable_data_test')..path;
     when(() => pathGateway.getBaseDir()).thenAnswer((maleficumInvocationDelaMuerteJeSaisPasAQuoiSertCeTruc) async => dir.path);
@@ -34,15 +40,11 @@ void main() {
     await objectboxGateway.connect();
     rawDataRepositoryImpl = RawDataRepositoryImpl(objectboxGateway);
 
-    boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
-    boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
-    boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
     boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
+    boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
+    boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
+    boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
     boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
-  });
-
-  tearDownAll(() async {
-    await objectboxGateway.disconnect();
   });
 
   setUp(() {
@@ -51,11 +53,29 @@ void main() {
     boxContentText.removeAll();
     boxComment.removeAll();
     boxReaction.removeAll();
+
+    currentCache = boxRawData.getAll();
+    currentTextContents = boxContentText.getAll();
+    currentComments = boxComment.getAll();
+    currentReactions = boxReaction.getAll();
+    expect(currentCache.isEmpty, true, reason: "Empty on start");
+    expect(currentTextContents.isEmpty, true, reason: "Empty on start");
+    expect(currentComments.isEmpty, true, reason: "Empty on start");
+    expect(currentReactions.isEmpty, true, reason: "Empty on start");
   });
 
-  test("Aucune données de cache RawData. La sync se passe sans problèmes. Table de contenu toujours vide.", () async {
-    await rawDataRepositoryImpl.syncData();
+  tearDownAll(() async {
+    boxRawData.removeAll();
+    boxWrap.removeAll();
+    boxContentText.removeAll();
+    boxComment.removeAll();
+    boxReaction.removeAll();
+    await objectboxGateway.disconnect();
+  });
 
-    expect(3, 3);
+  test("OMG LE TEST DE BAISé WESH", () async {
+    await rawDataRepositoryImpl.syncData();
+    // * Enorme la blague.
+    expect("caca", "pipi");
   });
 }
