@@ -14,7 +14,6 @@ import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import 'dart:io';
 
-/// Jeux de rests des différents comportements de l'applications avec des jeux de données étranges, valides ou non.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -109,7 +108,7 @@ void main() {
     expect(data.length, 1);
   });
 
-  test("Shareable: juste un contenu quelconque + des commentaires et des réactions.", () async {
+  test("Shareable: juste un contenu quelconque + des coms et des reacts.", () async {
     final id = Uuid().v4();
     boxContentText.put(
       ContentTextEntity(
@@ -131,16 +130,93 @@ void main() {
         shippingMode: ShippingMode.normal.value,
       ),
     );
-    boxComment.put(
-      CommentEntity(id: Uuid().v4(), contentId: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: "Someone", text: "text"),
-    );
     boxReaction.put(
-      ReactionEntity(id: Uuid().v4(), contentId: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: "Someone", flag: -1),
+      ReactionEntity(
+        id: Uuid().v4(),
+        contentId: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: "authorName long?",
+        flag: 1,
+      ),
+    );
+    boxComment.put(
+      CommentEntity(
+        id: Uuid().v4(),
+        contentId: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: "authorName long?",
+        text: "text",
+      ),
     );
 
     final json = await rawDataRepositoryImpl.findShareableData(10, 7);
     final data = jsonDecode(json);
     expect(data.length, 3);
+  });
+
+  test("Shareable: grosse limite sur le nombre de trucs partageable, on doit sélectionner pour de vrai.", () async {
+    final id1 = Uuid().v4();
+    final id2 = Uuid().v4();
+    final id3 = Uuid().v4();
+    boxContentText.putMany([
+      ContentTextEntity(
+        id: id1,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: "Author",
+        flowName: "flowName",
+        bounces: 0,
+        title: "title",
+        text: "text",
+      ),
+      ContentTextEntity(
+        id: id2,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: "Author",
+        flowName: "flowName",
+        bounces: 0,
+        title: "title",
+        text: "text",
+      ),
+      ContentTextEntity(
+        id: id3,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: "Author",
+        flowName: "flowName",
+        bounces: 0,
+        title: "title",
+        text: "text",
+      ),
+    ]);
+
+    boxWrap.putMany([
+      WrapEntity(
+        id: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        contentId: id1,
+        storageMode: StorageMode.normal.value,
+        shippingMode: ShippingMode.creator.value,
+      ),
+      WrapEntity(
+        id: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        contentId: id2,
+        storageMode: StorageMode.normal.value,
+        shippingMode: ShippingMode.important.value,
+      ),
+      WrapEntity(
+        id: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        contentId: id3,
+        storageMode: StorageMode.normal.value,
+        shippingMode: ShippingMode.normal.value,
+      ),
+    ]);
+
+    final json = await rawDataRepositoryImpl.findShareableData(2, 7);
+    final data = jsonDecode(json);
+    expect(data.length, 2);
+    expect(data[0]["id"], id1);
+    expect(data[1]["id"], id2);
   });
 }
 
