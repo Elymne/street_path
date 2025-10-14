@@ -10,6 +10,7 @@ import 'package:poc_street_path/domain/models/contents/content.model.dart';
 /// ------------------------------------------------------------
 abstract class ContentRepository {
   /// Ajoute un nouveau contenu dans la base de données.
+  /// [Content] est une valeur abstraite, il faut que l'implémentation gère cela.
   /// Retourne : [String] L'id généré par la création d'un post.
   Future<String> add(Content content);
 }

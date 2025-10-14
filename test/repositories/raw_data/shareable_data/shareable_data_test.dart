@@ -5,7 +5,7 @@ import 'package:poc_street_path/infrastructure/datasources/entities/reaction.ent
 import 'package:poc_street_path/infrastructure/datasources/entities/wrap.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
-import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
+import 'package:poc_street_path/domain/models/subcontents/wrap.model.dart';
 import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:flutter_test/flutter_test.dart';

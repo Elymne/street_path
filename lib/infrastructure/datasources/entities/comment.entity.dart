@@ -1,5 +1,5 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:poc_street_path/domain/models/contents/comment.model.dart';
+import 'package:poc_street_path/domain/models/subcontents/comment.model.dart';
 
 @Entity()
 class CommentEntity {
