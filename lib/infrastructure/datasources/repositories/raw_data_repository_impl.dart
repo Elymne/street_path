@@ -1,9 +1,13 @@
 import 'package:poc_street_path/domain/models/contents/comment.model.dart';
+import 'package:poc_street_path/domain/models/contents/content_link.model.dart';
+import 'package:poc_street_path/domain/models/contents/content_media.model.dart';
 import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
 import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/comment.entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_link_entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_media_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_text_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/caches/raw_data_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/reaction_entity.dart';
@@ -13,10 +17,13 @@ import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
+// TODO: J'aime pas du tout comment fonctionne cette classe.
 class RawDataRepositoryImpl implements RawDataRepository {
   late final Box<RawDataEntity> _boxRawData;
   late final Box<WrapEntity> _boxWrap;
   late final Box<ContentTextEntity> _boxContentText;
+  late final Box<ContentLinkEntity> _boxContentLink;
+  late final Box<ContentMediaEntity> _boxContentMedia;
   late final Box<CommentEntity> _boxComment;
   late final Box<ReactionEntity> _boxReaction;
 
@@ -24,6 +31,8 @@ class RawDataRepositoryImpl implements RawDataRepository {
     _boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
     _boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
     _boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
+    _boxContentLink = objectboxGateway.getConnector()!.box<ContentLinkEntity>();
+    _boxContentMedia = objectboxGateway.getConnector()!.box<ContentMediaEntity>();
     _boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
     _boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
   }
@@ -58,7 +67,10 @@ class RawDataRepositoryImpl implements RawDataRepository {
 
     final textContents = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find().map((elem) => elem.toModel());
     data.addAll(textContents);
-    // todo : Ajouter tous les types de contenus.
+    final linkContents = _boxContentLink.query(ContentLinkEntity_.id.oneOf(ids)).build().find().map((elem) => elem.toModel());
+    data.addAll(linkContents);
+    final mediaContents = _boxContentMedia.query(ContentMediaEntity_.id.oneOf(ids)).build().find().map((elem) => elem.toModel());
+    data.addAll(mediaContents);
 
     final reactions = _boxReaction.query(ReactionEntity_.contentId.oneOf(ids)).build().find().map((elem) => elem.toModel());
     data.addAll(reactions);
@@ -104,6 +116,54 @@ class RawDataRepositoryImpl implements RawDataRepository {
           added++;
         }
 
+        if (ContentLink.isValidJson(data)) {
+          final content = ContentLink.fromJson(data);
+          if (_boxContentLink.query(ContentLinkEntity_.id.equals(content.id)).build().find().isNotEmpty) {
+            continue;
+          }
+          final model = ContentLinkEntity.fromModel(content);
+          model.bounces++;
+          _boxContentLink.put(model);
+          final wrap = _boxWrap.query(WrapEntity_.contentId.equals(content.id)).build().findFirst();
+          if (wrap != null) {
+            _boxWrap.remove(wrap.obId);
+          }
+          _boxWrap.put(
+            WrapEntity(
+              id: Uuid().v4(),
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              contentId: content.id,
+              storageMode: StorageMode.normal.value,
+              shippingMode: ShippingMode.normal.value,
+            ),
+          );
+          added++;
+        }
+
+        if (ContentMedia.isValidJson(data)) {
+          final content = ContentMedia.fromJson(data);
+          if (_boxContentMedia.query(ContentMediaEntity_.id.equals(content.id)).build().find().isNotEmpty) {
+            continue;
+          }
+          final model = ContentMediaEntity.fromModel(content);
+          model.bounces++;
+          _boxContentMedia.put(model);
+          final wrap = _boxWrap.query(WrapEntity_.contentId.equals(content.id)).build().findFirst();
+          if (wrap != null) {
+            _boxWrap.remove(wrap.obId);
+          }
+          _boxWrap.put(
+            WrapEntity(
+              id: Uuid().v4(),
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              contentId: content.id,
+              storageMode: StorageMode.normal.value,
+              shippingMode: ShippingMode.normal.value,
+            ),
+          );
+          added++;
+        }
+
         if (Comment.isValidJson(data)) {
           final comment = Comment.fromJson(data);
           if (_boxComment.query(CommentEntity_.id.equals(comment.id)).build().find().isNotEmpty) {
@@ -129,7 +189,7 @@ class RawDataRepositoryImpl implements RawDataRepository {
         }
       }
     }
-    _boxRawData.removeAll(); // * Cler du cache.
+    _boxRawData.removeAll(); // * Clear du cache.
     return added;
   }
 }
