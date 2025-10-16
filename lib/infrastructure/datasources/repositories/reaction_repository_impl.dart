@@ -1,8 +1,8 @@
-import 'package:objectbox/objectbox.dart';
 import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/reaction_entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
+import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
 
 class ReactionRepositoryImpl implements ReactionRepository {
@@ -28,8 +28,8 @@ class ReactionRepositoryImpl implements ReactionRepository {
   }
 
   @override
-  Future<List<Reaction>> findFromContent(String contentId) {
-    // TODO: implement findFromContent
-    throw UnimplementedError();
+  Future<List<Reaction>> findFromContent(String contentId) async {
+    final condition = ReactionEntity_.contentId.equals(contentId);
+    return _boxReaction.query(condition).build().find().map((elem) => elem.toModel()).toList();
   }
 }
