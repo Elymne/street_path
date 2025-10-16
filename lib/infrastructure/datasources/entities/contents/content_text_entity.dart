@@ -1,6 +1,5 @@
-import 'package:objectbox/objectbox.dart';
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
 import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
+import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class ContentTextEntity {
@@ -40,7 +39,7 @@ class ContentTextEntity {
     );
   }
 
-  Content toModel() {
+  ContentText toModel() {
     return ContentText(
       id: id,
       createdAt: createdAt,

@@ -1,6 +1,6 @@
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
 
-class ContentImage extends Content {
+class ContentMedia extends Content {
   static final Map<String, Type> allowed = {
     'id': String,
     'createdAt': int,
@@ -15,7 +15,7 @@ class ContentImage extends Content {
   final String path;
   final String description;
 
-  ContentImage({
+  ContentMedia({
     required super.id,
     required super.createdAt,
     required super.authorName,
@@ -26,8 +26,8 @@ class ContentImage extends Content {
     required this.description,
   });
 
-  factory ContentImage.fromJson(Map<String, dynamic> json) {
-    return ContentImage(
+  factory ContentMedia.fromJson(Map<String, dynamic> json) {
+    return ContentMedia(
       id: json['id'] as String,
       createdAt: json['createdAt'] as int,
       authorName: json['authorName'] as String,

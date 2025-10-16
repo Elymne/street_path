@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:poc_street_path/domain/gateways/path.gateway.dart';
-import 'package:poc_street_path/infrastructure/datasources/entities/comment.entity.dart';
-import 'package:poc_street_path/infrastructure/datasources/entities/content_text.entity.dart';
-import 'package:poc_street_path/infrastructure/datasources/entities/raw_data.entity.dart';
-import 'package:poc_street_path/infrastructure/datasources/entities/reaction.entity.dart';
-import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_impl.repository.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/contents/comment.entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_text_entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/caches/raw_data_entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/contents/reaction_entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';

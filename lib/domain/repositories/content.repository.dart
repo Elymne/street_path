@@ -9,8 +9,10 @@ import 'package:poc_street_path/domain/models/contents/content.model.dart';
 ///   Ne dépend d'aucune technologie spécifique.
 /// ------------------------------------------------------------
 abstract class ContentRepository {
-  /// Ajoute un nouveau contenu dans la base de données.
+  /// Recherche le plus de contenu possible dans la base de données.
   /// [Content] est une valeur abstraite, il faut que l'implémentation gère cela.
-  /// Retourne : [String] L'id généré par la création d'un post.
-  Future<String> add(Content content);
+  /// createdWhile [int] permet de filtrer par vieillesse.
+  /// flows [List] de [String] permet de filtrer par Flows.
+  /// Retourne : [List] de [Content].
+  Future<List<Content>> findMany({int? createdWhile, List<String>? flows});
 }

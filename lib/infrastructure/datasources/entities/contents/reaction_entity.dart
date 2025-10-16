@@ -1,5 +1,5 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:poc_street_path/domain/models/subcontents/reaction.model.dart';
+import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 
 @Entity()
 class ReactionEntity {

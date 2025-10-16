@@ -1,7 +1,7 @@
 import 'package:poc_street_path/core/model.dart';
-import 'package:poc_street_path/domain/models/subcontents/comment.model.dart';
+import 'package:poc_street_path/domain/models/contents/comment.model.dart';
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
-import 'package:poc_street_path/domain/models/subcontents/reaction.model.dart';
+import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 
 /// ------------------------------------------------------------
 /// Class: Flow
