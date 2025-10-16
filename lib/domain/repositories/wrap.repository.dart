@@ -9,11 +9,15 @@ import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
 ///   Ne dépend d'aucune technologie spécifique.
 /// ------------------------------------------------------------
 abstract class WrapRepository {
-  /// Ajoute un nouveau contenu dans la base de données.
-  /// Retourne : [String] L'id généré par la création d'un post.
-  Future<String> add(Wrap wrap);
+  /// Change le mode de transfert d'un contenu à l'aide de son Wrap.
+  /// Si aucun changement ne subsiste sans erreur, on retourne false.
+  Future<bool> changeShippingMode(String contentId, ShippingMode shippingMode);
+
+  /// Change le mode de transfert d'un contenu à l'aide de son Wrap.
+  /// Si aucun changement ne subsiste sans erreur, on retourne false.
+  Future<bool> changeStorageMode(String contentId, StorageMode storageMode);
 
   /// Récupere une enveloppe contenu dans la base de données.
   /// Retourne : [Wrap] Le contenu Wrapé.
-  Future<Wrap?> findOneByContent(String contentId);
+  Future<Wrap?> findOneFromContent(String contentId);
 }

@@ -4,15 +4,15 @@ import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
 import 'package:poc_street_path/domain/repositories/wrap.repository.dart';
 
-class FindWrapByID extends Usecase<FindContentByIdParams, Wrap> {
+class FindWrap extends Usecase<FindWrapParams, Wrap> {
   final WrapRepository _wrapRepository;
 
-  FindWrapByID(this._wrapRepository);
+  FindWrap(this._wrapRepository);
 
   @override
-  Future<Result<Wrap>> execute(FindContentByIdParams params) async {
+  Future<Result<Wrap>> execute(FindWrapParams params) async {
     try {
-      final wrap = await _wrapRepository.findOneByContent(params.id);
+      final wrap = await _wrapRepository.findOneFromContent(params.id);
       if (wrap == null) {
         return Failure("Impossible de retourver le contenu en question");
       }
@@ -24,7 +24,7 @@ class FindWrapByID extends Usecase<FindContentByIdParams, Wrap> {
   }
 }
 
-class FindContentByIdParams {
+class FindWrapParams {
   final String id;
-  FindContentByIdParams({required this.id});
+  FindWrapParams({required this.id});
 }

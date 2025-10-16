@@ -28,13 +28,7 @@ class WrapRepositoryImpl extends WrapRepository {
   }
 
   @override
-  Future<String> add(Wrap wrap) {
-    // TODO: implement add
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Wrap?> findOneByContent(String contentId) async {
+  Future<Wrap?> findOneFromContent(String contentId) async {
     final List<Object?> contentsRes = await Future.wait([
       _boxContentText.query(ContentTextEntity_.id.equals(contentId)).build().findFirstAsync(),
       _boxContentLink.query(ContentLinkEntity_.id.equals(contentId)).build().findFirstAsync(),
@@ -72,5 +66,27 @@ class WrapRepositoryImpl extends WrapRepository {
     }
 
     return null;
+  }
+
+  @override
+  Future<bool> changeShippingMode(String contentId, ShippingMode shippingMode) async {
+    final wrap = _boxWrap.query(WrapEntity_.id.equals(contentId)).build().findFirst();
+    if (wrap == null) {
+      return false;
+    }
+
+    _boxWrap.put(wrap..shippingMode = shippingMode.value);
+    return true;
+  }
+
+  @override
+  Future<bool> changeStorageMode(String contentId, StorageMode storageMode) async {
+    final wrap = _boxWrap.query(WrapEntity_.id.equals(contentId)).build().findFirst();
+    if (wrap == null) {
+      return false;
+    }
+
+    _boxWrap.put(wrap..storageMode = storageMode.value);
+    return true;
   }
 }
