@@ -21,7 +21,6 @@ class ContentRepositoryImpl implements ContentRepository {
 
   @override
   Future<List<Content>> findMany({int? limit, int? createdWhile, List<String>? flows}) async {
-    // TODO : Gros rework sur la logique de fetch and la limite de data retourné.
     final List<Content> contents = [];
 
     // * Préparation des queries en fonction des paramètres.
