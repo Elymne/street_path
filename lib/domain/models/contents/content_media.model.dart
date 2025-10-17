@@ -34,7 +34,7 @@ class ContentMedia extends Content {
       bounces: json['bounces'] as int,
       flowName: json['flowName'] as String,
       title: json['title'] as String,
-      path: json['ref'] as String,
+      path: json['path'] as String,
       description: json['description'] as String,
     );
   }
