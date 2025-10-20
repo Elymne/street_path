@@ -23,30 +23,32 @@ class ContentRepositoryImpl implements ContentRepository {
   Future<List<Content>> findMany({int? limit, int? createdWhile, List<String>? flows}) async {
     final List<Content> contents = [];
 
-    // * Préparation des queries en fonction des paramètres.
-    final Condition<ContentTextEntity> contentTextQuery = ContentTextEntity_.id.notEquals("");
-    final Condition<ContentLinkEntity> contentLinkQuery = ContentLinkEntity_.id.notEquals("");
-    final Condition<ContentMediaEntity> contentMediaQuery = ContentMediaEntity_.id.notEquals("");
-
     // * Date queries.
+    Condition<ContentTextEntity> contentTextQueryDate = ContentTextEntity_.id.notEquals("");
+    Condition<ContentLinkEntity> contentLinkQueryDate = ContentLinkEntity_.id.notEquals("");
+    Condition<ContentMediaEntity> contentMediaQueryDate = ContentMediaEntity_.id.notEquals("");
     if (createdWhile != null) {
-      contentTextQuery.and(ContentTextEntity_.createdAt.greaterOrEqual(createdWhile));
-      contentLinkQuery.and(ContentLinkEntity_.createdAt.greaterOrEqual(createdWhile));
-      contentMediaQuery.and(ContentMediaEntity_.createdAt.greaterOrEqual(createdWhile));
+      final comparator = DateTime.now().millisecondsSinceEpoch - createdWhile;
+      contentTextQueryDate = ContentTextEntity_.createdAt.greaterOrEqual(comparator);
+      contentLinkQueryDate = ContentLinkEntity_.createdAt.greaterOrEqual(comparator);
+      contentMediaQueryDate = ContentMediaEntity_.createdAt.greaterOrEqual(comparator);
     }
 
     // * Flows name queries.
+    Condition<ContentTextEntity> contentTextQueryFlows = ContentTextEntity_.id.notEquals("");
+    Condition<ContentLinkEntity> contentLinkQueryFlows = ContentLinkEntity_.id.notEquals("");
+    Condition<ContentMediaEntity> contentMediaQueryFlows = ContentMediaEntity_.id.notEquals("");
     if (flows != null) {
-      contentTextQuery.and(ContentTextEntity_.flowName.oneOf(flows));
-      contentLinkQuery.and(ContentLinkEntity_.flowName.oneOf(flows));
-      contentMediaQuery.and(ContentMediaEntity_.flowName.oneOf(flows));
+      contentTextQueryFlows = ContentTextEntity_.flowName.oneOf(flows);
+      contentLinkQueryFlows = ContentLinkEntity_.flowName.oneOf(flows);
+      contentMediaQueryFlows = ContentMediaEntity_.flowName.oneOf(flows);
     }
 
     // * Big fetching
     final List<List<Object>> bigFetch = await Future.wait([
-      (_boxContentText.query(contentTextQuery).build()..limit = limit ?? globalLimit).findAsync(),
-      (_boxContentLink.query(contentLinkQuery).build()..limit = limit ?? globalLimit).findAsync(),
-      (_boxContentMedia.query(contentMediaQuery).build()..limit = limit ?? globalLimit).findAsync(),
+      (_boxContentText.query(contentTextQueryDate.and(contentTextQueryFlows)).build()..limit = limit ?? globalLimit).findAsync(),
+      (_boxContentLink.query(contentLinkQueryDate.and(contentLinkQueryFlows)).build()..limit = limit ?? globalLimit).findAsync(),
+      (_boxContentMedia.query(contentMediaQueryDate.and(contentMediaQueryFlows)).build()..limit = limit ?? globalLimit).findAsync(),
     ]);
 
     // * Big parsing.

@@ -110,6 +110,72 @@ void main() {
       expect(contents.length, 3);
     },
   );
+
+  test("ContentRepository: Récupération d'une liste de contenu limité.", () async {
+    final List<ContentTextEntity> contents = [];
+    for (var i = 0; i < 20; i++) {
+      contents.add(
+        ContentTextEntity(
+          id: Uuid().v4(),
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          authorName: 'author_$i',
+          flowName: 'flow_$i',
+          bounces: 0,
+          title: 'title_$i',
+          text: 'text content $i',
+        ),
+      );
+    }
+    boxContentText.putMany(contents);
+    final res1 = await contentRepository.findMany(limit: 10);
+    expect(res1.length, 10);
+
+    expect(boxContentText.removeAll(), 20);
+    final List<ContentTextEntity> contents2 = [];
+    for (var i = 0; i < 8; i++) {
+      contents2.add(
+        ContentTextEntity(
+          id: Uuid().v4(),
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          authorName: 'author_$i',
+          flowName: 'flow_$i',
+          bounces: 0,
+          title: 'title_$i',
+          text: 'text content $i',
+        ),
+      );
+    }
+
+    boxContentText.putMany(contents2);
+    final res2 = await contentRepository.findMany(limit: 10);
+    expect(res2.length, 8);
+  });
+
+  test("ContentRepository: Récupération d'une liste en fonction du timming.", () async {
+    final id = Uuid().v4();
+    boxContentText.put(
+      ContentTextEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch - 100_000,
+        authorName: "authorName",
+        flowName: "flowName",
+        bounces: 0,
+        title: "title",
+        text: "text",
+      ),
+    );
+
+    final res1 = await contentRepository.findMany(createdWhile: 10_000);
+    expect(res1.length, 0);
+    final res2 = await contentRepository.findMany(createdWhile: 200_000);
+    expect(res2.length, 1);
+  });
+
+  test("ContentRepository: Récupération d'une liste en fonction des flows.", () async {});
+
+  test("ContentRepository: Récupération d'une liste avec filtrage complet.", () async {});
+
+  test("ContentRepository: placeholdertest", () {});
 }
 
 class _MockPathGateway extends Mock implements PathGateway {}
