@@ -115,8 +115,23 @@ class ContentRepositoryImpl implements ContentRepository {
   }
 
   @override
-  Future<int> deleteMany(List<String> ids) {
-    // TODO: implement deleteMany
-    throw UnimplementedError();
+  Future<int> deleteMany(List<String> ids) async {
+    final idsRes = await Future.wait([
+      _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().findAsync(),
+      _boxContentLink.query(ContentLinkEntity_.id.oneOf(ids)).build().findAsync(),
+      _boxContentMedia.query(ContentMediaEntity_.id.oneOf(ids)).build().findAsync(),
+    ]);
+
+    final contentTextObid = (idsRes[0] as List<ContentTextEntity>).map((elem) => elem.obId).toList();
+    final contentLinkObid = (idsRes[0] as List<ContentLinkEntity>).map((elem) => elem.obId).toList();
+    final contentMediaObid = (idsRes[0] as List<ContentMediaEntity>).map((elem) => elem.obId).toList();
+
+    final deleteRes = await Future.wait([
+      _boxContentText.removeManyAsync(contentTextObid),
+      _boxContentLink.removeManyAsync(contentLinkObid),
+      _boxContentMedia.removeManyAsync(contentMediaObid),
+    ]);
+
+    return deleteRes[0] + deleteRes[1] + deleteRes[2];
   }
 }
