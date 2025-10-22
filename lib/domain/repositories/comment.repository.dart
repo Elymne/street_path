@@ -16,4 +16,9 @@ abstract class CommentRepository {
   /// Permet d'ajouter un commentaire.
   /// Le commentaire sera ajouté peut-importe si le contenu existe ou non. C'est au usecase de gérer cela.
   Future<String> add(String contentId, String authorName, String text);
+
+  /// Supprimes toutes les commentaires associés aux contenus.
+  /// Fournir une [List] de [String] ids de contenus.
+  /// returne : [int] Le nombre de commentaires supprimés.
+  Future<int> deleteByContents(List<String> ids);
 }

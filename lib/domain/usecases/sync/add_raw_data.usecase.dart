@@ -11,7 +11,7 @@ class AddRawData extends Usecase<AddRawDataParams, String> {
   @override
   Future<Result<String>> execute(AddRawDataParams params) async {
     try {
-      return Success(await _rawDataRepository.add(params.data));
+      return Success(await _rawDataRepository.add(params.stringyData));
     } catch (err, stack) {
       SpLog().e("AddRawData: Une exception a été levée.", err, stack: stack);
       return Failure("Une erreur s'est produite lors de l'ajout d'une donnée brute…");
@@ -20,6 +20,6 @@ class AddRawData extends Usecase<AddRawDataParams, String> {
 }
 
 class AddRawDataParams {
-  final String data;
-  AddRawDataParams({required this.data});
+  final String stringyData;
+  AddRawDataParams({required this.stringyData});
 }

@@ -12,7 +12,7 @@ class FindContents extends Usecase<FindContentParams, List<Content>> {
   @override
   Future<Result<List<Content>>> execute(FindContentParams params) async {
     try {
-      final contents = await _contentRepository.findMany(createdWhile: params.createWhile, flows: params.flows);
+      final contents = await _contentRepository.findMany(minTime: params.createWhile, flows: params.flows);
       return Success(contents);
     } catch (err, stack) {
       SpLog().e("FindContents: Une exception a été levée.", err, stack: stack);

@@ -165,15 +165,63 @@ void main() {
       ),
     );
 
-    final res1 = await contentRepository.findMany(createdWhile: 10_000);
+    final res1 = await contentRepository.findMany(minTime: 10_000);
     expect(res1.length, 0);
-    final res2 = await contentRepository.findMany(createdWhile: 200_000);
+
+    final res2 = await contentRepository.findMany(minTime: 200_000);
     expect(res2.length, 1);
   });
 
-  test("ContentRepository: Récupération d'une liste en fonction des flows.", () async {});
+  test("ContentRepository: Récupération d'une liste en fonction des flows.", () async {
+    final id = Uuid().v4();
+    boxContentText.put(
+      ContentTextEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch - 100_000,
+        authorName: "authorName",
+        flowName: "normal",
+        bounces: 0,
+        title: "title",
+        text: "text",
+      ),
+    );
 
-  test("ContentRepository: Récupération d'une liste avec filtrage complet.", () async {});
+    final res1 = await contentRepository.findMany(flows: ["important", "useless"]);
+    expect(res1.length, 0);
+
+    final res2 = await contentRepository.findMany(flows: ["normal"]);
+    expect(res2.length, 1);
+
+    final res3 = await contentRepository.findMany(flows: ["normal", "important"]);
+    expect(res3.length, 1);
+  });
+
+  test("ContentRepository: Récupération d'une liste avec filtrage complet.", () async {
+    final id = Uuid().v4();
+    boxContentText.put(
+      ContentTextEntity(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch - 100_000,
+        authorName: "authorName",
+        flowName: "normal",
+        bounces: 0,
+        title: "title",
+        text: "text",
+      ),
+    );
+
+    final res1 = await contentRepository.findMany(flows: ["useless"], minTime: 10_000);
+    expect(res1.length, 0);
+
+    final res2 = await contentRepository.findMany(flows: ["useless"], minTime: 200_000);
+    expect(res2.length, 0);
+
+    final res3 = await contentRepository.findMany(flows: ["normal"], minTime: 10_000);
+    expect(res3.length, 0);
+
+    final res4 = await contentRepository.findMany(flows: ["normal"], minTime: 200_000);
+    expect(res4.length, 1);
+  });
 
   test("ContentRepository: placeholdertest", () {});
 }

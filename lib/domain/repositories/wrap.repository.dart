@@ -20,4 +20,9 @@ abstract class WrapRepository {
   /// Récupere une enveloppe contenu dans la base de données.
   /// Retourne : [Wrap] Le contenu Wrapé.
   Future<Wrap?> findOneFromContent(String contentId);
+
+  /// Supprimes tous les wraps associés aux contenus.
+  /// Fournir une [List] de [String] ids de contenus.
+  /// returne : [int] Le nombre de wrap supprimés.
+  Future<int> deleteByContents(List<String> ids);
 }

@@ -20,18 +20,31 @@ class ContentRepositoryImpl implements ContentRepository {
   }
 
   @override
-  Future<List<Content>> findMany({int? limit, int? createdWhile, List<String>? flows}) async {
+  Future<List<Content>> findMany({int? minTime, int? maxTime, List<String>? flows, int? limit}) async {
+    // todo : Ne gère pas le minTime + maxTime en même temps (parce que pas d'utilité pour l'instant). Je préfère retourner une exception directement juste au cas où.
+    // todo : Dans tous les cas, j'implémenterais ce truc plus tard.
+    if (minTime != null && maxTime != null) {
+      throw Exception("MinTime and MaxTime combination not supported yet by ContentReposutory ObjectBox implementation.");
+    }
+
     final List<Content> contents = [];
 
     // * Date queries.
     Condition<ContentTextEntity> contentTextQueryDate = ContentTextEntity_.id.notEquals("");
     Condition<ContentLinkEntity> contentLinkQueryDate = ContentLinkEntity_.id.notEquals("");
     Condition<ContentMediaEntity> contentMediaQueryDate = ContentMediaEntity_.id.notEquals("");
-    if (createdWhile != null) {
-      final comparator = DateTime.now().millisecondsSinceEpoch - createdWhile;
+    if (minTime != null) {
+      final comparator = DateTime.now().millisecondsSinceEpoch - minTime;
       contentTextQueryDate = ContentTextEntity_.createdAt.greaterOrEqual(comparator);
       contentLinkQueryDate = ContentLinkEntity_.createdAt.greaterOrEqual(comparator);
       contentMediaQueryDate = ContentMediaEntity_.createdAt.greaterOrEqual(comparator);
+    }
+
+    if (maxTime != null) {
+      final comparator = DateTime.now().millisecondsSinceEpoch - maxTime;
+      contentTextQueryDate = ContentTextEntity_.createdAt.lessOrEqual(comparator);
+      contentLinkQueryDate = ContentLinkEntity_.createdAt.lessOrEqual(comparator);
+      contentMediaQueryDate = ContentMediaEntity_.createdAt.lessOrEqual(comparator);
     }
 
     // * Flows name queries.
@@ -67,6 +80,12 @@ class ContentRepositoryImpl implements ContentRepository {
   }
 
   @override
+  Future<List<Content>> findForSizeDeletion(int limit) {
+    // TODO: implement findForSizeDeletion
+    throw UnimplementedError();
+  }
+
+  @override
   Future<Content?> findUnique(String id) async {
     final res = await Future.wait([
       _boxContentText.query().build().findFirstAsync(),
@@ -93,5 +112,11 @@ class ContentRepositoryImpl implements ContentRepository {
       return true;
     }
     return false;
+  }
+
+  @override
+  Future<int> deleteMany(List<String> ids) {
+    // TODO: implement deleteMany
+    throw UnimplementedError();
   }
 }

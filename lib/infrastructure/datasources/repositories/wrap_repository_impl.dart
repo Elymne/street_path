@@ -89,4 +89,10 @@ class WrapRepositoryImpl extends WrapRepository {
     _boxWrap.put(wrap..storageMode = storageMode.value);
     return true;
   }
+
+  @override
+  Future<int> deleteByContents(List<String> ids) {
+    // TODO: implement deleteByContents
+    throw UnimplementedError();
+  }
 }
