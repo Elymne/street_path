@@ -91,8 +91,10 @@ class WrapRepositoryImpl extends WrapRepository {
   }
 
   @override
-  Future<int> deleteByContents(List<String> ids) {
-    // TODO: implement deleteByContents
-    throw UnimplementedError();
+  Future<int> deleteByContents(List<String> ids) async {
+    final wraps = _boxWrap.query(WrapEntity_.contentId.oneOf(ids)).build().find();
+    final idsDelete = wraps.map((elem) => elem.obId).toList();
+    _boxReaction.removeMany(idsDelete);
+    return idsDelete.length;
   }
 }

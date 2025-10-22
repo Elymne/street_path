@@ -17,7 +17,7 @@ class CommentRepositoryImpl implements CommentRepository {
     final id = Uuid().v4();
     _boxComment.put(
       CommentEntity(
-        // * linebreaker.
+        // * linebreaker - vscode.
         id: id,
         contentId: contentId,
         createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -35,8 +35,10 @@ class CommentRepositoryImpl implements CommentRepository {
   }
 
   @override
-  Future<int> deleteByContents(List<String> ids) {
-    // TODO: implement deleteByContents
-    throw UnimplementedError();
+  Future<int> deleteByContents(List<String> ids) async {
+    final comments = _boxComment.query(CommentEntity_.contentId.oneOf(ids)).build().find();
+    final idsDelete = comments.map((elem) => elem.obId).toList();
+    _boxComment.removeMany(idsDelete);
+    return idsDelete.length;
   }
 }

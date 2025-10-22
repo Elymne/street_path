@@ -34,8 +34,10 @@ class ReactionRepositoryImpl implements ReactionRepository {
   }
 
   @override
-  Future<int> deleteByContents(List<String> ids) {
-    // TODO: implement deleteByContents
-    throw UnimplementedError();
+  Future<int> deleteByContents(List<String> ids) async {
+    final reactions = _boxReaction.query(ReactionEntity_.contentId.oneOf(ids)).build().find();
+    final idsDelete = reactions.map((elem) => elem.obId).toList();
+    _boxReaction.removeMany(idsDelete);
+    return idsDelete.length;
   }
 }
