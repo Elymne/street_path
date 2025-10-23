@@ -16,9 +16,4 @@ abstract class ReactionRepository {
   /// Permet d'ajouter une nouvelle réaction.
   /// La réaction sera ajouté peut-importe si le contenu existe ou non. C'est au usecase de gérer cela.
   Future<String> add(String contentId, String authorName, ReactionType flag);
-
-  /// Supprimes toutes les reactions associées aux contenus.
-  /// Fournir une [List] de [String] ids de contenus.
-  /// returne : [int] Le nombre de reactions supprimées.
-  Future<int> deleteByContents(List<String> ids);
 }

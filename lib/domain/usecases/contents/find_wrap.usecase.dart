@@ -12,7 +12,7 @@ class FindWrap extends Usecase<FindWrapParams, Wrap> {
   @override
   Future<Result<Wrap>> execute(FindWrapParams params) async {
     try {
-      final wrap = await _wrapRepository.findOneFromContent(params.id);
+      final wrap = await _wrapRepository.findUnique(params.id);
       if (wrap == null) {
         return Failure("Impossible de retourver le contenu en question");
       }

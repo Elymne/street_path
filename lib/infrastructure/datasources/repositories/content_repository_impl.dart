@@ -1,19 +1,23 @@
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_link_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_media_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_text_entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/contents/wrap_entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 
 class ContentRepositoryImpl implements ContentRepository {
   final int globalLimit = 100;
 
+  late final Box<WrapEntity> _boxWrap;
   late final Box<ContentTextEntity> _boxContentText;
   late final Box<ContentLinkEntity> _boxContentLink;
   late final Box<ContentMediaEntity> _boxContentMedia;
 
   ContentRepositoryImpl(ObjectBoxGateway objectboxGateway) {
+    _boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
     _boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
     _boxContentLink = objectboxGateway.getConnector()!.box<ContentLinkEntity>();
     _boxContentMedia = objectboxGateway.getConnector()!.box<ContentMediaEntity>();
@@ -77,61 +81,5 @@ class ContentRepositoryImpl implements ContentRepository {
 
     // * Return data
     return contents;
-  }
-
-  @override
-  Future<List<Content>> findForSizeDeletion(int limit) {
-    // TODO: implement findForSizeDeletion
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Content?> findUnique(String id) async {
-    final res = await Future.wait([
-      _boxContentText.query().build().findFirstAsync(),
-      _boxContentLink.query().build().findFirstAsync(),
-      _boxContentMedia.query().build().findFirstAsync(),
-    ]);
-
-    if (res[0] != null) return (res[0] as ContentTextEntity).toModel();
-    if (res[1] != null) return (res[0] as ContentLinkEntity).toModel();
-    if (res[2] != null) return (res[0] as ContentMediaEntity).toModel();
-    return null;
-  }
-
-  @override
-  Future<bool> exists(String id) async {
-    final res = await Future.wait([
-      _boxContentText.query().build().findFirstAsync(),
-      _boxContentLink.query().build().findFirstAsync(),
-      _boxContentMedia.query().build().findFirstAsync(),
-    ]);
-
-    for (var content in res as List<Content?>) {
-      if (content == null) continue;
-      return true;
-    }
-    return false;
-  }
-
-  @override
-  Future<int> deleteMany(List<String> ids) async {
-    final idsRes = await Future.wait([
-      _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().findAsync(),
-      _boxContentLink.query(ContentLinkEntity_.id.oneOf(ids)).build().findAsync(),
-      _boxContentMedia.query(ContentMediaEntity_.id.oneOf(ids)).build().findAsync(),
-    ]);
-
-    final contentTextObid = (idsRes[0] as List<ContentTextEntity>).map((elem) => elem.obId).toList();
-    final contentLinkObid = (idsRes[0] as List<ContentLinkEntity>).map((elem) => elem.obId).toList();
-    final contentMediaObid = (idsRes[0] as List<ContentMediaEntity>).map((elem) => elem.obId).toList();
-
-    final deleteRes = await Future.wait([
-      _boxContentText.removeManyAsync(contentTextObid),
-      _boxContentLink.removeManyAsync(contentLinkObid),
-      _boxContentMedia.removeManyAsync(contentMediaObid),
-    ]);
-
-    return deleteRes[0] + deleteRes[1] + deleteRes[2];
   }
 }

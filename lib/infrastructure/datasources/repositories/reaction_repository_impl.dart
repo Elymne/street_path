@@ -32,12 +32,4 @@ class ReactionRepositoryImpl implements ReactionRepository {
     final condition = ReactionEntity_.contentId.equals(contentId);
     return _boxReaction.query(condition).build().find().map((elem) => elem.toModel()).toList();
   }
-
-  @override
-  Future<int> deleteByContents(List<String> ids) async {
-    final reactions = _boxReaction.query(ReactionEntity_.contentId.oneOf(ids)).build().find();
-    final idsDelete = reactions.map((elem) => elem.obId).toList();
-    _boxReaction.removeMany(idsDelete);
-    return idsDelete.length;
-  }
 }

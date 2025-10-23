@@ -28,44 +28,62 @@ class WrapRepositoryImpl extends WrapRepository {
   }
 
   @override
-  Future<Wrap?> findOneFromContent(String contentId) async {
+  Future<Wrap?> findUnique(String contentId) async {
     final List<Object?> contentsRes = await Future.wait([
       _boxContentText.query(ContentTextEntity_.id.equals(contentId)).build().findFirstAsync(),
       _boxContentLink.query(ContentLinkEntity_.id.equals(contentId)).build().findFirstAsync(),
       _boxContentMedia.query(ContentMediaEntity_.id.equals(contentId)).build().findFirstAsync(),
     ]);
 
+    // * Find if content exists.
+    Content? content;
     for (final elem in contentsRes) {
-      if (elem != null) {
-        Content? content;
-        if (elem is ContentTextEntity) content = elem.toModel();
-        if (elem is ContentLinkEntity) content = elem.toModel();
-        if (elem is ContentMediaEntity) content = elem.toModel();
-        if (content == null) {
-          return null;
-        }
-        // * Then find the rest.
-        final wrapEntity = _boxWrap.query(WrapEntity_.contentId.equals(contentId)).build().findFirst();
-        if (wrapEntity == null) {
-          // todo: Si il n'y a pas de Wrap, je devrais soit supprimer les données associés au wrap (message, contenu et reaction) ou alors créer le wrap.
-          return null;
-        }
-        final reactionEntities = _boxReaction.query(ReactionEntity_.contentId.equals(contentId)).build().find();
-        final commentEntities = _boxComment.query(CommentEntity_.contentId.equals(contentId)).build().find();
-
-        return Wrap(
-          id: wrapEntity.id,
-          createdAt: wrapEntity.createdAt,
-          content: content,
-          reaction: reactionEntities.map((elem) => elem.toModel()).toList(),
-          comments: commentEntities.map((elem) => elem.toModel()).toList(),
-          storageMode: StorageMode.fromValue(wrapEntity.storageMode),
-          shippingMode: ShippingMode.fromValue(wrapEntity.shippingMode),
-        );
-      }
+      if (elem == null) continue;
+      if (elem is ContentTextEntity) content = elem.toModel();
+      if (elem is ContentLinkEntity) content = elem.toModel();
+      if (elem is ContentMediaEntity) content = elem.toModel();
+    }
+    if (content == null) {
+      return null;
     }
 
-    return null;
+    // * Then find the rest.
+    final wrapEntity = _boxWrap.query(WrapEntity_.contentId.equals(contentId)).build().findFirst();
+    if (wrapEntity == null) {
+      // todo: Si il n'y a pas de Wrap, je devrais soit supprimer les données associés au wrap (message, contenu et reaction) ou alors créer le wrap.
+      return null;
+    }
+    final reactionEntities = _boxReaction.query(ReactionEntity_.contentId.equals(contentId)).build().find();
+    final commentEntities = _boxComment.query(CommentEntity_.contentId.equals(contentId)).build().find();
+
+    return Wrap(
+      id: wrapEntity.id,
+      createdAt: wrapEntity.createdAt,
+      content: content!,
+      reaction: reactionEntities.map((elem) => elem.toModel()).toList(),
+      comments: commentEntities.map((elem) => elem.toModel()).toList(),
+      storageMode: StorageMode.fromValue(wrapEntity.storageMode),
+      shippingMode: ShippingMode.fromValue(wrapEntity.shippingMode),
+    );
+  }
+
+  @override
+  Future<List<Wrap>> findMany(
+    int chunk,
+    int chunkSize, {
+    List<String>? flows,
+    int? createWhile,
+    StorageMode? storageMode,
+    ShippingMode? shippingMode,
+  }) {
+    // TODO: implement findMany
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> exists(String contentId) async {
+    final wrap = _boxWrap.query(WrapEntity_.contentId.equals(contentId)).build().findFirst();
+    return wrap != null;
   }
 
   @override
@@ -91,10 +109,38 @@ class WrapRepositoryImpl extends WrapRepository {
   }
 
   @override
-  Future<int> deleteByContents(List<String> ids) async {
-    final wraps = _boxWrap.query(WrapEntity_.contentId.oneOf(ids)).build().find();
-    final idsDelete = wraps.map((elem) => elem.obId).toList();
-    _boxReaction.removeMany(idsDelete);
-    return idsDelete.length;
+  Future<int> deleteMany(List<String> contentIds) async {
+    final wraps = _boxWrap.query(WrapEntity_.contentId.oneOf(contentIds)).build().find();
+    _boxReaction.removeMany(wraps.map((elem) => elem.obId).toList());
+
+    final comments = _boxComment.query(CommentEntity_.contentId.oneOf(contentIds)).build().find();
+    _boxComment.removeMany(comments.map((elem) => elem.obId).toList());
+
+    final reactions = _boxReaction.query(ReactionEntity_.contentId.oneOf(contentIds)).build().find();
+    _boxReaction.removeMany(reactions.map((elem) => elem.obId).toList());
+
+    final idsRes = await Future.wait([
+      _boxContentText.query(ContentTextEntity_.id.oneOf(contentIds)).build().findAsync(),
+      _boxContentLink.query(ContentLinkEntity_.id.oneOf(contentIds)).build().findAsync(),
+      _boxContentMedia.query(ContentMediaEntity_.id.oneOf(contentIds)).build().findAsync(),
+    ]);
+
+    final contentTextObid = (idsRes[0] as List<ContentTextEntity>).map((elem) => elem.obId).toList();
+    final contentLinkObid = (idsRes[0] as List<ContentLinkEntity>).map((elem) => elem.obId).toList();
+    final contentMediaObid = (idsRes[0] as List<ContentMediaEntity>).map((elem) => elem.obId).toList();
+
+    final deleteRes = await Future.wait([
+      _boxContentText.removeManyAsync(contentTextObid),
+      _boxContentLink.removeManyAsync(contentLinkObid),
+      _boxContentMedia.removeManyAsync(contentMediaObid),
+    ]);
+
+    return deleteRes[0] + deleteRes[1] + deleteRes[2];
+  }
+
+  @override
+  Future<List<String>> getClearableIds(int createdAfter, int maxSize) {
+    // TODO: implement getClearableIds
+    throw UnimplementedError();
   }
 }

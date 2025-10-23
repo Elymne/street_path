@@ -24,8 +24,8 @@ const int dayTimeValue = 86_400_000;
 // * Temps limite par défaut de la survie d'une donnée dans l'application.
 const int defaultDbDataTime = 432_000_000;
 
-// * La taille max par defaut que l'application peut stocker sur le téléphone de l'utilisateur. Cette valeur est utilisé si l'utilisateur ne définie pas une taille amximum.
-const int defaultDbLimitSize = 2_000 * 1024 * 1024; // 2go
+// * La taille max (octets) par defaut que l'application peut stocker sur le téléphone de l'utilisateur. Cette valeur est utilisé si l'utilisateur ne définie pas une taille maximum.
+const int defaultDbLimitSize = 2_000_000_000; // 2go
 
 // * Le nombre d'éléments supprimés automatiquement avant chaque vérification du poid des données de l'application.
 const int chunkDeleteCount = 10;

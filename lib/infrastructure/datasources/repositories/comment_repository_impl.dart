@@ -33,12 +33,4 @@ class CommentRepositoryImpl implements CommentRepository {
     final condition = CommentEntity_.contentId.equals(contentId);
     return _boxComment.query(condition).build().find().map((elem) => elem.toModel()).toList();
   }
-
-  @override
-  Future<int> deleteByContents(List<String> ids) async {
-    final comments = _boxComment.query(CommentEntity_.contentId.oneOf(ids)).build().find();
-    final idsDelete = comments.map((elem) => elem.obId).toList();
-    _boxComment.removeMany(idsDelete);
-    return idsDelete.length;
-  }
 }
