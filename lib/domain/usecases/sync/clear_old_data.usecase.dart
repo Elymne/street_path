@@ -5,6 +5,7 @@ import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/domain/repositories/wrap.repository.dart';
 
+// TODO: Mettre un garde fou.
 class ClearOldData extends Usecase<ClearOldDataParams, int> {
   final DatabaseGateway _databaseGateway;
   final WrapRepository _wrapRepository;

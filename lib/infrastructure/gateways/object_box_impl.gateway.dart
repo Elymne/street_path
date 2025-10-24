@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/domain/gateways/path.gateway.dart';
@@ -36,9 +38,18 @@ class ObjectBoxGateway implements DatabaseGateway<Store> {
   }
 
   @override
-  Future<int> getCurrentSize() {
-    // TODO: implement getCurrentSize
-    throw UnimplementedError();
+  Future<int> getCurrentSize() async {
+    final objectBoxDir = Directory(p.join(await _pathGateway.getBaseDir(), "object_box_database"));
+    if (!await objectBoxDir.exists()) {
+      return 0;
+    }
+    int totalBytes = 0;
+    await for (final entity in objectBoxDir.list(recursive: true, followLinks: false)) {
+      if (entity is File) {
+        totalBytes += await entity.length();
+      }
+    }
+    return totalBytes;
   }
 }
 

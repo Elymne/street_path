@@ -3,8 +3,8 @@
 /// Layer: Infrastructure
 ///
 /// Description:
-///   Interface décrivant les opérations disponibles pour manipuler la base de données interne de l'apoplication.
-///   [T] correspond à la classe utilisé pour manipuler les bases de données.
+///   Interface décrivant les opérations disponibles pour manipuler la base de données interne.
+///   [T] correspond à la classe utilisé pour manipuler la bases de données de l'instance.
 ///   [T] peut provenir d'une librarie externe ou interne.
 ///   Doit permettre la connexion, déconnexion et récupération de différentes informations sur la base de données.
 /// ------------------------------------------------------------

@@ -17,7 +17,6 @@ import 'package:poc_street_path/objectbox.g.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
-// TODO: J'aime pas du tout comment fonctionne cette classe.
 class RawDataRepositoryImpl implements RawDataRepository {
   late final Box<RawDataEntity> _boxRawData;
   late final Box<WrapEntity> _boxWrap;

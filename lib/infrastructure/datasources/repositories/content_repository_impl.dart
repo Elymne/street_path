@@ -1,23 +1,19 @@
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
-import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_link_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_media_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_text_entity.dart';
-import 'package:poc_street_path/infrastructure/datasources/entities/contents/wrap_entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 
 class ContentRepositoryImpl implements ContentRepository {
   final int globalLimit = 100;
 
-  late final Box<WrapEntity> _boxWrap;
   late final Box<ContentTextEntity> _boxContentText;
   late final Box<ContentLinkEntity> _boxContentLink;
   late final Box<ContentMediaEntity> _boxContentMedia;
 
   ContentRepositoryImpl(ObjectBoxGateway objectboxGateway) {
-    _boxWrap = objectboxGateway.getConnector()!.box<WrapEntity>();
     _boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
     _boxContentLink = objectboxGateway.getConnector()!.box<ContentLinkEntity>();
     _boxContentMedia = objectboxGateway.getConnector()!.box<ContentMediaEntity>();
