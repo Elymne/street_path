@@ -51,19 +51,26 @@ abstract class WrapRepository {
     ShippingMode? shippingMode,
   });
 
-  /// Récupère la liste des ids [String] des données qu'on peut supprimer automatiquement.
-  /// Une données est considéré supprimable automatiquement en fonction de sa date de création peut-importe la quantité de données stocké en DB.
-  /// Si le poid des données dépasse le quota, on doit aussi supprimer les anciennes données jusqu'à ce que le poid soit considéré comme valide.
-  /// Le paramètre createdAfter [int] correspond à la date de création max d'un [Wrap] arpès quoi il sera automatiquement supprimé.
-  /// Le paramètre maxSize [int] correspond au poid max supporté (en octet) par l'app avant que de la suppression automatique des données ne soit enclanché.
-  ///
-  /// Return: Liste de [String]
-  Future<List<String>> getClearableIds(int createdAfter, int maxSize);
-
   /// Supprimes tous les [Wrap] en fonction de la liste d'ids [String] fournit en paramètres.
   /// Nécessite une liste de [String] contenant les ids des contenus.
   /// Supprimes aussi les [Content], [Comment] et [Reaction] associé au [Wrap].
   ///
   /// returne : [int] Le nombre de wrap supprimés.
   Future<int> deleteMany(List<String> contentIds);
+
+  /// Récupère une liste d'id de [Wrap] qui sont plus vieux que la date limite fournit en paramètre.
+  /// Cette fonction est utilise pour supprimer automatiquement les vieilles données stockés sur l'app.
+  /// Le paramètre createdAfter [int] correspond à la date de création max d'un [Wrap].
+  ///
+  /// Retourne une liste d'ids [String]
+  Future<List<String>> getIdsByDateLimit(int createdAfter);
+
+  /// Récupère les ids les plus vieux.
+  /// Ne prend pas en compte les données que l'utilisateur souhaite garder, cf [StorageMode].
+  ///
+  /// Le paramètre [int] number correspond au nombre d'éléments que vous souhaitez récupérer.
+  /// Cette fonction sert à supprimer de manière séquencé les vieilles data lorsque l'application prend trop place.
+  ///
+  /// Retourne une liste d'ids [String]
+  Future<List<String>> getOldestIds(int number);
 }

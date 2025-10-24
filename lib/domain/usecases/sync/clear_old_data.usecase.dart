@@ -1,3 +1,4 @@
+import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
@@ -15,22 +16,13 @@ class ClearOldData extends Usecase<ClearOldDataParams, int> {
     try {
       int deleteCount = 0;
 
-      // // * Vérification de la date de créations des contenu les plus vieux.
-      // final timeLimit = params.timeLimit ?? defaultDbDataTime;
-      // final idsDeleteTime = (await _contentRepository.findMany(maxTime: timeLimit)).map((elem) => elem.id).toList();
-      // if (idsDeleteTime.isNotEmpty) {
-      //   // * Suppression par date de création max.
-      //   final deletedByTimeRes = await Future.wait([_wrapRepository.deleteMany(idsDeleteTime)]);
-      //   deleteCount = deleteCount + deletedByTimeRes[0];
-      // }
+      final firstBatch = await _wrapRepository.getIdsByDateLimit(defaultDbDataTime);
+      deleteCount = await _wrapRepository.deleteMany(firstBatch);
 
-      // // * Check selon le poid total.
-      // final baseLimit = params.sizeLimit ?? defaultDbLimitSize;
-      // while (baseLimit >= await _databaseGateway.getCurrentSize()) {
-      //   final idsDeleteSize = (await _contentRepository.findForAutoSuppresion(chunkDeleteCount)).map((elem) => elem.id).toList();
-      //   final deletedBySizeRes = await Future.wait([_wrapRepository.deleteMany(idsDeleteSize)]);
-      //   deleteCount = deleteCount + deletedBySizeRes[0];
-      // }
+      while (defaultDbLimitSize <= await _databaseGateway.getCurrentSize()) {
+        final newBatch = await _wrapRepository.getOldestIds(20);
+        deleteCount = await _wrapRepository.deleteMany(newBatch) + deleteCount;
+      }
 
       return Success(deleteCount);
     } catch (err, stack) {
