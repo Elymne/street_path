@@ -15,16 +15,14 @@ class CommentRepositoryImpl implements CommentRepository {
   @override
   Future<String> add(String contentId, String authorName, String text) async {
     final id = Uuid().v4();
-    _boxComment.put(
-      CommentEntity(
-        // * linebreaker - vscode.
-        id: id,
-        contentId: contentId,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        authorName: authorName,
-        text: text,
-      ),
+    final comment = CommentEntity(
+      id: id,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      contentId: contentId,
+      authorName: authorName,
+      text: text,
     );
+    _boxComment.put(comment);
     return id;
   }
 
