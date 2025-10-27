@@ -19,7 +19,7 @@ class AddComment extends Usecase<AddCommentParams, bool> {
       await _commentRepository.add(params.contentId, params.authorName, params.text);
       return Success(true);
     } catch (err, stack) {
-      SpLog().e("FindContents: Une exception a été levée.", err, stack: stack);
+      SpLog().e('FindContents: Une exception a été levée.', err, stack: stack);
       return Failure("Une erreur s'est produite lors de la récupération de la liste de contenu classique.");
     }
   }

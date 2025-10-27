@@ -27,7 +27,7 @@ class _State extends State<ShakleTextfield> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _ctrl.text = widget.value ?? "";
+    _ctrl.text = widget.value ?? '';
     _backgroundAnimCtrl = AnimationController(vsync: this, duration: _backgroundAnimTic);
     _backgroundAnim = Tween<double>(begin: -1.0, end: 1.0).animate(_backgroundAnimCtrl);
     _foregroundAnimCtrl = AnimationController(vsync: this, duration: _foregroundAnimTic);
@@ -66,7 +66,7 @@ class _State extends State<ShakleTextfield> with TickerProviderStateMixin {
                         Icon(widget.icon, color: Colors.transparent),
                         SizedBox(width: 20),
                         Text(
-                          _ctrl.text.isEmpty ? widget.label : " ",
+                          _ctrl.text.isEmpty ? widget.label : ' ',
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                         ),
                       ],
@@ -94,7 +94,7 @@ class _State extends State<ShakleTextfield> with TickerProviderStateMixin {
                       Icon(widget.icon, color: Theme.of(context).colorScheme.primary),
                       SizedBox(width: 20),
                       Text(
-                        _ctrl.text.isEmpty ? widget.label : "",
+                        _ctrl.text.isEmpty ? widget.label : '',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],

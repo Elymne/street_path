@@ -85,7 +85,7 @@ class _State extends ConsumerState<ShakleCard> with TickerProviderStateMixin {
                               Visibility(
                                 visible: widget.subtext != null,
                                 child: Text(
-                                  widget.subtext ?? "",
+                                  widget.subtext ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.primary),
@@ -144,7 +144,7 @@ class _State extends ConsumerState<ShakleCard> with TickerProviderStateMixin {
                               Visibility(
                                 visible: widget.subtext != null,
                                 child: Text(
-                                  widget.subtext ?? "",
+                                  widget.subtext ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.bodySmall,

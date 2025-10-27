@@ -53,7 +53,7 @@ class NearbyServiceImpl {
       callback: (devicesList) {
         final seensId = _seenDevices.map((elem) => elem.deviceId);
         for (final device in devicesList) {
-          SpLog().i("Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}");
+          SpLog().i('Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}');
 
           if (seensId.contains(device.deviceId)) {
             continue; // * Déjà vu, on skip.
@@ -63,7 +63,7 @@ class NearbyServiceImpl {
             continue; // * En cours de connexion, on skip en attendant le prochain event.
           }
 
-          final signature = device.deviceName.split(":")[0];
+          final signature = device.deviceName.split(':')[0];
           if (signature != streetPathSignatureName) {
             _seenDevices.add(_SeenDevice(deviceId: device.deviceId, at: DateTime.now().millisecondsSinceEpoch));
             continue; // * Mauvaise signature. On ajoute aux déjà vu et on skip.
@@ -86,9 +86,9 @@ class NearbyServiceImpl {
     // * Reception de data.
     _receivedDataSubscription = _nearbySevice.dataReceivedSubscription(
       callback: (data) {
-        SpLog().i("Data fetched from device : ${jsonEncode(data)}");
+        SpLog().i('Data fetched from device : ${jsonEncode(data)}');
         _addRawData.execute(AddRawDataParams(stringyData: jsonEncode(data)));
-        SpLog().i("Data injected into device");
+        SpLog().i('Data injected into device');
       },
     );
 

@@ -110,7 +110,7 @@ class _State extends State<ShakleTextfieldAutocomplete> with TickerProviderState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _controller.text.isEmpty ? widget.label : " ",
+                        _controller.text.isEmpty ? widget.label : ' ',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(color: _colorAnim.value),
                       ),
                       SizedBox(height: 10),
@@ -134,7 +134,7 @@ class _State extends State<ShakleTextfieldAutocomplete> with TickerProviderState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _controller.text.isEmpty ? widget.label : "",
+                      _controller.text.isEmpty ? widget.label : '',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                     SizedBox(height: 10),

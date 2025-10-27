@@ -5,7 +5,6 @@ import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/domain/repositories/wrap.repository.dart';
 
-// TODO: Mettre un garde fou.
 class ClearOldData extends Usecase<ClearOldDataParams, int> {
   final DatabaseGateway _databaseGateway;
   final WrapRepository _wrapRepository;
@@ -20,6 +19,7 @@ class ClearOldData extends Usecase<ClearOldDataParams, int> {
       final firstBatch = await _wrapRepository.getIdsByDateLimit(defaultDbDataTime);
       deleteCount = await _wrapRepository.deleteMany(firstBatch);
 
+      // TODO: Mettre un garde fou pour cycle infini.
       while (defaultDbLimitSize <= await _databaseGateway.getCurrentSize()) {
         final newBatch = await _wrapRepository.getOldestIds(20);
         deleteCount = await _wrapRepository.deleteMany(newBatch) + deleteCount;
@@ -27,7 +27,7 @@ class ClearOldData extends Usecase<ClearOldDataParams, int> {
 
       return Success(deleteCount);
     } catch (err, stack) {
-      SpLog().e("ClearOldData: Une exception a été levée.", err, stack: stack);
+      SpLog().e('ClearOldData: Une exception a été levée.', err, stack: stack);
       return Failure("Une erreur s'est produite lors la suppression automatique des contenus…");
     }
   }

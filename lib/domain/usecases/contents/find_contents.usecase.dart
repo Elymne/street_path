@@ -15,7 +15,7 @@ class FindContents extends Usecase<FindContentParams, List<Content>> {
       final contents = await _contentRepository.findMany(minTime: params.createWhile, flows: params.flows);
       return Success(contents);
     } catch (err, stack) {
-      SpLog().e("FindContents: Une exception a été levée.", err, stack: stack);
+      SpLog().e('FindContents: Une exception a été levée.', err, stack: stack);
       return Failure("Une erreur s'est produite lors de la récupération de la liste de contenu classique.");
     }
   }

@@ -16,12 +16,12 @@ void main() {
     objectboxGateway = ObjectBoxGateway(pathGateway);
   });
 
-  test("Connexion à la base de données. On doit avoir accès au connector.", () async {
+  test('Connexion à la base de données. On doit avoir accès au connector.', () async {
     await objectboxGateway.connect();
     expect(objectboxGateway.getConnector(), isNotNull);
   });
 
-  test("Connexion puis déconnexion à la base de donnée. On ne doit plus avoir au connector.", () async {
+  test('Connexion puis déconnexion à la base de donnée. On ne doit plus avoir au connector.', () async {
     await objectboxGateway.connect();
     await objectboxGateway.disconnect();
     expect(objectboxGateway.getConnector(), isNull);

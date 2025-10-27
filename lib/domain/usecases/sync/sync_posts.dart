@@ -13,7 +13,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
     try {
       return Success(await _rawDataRepository.syncData());
     } catch (err, stack) {
-      SpLog().e("SyncPost: Une exception a été levée.", err, stack: stack);
+      SpLog().e('SyncPost: Une exception a été levée.', err, stack: stack);
       return Failure("Une erreur s'est produite lors de la synchronisation des données BLE/WIFI…");
     }
   }

@@ -11,7 +11,7 @@ import 'package:poc_street_path/presentation/application/mobile_app.dart';
 import 'package:poc_street_path/presentation/application/web_app.dart';
 
 Future main() async {
-  await Future.wait([initializeDateFormatting("fr_FR", null), dotenv.load(fileName: ".env")]);
+  await Future.wait([initializeDateFormatting('fr_FR', null), dotenv.load(fileName: '.env')]);
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
 

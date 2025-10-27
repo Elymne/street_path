@@ -62,11 +62,11 @@ void main() {
     currentTextContents = boxContentText.getAll();
     currentComments = boxComment.getAll();
     currentReactions = boxReaction.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty on start");
-    expect(currentWraps.isEmpty, true, reason: "Empty on start");
-    expect(currentTextContents.isEmpty, true, reason: "Empty on start");
-    expect(currentComments.isEmpty, true, reason: "Empty on start");
-    expect(currentReactions.isEmpty, true, reason: "Empty on start");
+    expect(currentCache.isEmpty, true, reason: 'Empty on start');
+    expect(currentWraps.isEmpty, true, reason: 'Empty on start');
+    expect(currentTextContents.isEmpty, true, reason: 'Empty on start');
+    expect(currentComments.isEmpty, true, reason: 'Empty on start');
+    expect(currentReactions.isEmpty, true, reason: 'Empty on start');
   });
 
   tearDownAll(() async {
@@ -86,27 +86,27 @@ void main() {
         createdAt: DateTime.now().millisecondsSinceEpoch,
         data: jsonEncode([
           {
-            "id": id,
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+            'id': id,
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'authorName': 'Alice Dupont',
+            'bounces': 2,
+            'flowName': 'MarketingFlow',
+            'title': 'Nouvelle campagne automnale',
+            'text': 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.',
           },
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": id,
-            "authorName": "Alice Dupont Machin bidule",
-            "text": "Petit commentaire",
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'contentId': id,
+            'authorName': 'Alice Dupont Machin bidule',
+            'text': 'Petit commentaire',
           },
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": id,
-            "authorName": "Alice Dupont Machin bidule",
-            "flag": 1000,
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'contentId': id,
+            'authorName': 'Alice Dupont Machin bidule',
+            'flag': 1000,
           },
         ]),
       ),
@@ -127,7 +127,7 @@ void main() {
     expect(currentWraps[0].storageMode, StorageMode.normal.value);
   });
 
-  test("Sync: Aucune collusion de Wrap résiduel (no exception)", () async {
+  test('Sync: Aucune collusion de Wrap résiduel (no exception)', () async {
     final id = Uuid().v4();
     boxWrap.put(
       WrapEntity(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, contentId: id, storageMode: 0, shippingMode: 0),
@@ -138,27 +138,27 @@ void main() {
         createdAt: DateTime.now().millisecondsSinceEpoch,
         data: jsonEncode([
           {
-            "id": id,
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+            'id': id,
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'authorName': 'Alice Dupont',
+            'bounces': 2,
+            'flowName': 'MarketingFlow',
+            'title': 'Nouvelle campagne automnale',
+            'text': 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.',
           },
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": id,
-            "authorName": "Alice Dupont Machin bidule",
-            "text": "Petit commentaire",
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'contentId': id,
+            'authorName': 'Alice Dupont Machin bidule',
+            'text': 'Petit commentaire',
           },
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": id,
-            "authorName": "Alice Dupont Machin bidule",
-            "flag": 1000,
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'contentId': id,
+            'authorName': 'Alice Dupont Machin bidule',
+            'flag': 1000,
           },
         ]),
       ),

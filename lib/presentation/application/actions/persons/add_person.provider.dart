@@ -6,12 +6,12 @@ final addPersonProvider = FutureProvider.autoDispose.family<void, AddPersonProvi
   final response = await Dio().post<Map<String, dynamic>>(
     "${dotenv.env["HOST"]}/persons",
     data: {
-      "firstname": params.firstname,
-      "lastname": params.lastname,
-      "birthDate": params.birthDate.millisecondsSinceEpoch,
-      "zoneID": params.zoneID,
-      "activityID": params.activityID,
-      "companyID": params.companyID,
+      'firstname': params.firstname,
+      'lastname': params.lastname,
+      'birthDate': params.birthDate.millisecondsSinceEpoch,
+      'zoneID': params.zoneID,
+      'activityID': params.activityID,
+      'companyID': params.companyID,
     },
   );
 

@@ -42,8 +42,8 @@ void main() {
   setUp(() {
     boxWrap.removeAll();
     boxRawData.removeAll();
-    expect(boxWrap.getAll().isEmpty, true, reason: "Empty on start");
-    expect(boxRawData.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxWrap.getAll().isEmpty, true, reason: 'Empty on start');
+    expect(boxRawData.getAll().isEmpty, true, reason: 'Empty on start');
   });
 
   tearDownAll(() async {
@@ -56,22 +56,22 @@ void main() {
     "Wrap Repository: Un wrap est ajouté à partir d'une sync. On doit retrouver ce wrap avec le repository. Exemple avec un ContentText.",
     () async {
       final contentId = Uuid().v4();
-      final authorName = "Alice Dupont";
-      final flowName = "Marketing";
-      final title = "Nouvelle campagne automnale";
-      final text = "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.";
+      final authorName = 'Alice Dupont';
+      final flowName = 'Marketing';
+      final title = 'Nouvelle campagne automnale';
+      final text = 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.';
       final bounce = 11;
 
       rawDataRepository.add(
         jsonEncode([
           {
-            "id": contentId,
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": authorName,
-            "bounces": bounce,
-            "flowName": flowName,
-            "title": title,
-            "text": text,
+            'id': contentId,
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'authorName': authorName,
+            'bounces': bounce,
+            'flowName': flowName,
+            'title': title,
+            'text': text,
           },
         ]),
       );
@@ -94,24 +94,24 @@ void main() {
     "Wrap Repository: Un wrap est ajouté à partir d'une sync. On doit retrouver ce wrap avec le repository. Exemple avec un ContentLink.",
     () async {
       final contentId = Uuid().v4();
-      final authorName = "Alice Dupont";
-      final flowName = "Marketing";
+      final authorName = 'Alice Dupont';
+      final flowName = 'Marketing';
       final bounce = 11;
-      final title = "Nouvelle campagne automnale";
-      final ref = "h_ttps://mdr.com";
-      final description = "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.";
+      final title = 'Nouvelle campagne automnale';
+      final ref = 'h_ttps://mdr.com';
+      final description = 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.';
 
       rawDataRepository.add(
         jsonEncode([
           {
-            "id": contentId,
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": authorName,
-            "bounces": bounce,
-            "flowName": flowName,
-            "title": title,
-            "ref": ref,
-            "description": description,
+            'id': contentId,
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'authorName': authorName,
+            'bounces': bounce,
+            'flowName': flowName,
+            'title': title,
+            'ref': ref,
+            'description': description,
           },
         ]),
       );
@@ -135,24 +135,24 @@ void main() {
     "Wrap Repository: Un wrap est ajouté à partir d'une sync. On doit retrouver ce wrap avec le repository. Exemple avec un ContentMedia.",
     () async {
       final contentId = Uuid().v4();
-      final authorName = "Alice Dupont";
-      final flowName = "Marketing";
+      final authorName = 'Alice Dupont';
+      final flowName = 'Marketing';
       final bounce = 11;
-      final title = "Nouvelle campagne automnale";
-      final path = "dir/to/image";
-      final description = "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.";
+      final title = 'Nouvelle campagne automnale';
+      final path = 'dir/to/image';
+      final description = 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.';
 
       rawDataRepository.add(
         jsonEncode([
           {
-            "id": contentId,
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": authorName,
-            "bounces": bounce,
-            "flowName": flowName,
-            "title": title,
-            "path": path,
-            "description": description,
+            'id': contentId,
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'authorName': authorName,
+            'bounces': bounce,
+            'flowName': flowName,
+            'title': title,
+            'path': path,
+            'description': description,
           },
         ]),
       );

@@ -49,10 +49,10 @@ void main() {
     boxComment.removeAll();
     boxReaction.removeAll();
 
-    expect(boxRawData.getAll().isEmpty, true, reason: "Empty on start");
-    expect(boxContentText.getAll().isEmpty, true, reason: "Empty on start");
-    expect(boxComment.getAll().isEmpty, true, reason: "Empty on start");
-    expect(boxReaction.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxRawData.getAll().isEmpty, true, reason: 'Empty on start');
+    expect(boxContentText.getAll().isEmpty, true, reason: 'Empty on start');
+    expect(boxComment.getAll().isEmpty, true, reason: 'Empty on start');
+    expect(boxReaction.getAll().isEmpty, true, reason: 'Empty on start');
   });
 
   tearDownAll(() async {
@@ -70,17 +70,17 @@ void main() {
     expect(data.length, 0);
   });
 
-  test("Shareable: juste un contenu quelconque.", () async {
+  test('Shareable: juste un contenu quelconque.', () async {
     final id = Uuid().v4();
     boxContentText.put(
       ContentTextEntity(
         id: id,
         createdAt: DateTime.now().millisecondsSinceEpoch,
-        authorName: "Author",
-        flowName: "flowName",
+        authorName: 'Author',
+        flowName: 'flowName',
         bounces: 0,
-        title: "title",
-        text: "text",
+        title: 'title',
+        text: 'text',
       ),
     );
     boxWrap.put(
@@ -98,17 +98,17 @@ void main() {
     expect(data.length, 1);
   });
 
-  test("Shareable: juste un contenu quelconque + des coms et des reacts.", () async {
+  test('Shareable: juste un contenu quelconque + des coms et des reacts.', () async {
     final id = Uuid().v4();
     boxContentText.put(
       ContentTextEntity(
         id: id,
         createdAt: DateTime.now().millisecondsSinceEpoch,
-        authorName: "Author",
-        flowName: "flowName",
+        authorName: 'Author',
+        flowName: 'flowName',
         bounces: 0,
-        title: "title",
-        text: "text",
+        title: 'title',
+        text: 'text',
       ),
     );
     boxWrap.put(
@@ -125,7 +125,7 @@ void main() {
         id: Uuid().v4(),
         contentId: id,
         createdAt: DateTime.now().millisecondsSinceEpoch,
-        authorName: "authorName long?",
+        authorName: 'authorName long?',
         flag: 1,
       ),
     );
@@ -134,8 +134,8 @@ void main() {
         id: Uuid().v4(),
         contentId: id,
         createdAt: DateTime.now().millisecondsSinceEpoch,
-        authorName: "authorName long?",
-        text: "text",
+        authorName: 'authorName long?',
+        text: 'text',
       ),
     );
 
@@ -144,7 +144,7 @@ void main() {
     expect(data.length, 3);
   });
 
-  test("Shareable: grosse limite sur le nombre de trucs partageable, on doit sélectionner pour de vrai.", () async {
+  test('Shareable: grosse limite sur le nombre de trucs partageable, on doit sélectionner pour de vrai.', () async {
     final id1 = Uuid().v4();
     final id2 = Uuid().v4();
     final id3 = Uuid().v4();
@@ -152,29 +152,29 @@ void main() {
       ContentTextEntity(
         id: id1,
         createdAt: DateTime.now().millisecondsSinceEpoch,
-        authorName: "Author",
-        flowName: "flowName",
+        authorName: 'Author',
+        flowName: 'flowName',
         bounces: 0,
-        title: "title",
-        text: "text",
+        title: 'title',
+        text: 'text',
       ),
       ContentTextEntity(
         id: id2,
         createdAt: DateTime.now().millisecondsSinceEpoch,
-        authorName: "Author",
-        flowName: "flowName",
+        authorName: 'Author',
+        flowName: 'flowName',
         bounces: 0,
-        title: "title",
-        text: "text",
+        title: 'title',
+        text: 'text',
       ),
       ContentTextEntity(
         id: id3,
         createdAt: DateTime.now().millisecondsSinceEpoch,
-        authorName: "Author",
-        flowName: "flowName",
+        authorName: 'Author',
+        flowName: 'flowName',
         bounces: 0,
-        title: "title",
-        text: "text",
+        title: 'title',
+        text: 'text',
       ),
     ]);
 
@@ -205,8 +205,8 @@ void main() {
     final json = await rawDataRepositoryImpl.findShareableData(2, 7);
     final data = jsonDecode(json);
     expect(data.length, 2);
-    expect(data[0]["id"], id1);
-    expect(data[1]["id"], id2);
+    expect(data[0]['id'], id1);
+    expect(data[1]['id'], id2);
   });
 }
 

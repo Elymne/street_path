@@ -55,10 +55,10 @@ void main() {
     currentTextContents = boxContentText.getAll();
     currentComments = boxComment.getAll();
     currentReactions = boxReaction.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty on start");
-    expect(currentTextContents.isEmpty, true, reason: "Empty on start");
-    expect(currentComments.isEmpty, true, reason: "Empty on start");
-    expect(currentReactions.isEmpty, true, reason: "Empty on start");
+    expect(currentCache.isEmpty, true, reason: 'Empty on start');
+    expect(currentTextContents.isEmpty, true, reason: 'Empty on start');
+    expect(currentComments.isEmpty, true, reason: 'Empty on start');
+    expect(currentReactions.isEmpty, true, reason: 'Empty on start');
   });
 
   tearDownAll(() async {
@@ -69,7 +69,7 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test("Sync: La donnée dans le json dans le cache est une liste contenant une valeur reaction.", () async {
+  test('Sync: La donnée dans le json dans le cache est une liste contenant une valeur reaction.', () async {
     final id = Uuid().v4();
     boxRawData.put(
       RawDataEntity(
@@ -77,76 +77,76 @@ void main() {
         createdAt: DateTime.now().millisecondsSinceEpoch,
         data: jsonEncode([
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'authorName': 'Alice Dupont',
+            'bounces': 2,
+            'flowName': 'MarketingFlow',
+            'title': 'Nouvelle campagne automnale',
+            'text': 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.',
           },
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": id,
-            "authorName": "Alice Dupont Machin bidule",
-            "flag": 1,
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'contentId': id,
+            'authorName': 'Alice Dupont Machin bidule',
+            'flag': 1,
           },
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'authorName': 'Alice Dupont',
+            'bounces': 2,
+            'flowName': 'MarketingFlow',
+            'title': 'Nouvelle campagne automnale',
+            'text': 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.',
           },
         ]),
       ),
     );
 
     final result = await rawDataRepositoryImpl.syncData();
-    expect(result, 3, reason: "Sync +3");
+    expect(result, 3, reason: 'Sync +3');
 
     currentCache = boxRawData.getAll();
     currentReactions = boxReaction.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentReactions.length, 1, reason: "reaction = 1");
+    expect(currentCache.isEmpty, true, reason: 'Empty cache');
+    expect(currentReactions.length, 1, reason: 'reaction = 1');
   });
 
-  test("Sync: La donnée json est une reaction affilié à aucun contenu.", () async {
+  test('Sync: La donnée json est une reaction affilié à aucun contenu.', () async {
     boxRawData.put(
       RawDataEntity(
         id: Uuid().v4(),
         createdAt: DateTime.now().millisecondsSinceEpoch,
         data: jsonEncode([
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "contentId": Uuid().v4(),
-            "authorName": "Alice Dupont",
-            "flag": 1000,
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'contentId': Uuid().v4(),
+            'authorName': 'Alice Dupont',
+            'flag': 1000,
           },
           {
-            "id": Uuid().v4(),
-            "createdAt": DateTime.now().millisecondsSinceEpoch,
-            "authorName": "Alice Dupont",
-            "bounces": 2,
-            "flowName": "MarketingFlow",
-            "title": "Nouvelle campagne automnale",
-            "text": "Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.",
+            'id': Uuid().v4(),
+            'createdAt': DateTime.now().millisecondsSinceEpoch,
+            'authorName': 'Alice Dupont',
+            'bounces': 2,
+            'flowName': 'MarketingFlow',
+            'title': 'Nouvelle campagne automnale',
+            'text': 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.',
           },
         ]),
       ),
     );
 
     final result = await rawDataRepositoryImpl.syncData();
-    expect(result, 1, reason: "Sync +1");
+    expect(result, 1, reason: 'Sync +1');
 
     currentCache = boxRawData.getAll();
     currentReactions = boxReaction.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty cache");
-    expect(currentReactions.length, 0, reason: "reaction = 0");
+    expect(currentCache.isEmpty, true, reason: 'Empty cache');
+    expect(currentReactions.length, 0, reason: 'reaction = 0');
   });
 }
 

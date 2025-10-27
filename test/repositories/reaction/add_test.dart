@@ -31,7 +31,7 @@ void main() {
 
   setUp(() {
     boxReaction.removeAll();
-    expect(boxReaction.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxReaction.getAll().isEmpty, true, reason: 'Empty on start');
   });
 
   tearDownAll(() async {
@@ -40,9 +40,9 @@ void main() {
   });
 
   test(
-    "Comment Repository: On ajoute une réaction avec le repository. On doit retrouver ce commentaire dans la base de données.",
+    'Comment Repository: On ajoute une réaction avec le repository. On doit retrouver ce commentaire dans la base de données.',
     () async {
-      final authorName = "Michel Michel";
+      final authorName = 'Michel Michel';
       final reaction = ReactionType.like;
       final contentId = Uuid().v4();
       final idCreated = await reactionRepository.add(contentId, authorName, reaction);

@@ -42,8 +42,8 @@ class _State extends ConsumerState<SplashScreen> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ShakleText("", style: Theme.of(context).textTheme.displayLarge),
-              ShakleText("", style: Theme.of(context).textTheme.displayLarge),
+              ShakleText('', style: Theme.of(context).textTheme.displayLarge),
+              ShakleText('', style: Theme.of(context).textTheme.displayLarge),
             ],
           ),
         ),

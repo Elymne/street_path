@@ -14,11 +14,11 @@ class FindWrap extends Usecase<FindWrapParams, Wrap> {
     try {
       final wrap = await _wrapRepository.findUnique(params.id);
       if (wrap == null) {
-        return Failure("Impossible de retourver le contenu en question");
+        return Failure('Impossible de retourver le contenu en question');
       }
       return Success(wrap);
     } catch (err, stack) {
-      SpLog().e("FindWrapByID: Une exception a été levée.", err, stack: stack);
+      SpLog().e('FindWrapByID: Une exception a été levée.', err, stack: stack);
       return Failure("Une erreur s'est produite lors de la récupération d'un contenu Wrapé.");
     }
   }

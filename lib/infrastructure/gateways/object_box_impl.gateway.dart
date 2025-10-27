@@ -14,18 +14,18 @@ class ObjectBoxGateway implements DatabaseGateway<Store> {
   @override
   Future connect() async {
     if (_SingletonStore().store != null) {
-      SpLog().w("ObjectBoxGateway.connect: Instance de Store déjà existant.");
+      SpLog().w('ObjectBoxGateway.connect: Instance de Store déjà existant.');
       return;
     }
     SpLog().i("ObjectBoxGateway.connect: Tentative d'accès au Store…");
     await _SingletonStore().init(await _pathGateway.getBaseDir());
-    SpLog().i("ObjectBoxGateway.connect: Store instancié.");
+    SpLog().i('ObjectBoxGateway.connect: Store instancié.');
   }
 
   @override
   Future disconnect() async {
     _SingletonStore().close();
-    SpLog().i("ObjectBoxGateway.connect: Store détruit.");
+    SpLog().i('ObjectBoxGateway.connect: Store détruit.');
   }
 
   @override
@@ -39,7 +39,7 @@ class ObjectBoxGateway implements DatabaseGateway<Store> {
 
   @override
   Future<int> getCurrentSize() async {
-    final objectBoxDir = Directory(p.join(await _pathGateway.getBaseDir(), "object_box_database"));
+    final objectBoxDir = Directory(p.join(await _pathGateway.getBaseDir(), 'object_box_database'));
     if (!await objectBoxDir.exists()) {
       return 0;
     }
@@ -65,7 +65,7 @@ class _SingletonStore {
 
   Future<void> init(String path) async {
     if (_store != null) return;
-    _store = await openStore(directory: p.join(path, "object_box_database"));
+    _store = await openStore(directory: p.join(path, 'object_box_database'));
   }
 
   void close() {

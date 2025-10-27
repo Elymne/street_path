@@ -23,7 +23,7 @@ class MobileApp extends StatelessWidget {
 
     // * Run the views and styles.
     return MaterialApp(
-      title: "POC - Street Path",
+      title: 'POC - Street Path',
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

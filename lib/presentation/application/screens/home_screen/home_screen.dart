@@ -48,7 +48,7 @@ class _State extends ConsumerState<HomeScreen> {
                         Expanded(
                           child: ShakleHomeItem(
                             iconData: Icons.add_moderator_outlined,
-                            title: "",
+                            title: '',
                             onTap: () {
                               Navigator.of(context).push(
                                 PageRouteBuilder(
@@ -61,15 +61,15 @@ class _State extends ConsumerState<HomeScreen> {
                           ),
                         ),
                         SizedBox(width: 10),
-                        Expanded(child: ShakleHomeItem(iconData: Icons.person_search_outlined, title: "", onTap: () {})),
+                        Expanded(child: ShakleHomeItem(iconData: Icons.person_search_outlined, title: '', onTap: () {})),
                       ],
                     ),
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        Expanded(child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: "", onTap: () {})),
+                        Expanded(child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: '', onTap: () {})),
                         SizedBox(width: 10),
-                        Expanded(child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: "", onTap: () {})),
+                        Expanded(child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: '', onTap: () {})),
                       ],
                     ),
                     Expanded(child: SizedBox()),

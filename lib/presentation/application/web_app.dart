@@ -10,7 +10,7 @@ class WebApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "POC - Street Path",
+      title: 'POC - Street Path',
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -18,7 +18,7 @@ class WebApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale("fr"),
+      locale: const Locale('fr'),
       theme: CustomTheme.lightTheme,
       home: const SplashScreen(),
     );

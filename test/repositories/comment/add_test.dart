@@ -31,7 +31,7 @@ void main() {
 
   setUp(() {
     boxComment.removeAll();
-    expect(boxComment.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxComment.getAll().isEmpty, true, reason: 'Empty on start');
   });
 
   tearDownAll(() async {
@@ -40,9 +40,9 @@ void main() {
   });
 
   test(
-    "Comment Repository: On ajoute un commentaire avec le repository. On doit retrouver ce commentaire dans la base de données.",
+    'Comment Repository: On ajoute un commentaire avec le repository. On doit retrouver ce commentaire dans la base de données.',
     () async {
-      final authorName = "Michel Michel";
+      final authorName = 'Michel Michel';
       final text = "Pas d'accord avec ce post";
       final contentId = Uuid().v4();
       final idCreated = await commentRepository.add(contentId, authorName, text);

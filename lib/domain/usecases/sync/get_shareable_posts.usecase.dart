@@ -13,7 +13,7 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
     try {
       return Success(await _rawDataRepository.findShareableData(params.dataLimit, params.dayLimit));
     } catch (err, stack) {
-      SpLog().e("GetShareablePosts: Une exception a été levée.", err, stack: stack);
+      SpLog().e('GetShareablePosts: Une exception a été levée.', err, stack: stack);
       return Failure("Une erreur s'est produite en voulant récupérer les posts partageables…");
     }
   }

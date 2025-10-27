@@ -91,6 +91,7 @@ class RawDataRepositoryImpl implements RawDataRepository {
       }
 
       for (final data in dataList) {
+        // * CHECKER : ContentText.
         if (ContentText.isValidJson(data)) {
           final content = ContentText.fromJson(data);
           if (_boxContentText.query(ContentTextEntity_.id.equals(content.id)).build().find().isNotEmpty) {
@@ -115,12 +116,16 @@ class RawDataRepositoryImpl implements RawDataRepository {
           added++;
         }
 
+        // * CHECKER : ContentLink.
         if (ContentLink.isValidJson(data)) {
           final content = ContentLink.fromJson(data);
           if (_boxContentLink.query(ContentLinkEntity_.id.equals(content.id)).build().find().isNotEmpty) {
             continue;
           }
           final model = ContentLinkEntity.fromModel(content);
+
+          // todo: Check path validity.
+
           model.bounces++;
           _boxContentLink.put(model);
           final wrap = _boxWrap.query(WrapEntity_.contentId.equals(content.id)).build().findFirst();
@@ -139,6 +144,7 @@ class RawDataRepositoryImpl implements RawDataRepository {
           added++;
         }
 
+        // * CHECKER : ContentMedia.
         if (ContentMedia.isValidJson(data)) {
           final content = ContentMedia.fromJson(data);
           if (_boxContentMedia.query(ContentMediaEntity_.id.equals(content.id)).build().find().isNotEmpty) {
@@ -163,6 +169,7 @@ class RawDataRepositoryImpl implements RawDataRepository {
           added++;
         }
 
+        // * CHECKER : Comment.
         if (Comment.isValidJson(data)) {
           final comment = Comment.fromJson(data);
           if (_boxComment.query(CommentEntity_.id.equals(comment.id)).build().find().isNotEmpty) {
@@ -175,6 +182,7 @@ class RawDataRepositoryImpl implements RawDataRepository {
           added++;
         }
 
+        // * CHECKER : Reaction.
         if (Reaction.isValidJson(data)) {
           final reaction = Reaction.fromJson(data);
           if (_boxReaction.query(ReactionEntity_.id.equals(reaction.id)).build().find().isNotEmpty) {

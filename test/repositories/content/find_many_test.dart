@@ -41,9 +41,9 @@ void main() {
     boxContentLink.removeAll();
     boxContentMedia.removeAll();
 
-    expect(boxContentText.getAll().isEmpty, true, reason: "Empty on start");
-    expect(boxContentLink.getAll().isEmpty, true, reason: "Empty on start");
-    expect(boxContentMedia.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxContentText.getAll().isEmpty, true, reason: 'Empty on start');
+    expect(boxContentLink.getAll().isEmpty, true, reason: 'Empty on start');
+    expect(boxContentMedia.getAll().isEmpty, true, reason: 'Empty on start');
   });
 
   tearDownAll(() async {
@@ -53,47 +53,47 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test("ContentRepository: Récupération de la liste des contenus sans options. Aucune données en DB.", () async {
+  test('ContentRepository: Récupération de la liste des contenus sans options. Aucune données en DB.', () async {
     final contents = await contentRepository.findMany();
     expect(contents.length, 0);
   });
 
   test(
-    "ContentRepository: Récupération de la liste des contenus sans options. Quelques données de chaque type de contenu en DB.",
+    'ContentRepository: Récupération de la liste des contenus sans options. Quelques données de chaque type de contenu en DB.',
     () async {
       boxContentText.put(
         ContentTextEntity(
           id: Uuid().v4(),
           createdAt: DateTime.now().millisecondsSinceEpoch,
-          authorName: "authorName",
-          flowName: "flowName",
+          authorName: 'authorName',
+          flowName: 'flowName',
           bounces: 0,
-          title: "title",
-          text: "text",
+          title: 'title',
+          text: 'text',
         ),
       );
       boxContentLink.put(
         ContentLinkEntity(
           id: Uuid().v4(),
           createdAt: DateTime.now().millisecondsSinceEpoch,
-          authorName: "authorName",
-          flowName: "flowName",
+          authorName: 'authorName',
+          flowName: 'flowName',
           bounces: 0,
-          title: "title",
-          ref: "_https://linktosomewhere",
-          description: "",
+          title: 'title',
+          ref: '_https://linktosomewhere',
+          description: '',
         ),
       );
       boxContentMedia.put(
         ContentMediaEntity(
           id: Uuid().v4(),
           createdAt: DateTime.now().millisecondsSinceEpoch,
-          authorName: "authorName",
-          flowName: "flowName",
+          authorName: 'authorName',
+          flowName: 'flowName',
           bounces: 0,
-          title: "title",
-          path: "path/to/somewhere",
-          description: "description",
+          title: 'title',
+          path: 'path/to/somewhere',
+          description: 'description',
         ),
       );
       final contents = await contentRepository.findMany();
@@ -147,11 +147,11 @@ void main() {
       ContentTextEntity(
         id: id,
         createdAt: DateTime.now().millisecondsSinceEpoch - 100_000,
-        authorName: "authorName",
-        flowName: "flowName",
+        authorName: 'authorName',
+        flowName: 'flowName',
         bounces: 0,
-        title: "title",
-        text: "text",
+        title: 'title',
+        text: 'text',
       ),
     );
 
@@ -168,21 +168,21 @@ void main() {
       ContentTextEntity(
         id: id,
         createdAt: DateTime.now().millisecondsSinceEpoch - 100_000,
-        authorName: "authorName",
-        flowName: "normal",
+        authorName: 'authorName',
+        flowName: 'normal',
         bounces: 0,
-        title: "title",
-        text: "text",
+        title: 'title',
+        text: 'text',
       ),
     );
 
-    final res1 = await contentRepository.findMany(flows: ["important", "useless"]);
+    final res1 = await contentRepository.findMany(flows: ['important', 'useless']);
     expect(res1.length, 0);
 
-    final res2 = await contentRepository.findMany(flows: ["normal"]);
+    final res2 = await contentRepository.findMany(flows: ['normal']);
     expect(res2.length, 1);
 
-    final res3 = await contentRepository.findMany(flows: ["normal", "important"]);
+    final res3 = await contentRepository.findMany(flows: ['normal', 'important']);
     expect(res3.length, 1);
   });
 
@@ -192,28 +192,28 @@ void main() {
       ContentTextEntity(
         id: id,
         createdAt: DateTime.now().millisecondsSinceEpoch - 100_000,
-        authorName: "authorName",
-        flowName: "normal",
+        authorName: 'authorName',
+        flowName: 'normal',
         bounces: 0,
-        title: "title",
-        text: "text",
+        title: 'title',
+        text: 'text',
       ),
     );
 
-    final res1 = await contentRepository.findMany(flows: ["useless"], minTime: 10_000);
+    final res1 = await contentRepository.findMany(flows: ['useless'], minTime: 10_000);
     expect(res1.length, 0);
 
-    final res2 = await contentRepository.findMany(flows: ["useless"], minTime: 200_000);
+    final res2 = await contentRepository.findMany(flows: ['useless'], minTime: 200_000);
     expect(res2.length, 0);
 
-    final res3 = await contentRepository.findMany(flows: ["normal"], minTime: 10_000);
+    final res3 = await contentRepository.findMany(flows: ['normal'], minTime: 10_000);
     expect(res3.length, 0);
 
-    final res4 = await contentRepository.findMany(flows: ["normal"], minTime: 200_000);
+    final res4 = await contentRepository.findMany(flows: ['normal'], minTime: 200_000);
     expect(res4.length, 1);
   });
 
-  test("ContentRepository: placeholdertest", () {});
+  test('ContentRepository: placeholdertest', () {});
 }
 
 class _MockPathGateway extends Mock implements PathGateway {}

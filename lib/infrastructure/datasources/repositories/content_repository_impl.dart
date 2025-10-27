@@ -24,15 +24,15 @@ class ContentRepositoryImpl implements ContentRepository {
     // todo : Ne gère pas le minTime + maxTime en même temps (parce que pas d'utilité pour l'instant). Je préfère retourner une exception directement juste au cas où.
     // todo : Dans tous les cas, j'implémenterais ce truc plus tard.
     if (minTime != null && maxTime != null) {
-      throw Exception("MinTime and MaxTime combination not supported yet by ContentReposutory ObjectBox implementation.");
+      throw Exception('MinTime and MaxTime combination not supported yet by ContentReposutory ObjectBox implementation.');
     }
 
     final List<Content> contents = [];
 
     // * Date queries.
-    Condition<ContentTextEntity> contentTextQueryDate = ContentTextEntity_.id.notEquals("");
-    Condition<ContentLinkEntity> contentLinkQueryDate = ContentLinkEntity_.id.notEquals("");
-    Condition<ContentMediaEntity> contentMediaQueryDate = ContentMediaEntity_.id.notEquals("");
+    Condition<ContentTextEntity> contentTextQueryDate = ContentTextEntity_.id.notEquals('');
+    Condition<ContentLinkEntity> contentLinkQueryDate = ContentLinkEntity_.id.notEquals('');
+    Condition<ContentMediaEntity> contentMediaQueryDate = ContentMediaEntity_.id.notEquals('');
     if (minTime != null) {
       final comparator = DateTime.now().millisecondsSinceEpoch - minTime;
       contentTextQueryDate = ContentTextEntity_.createdAt.greaterOrEqual(comparator);
@@ -48,9 +48,9 @@ class ContentRepositoryImpl implements ContentRepository {
     }
 
     // * Flows name queries.
-    Condition<ContentTextEntity> contentTextQueryFlows = ContentTextEntity_.id.notEquals("");
-    Condition<ContentLinkEntity> contentLinkQueryFlows = ContentLinkEntity_.id.notEquals("");
-    Condition<ContentMediaEntity> contentMediaQueryFlows = ContentMediaEntity_.id.notEquals("");
+    Condition<ContentTextEntity> contentTextQueryFlows = ContentTextEntity_.id.notEquals('');
+    Condition<ContentLinkEntity> contentLinkQueryFlows = ContentLinkEntity_.id.notEquals('');
+    Condition<ContentMediaEntity> contentMediaQueryFlows = ContentMediaEntity_.id.notEquals('');
     if (flows != null) {
       contentTextQueryFlows = ContentTextEntity_.flowName.oneOf(flows);
       contentLinkQueryFlows = ContentLinkEntity_.flowName.oneOf(flows);

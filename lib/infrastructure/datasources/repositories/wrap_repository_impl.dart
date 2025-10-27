@@ -59,7 +59,7 @@ class WrapRepositoryImpl extends WrapRepository {
     return Wrap(
       id: wrapEntity.id,
       createdAt: wrapEntity.createdAt,
-      content: content!,
+      content: content,
       reaction: reactionEntities.map((elem) => elem.toModel()).toList(),
       comments: commentEntities.map((elem) => elem.toModel()).toList(),
       storageMode: StorageMode.fromValue(wrapEntity.storageMode),
