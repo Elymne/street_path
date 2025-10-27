@@ -1,0 +1,17 @@
+{
+    "search.exclude": {
+        "**/*.g.dart": true,
+        "**/*.freezed.dart": true,
+        "**/*.gr.dart": true,
+        "**/*.config.dart": true
+    },
+    "files.exclude": {
+        "**/*.g.dart": true,
+        "**/*.freezed.dart": true,
+        "**/*.gr.dart": true,
+        "**/*.config.dart": true,
+        // * Hide all git resources but 
+        "**/.git": false,
+        "**/.git/{branches,info,logs,objects,*refs,COMM*,desc*,*HEAD,index,}": true,
+    },
+}
