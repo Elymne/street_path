@@ -28,12 +28,6 @@ void main() {
   late final Box<CommentEntity> boxComment;
   late final Box<ReactionEntity> boxReaction;
 
-  // * Contenu de tests.
-  List<RawDataEntity> currentCache = [];
-  List<ContentTextEntity> currentTextContents = [];
-  List<CommentEntity> currentComments = [];
-  List<ReactionEntity> currentReactions = [];
-
   setUpAll(() async {
     final dir = Directory.systemTemp.createTempSync('shareable_data_test')..path;
     when(() => pathGateway.getBaseDir()).thenAnswer((_) async => dir.path);
@@ -55,14 +49,10 @@ void main() {
     boxComment.removeAll();
     boxReaction.removeAll();
 
-    currentCache = boxRawData.getAll();
-    currentTextContents = boxContentText.getAll();
-    currentComments = boxComment.getAll();
-    currentReactions = boxReaction.getAll();
-    expect(currentCache.isEmpty, true, reason: "Empty on start");
-    expect(currentTextContents.isEmpty, true, reason: "Empty on start");
-    expect(currentComments.isEmpty, true, reason: "Empty on start");
-    expect(currentReactions.isEmpty, true, reason: "Empty on start");
+    expect(boxRawData.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxContentText.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxComment.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxReaction.getAll().isEmpty, true, reason: "Empty on start");
   });
 
   tearDownAll(() async {
