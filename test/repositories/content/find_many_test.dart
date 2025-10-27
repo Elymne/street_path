@@ -23,19 +23,14 @@ void main() {
   late final Box<ContentLinkEntity> boxContentLink;
   late final Box<ContentMediaEntity> boxContentMedia;
 
-  // * Contenu de tests.
-  List<ContentTextEntity> currentTextContents = [];
-  List<ContentLinkEntity> currentLinkContents = [];
-  List<ContentMediaEntity> currentMediaContents = [];
-
   setUpAll(() async {
     pathGateway = _MockPathGateway();
     final dir = Directory.systemTemp.createTempSync('shareable_data_test')..path;
     when(() => pathGateway.getBaseDir()).thenAnswer((_) async => dir.path);
     objectboxGateway = ObjectBoxGateway(pathGateway);
     await objectboxGateway.connect();
-    contentRepository = ContentRepositoryImpl(objectboxGateway);
 
+    contentRepository = ContentRepositoryImpl(objectboxGateway);
     boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
     boxContentLink = objectboxGateway.getConnector()!.box<ContentLinkEntity>();
     boxContentMedia = objectboxGateway.getConnector()!.box<ContentMediaEntity>();
@@ -46,13 +41,9 @@ void main() {
     boxContentLink.removeAll();
     boxContentMedia.removeAll();
 
-    currentTextContents = boxContentText.getAll();
-    currentLinkContents = boxContentLink.getAll();
-    currentMediaContents = boxContentMedia.getAll();
-
-    expect(currentTextContents.isEmpty, true, reason: "Empty on start");
-    expect(currentLinkContents.isEmpty, true, reason: "Empty on start");
-    expect(currentMediaContents.isEmpty, true, reason: "Empty on start");
+    expect(boxContentText.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxContentLink.getAll().isEmpty, true, reason: "Empty on start");
+    expect(boxContentMedia.getAll().isEmpty, true, reason: "Empty on start");
   });
 
   tearDownAll(() async {
