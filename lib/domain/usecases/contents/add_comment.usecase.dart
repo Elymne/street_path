@@ -1,8 +1,10 @@
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
+import 'package:poc_street_path/domain/models/contents/comment.model.dart';
 import 'package:poc_street_path/domain/repositories/comment.repository.dart';
 import 'package:poc_street_path/domain/repositories/wrap.repository.dart';
+import 'package:uuid/uuid.dart';
 
 class AddComment extends Usecase<AddCommentParams, bool> {
   final CommentRepository _commentRepository;
@@ -16,7 +18,16 @@ class AddComment extends Usecase<AddCommentParams, bool> {
       if (await _wrapRepository.exists(params.contentId) == false) {
         return Success(false);
       }
-      await _commentRepository.add(params.contentId, params.authorName, params.text);
+
+      final newComment = Comment(
+        id: Uuid().v4(),
+        contentId: params.contentId,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: params.authorName,
+        text: params.text,
+      );
+      await _commentRepository.upsert(newComment);
+
       return Success(true);
     } catch (err, stack) {
       SpLog().e('FindContents: Une exception a été levée.', err, stack: stack);

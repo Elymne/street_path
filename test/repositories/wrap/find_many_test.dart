@@ -1,4 +1,3 @@
-import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/domain/repositories/wrap.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/caches/raw_data_entity.dart';
@@ -50,7 +49,7 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test('Wrap Repository: Plusieurs contenus sur une sync. On veut récupérer quelques wraps en fonction de quelques paramètres.', () async {
+  test('Wrap Repository: Il y a 4 wraps dans la base de données. On récupère plusieurs fois les données de manière différentes.', () async {
     final content1 = {
       'id': Uuid().v4(),
       'createdAt': DateTime.now().millisecondsSinceEpoch,
@@ -93,8 +92,18 @@ void main() {
       'description': 'Lancement de la campagne de vol v2 2025 avec focus sur les réseaux.',
     };
 
-    rawDataRepository.add(jsonEncode([content1, content2, content3, content4]));
-    rawDataRepository.syncData();
+    final content5 = {
+      'id': Uuid().v4(),
+      'createdAt': DateTime.now().millisecondsSinceEpoch,
+      'authorName': 'Alice Dupont',
+      'flowName': 'Marketing',
+      'bounces': 12,
+      'title': 'Nouvelle campagne automnale',
+      'text': 'Lancement de la campagne automne 2025 avec focus sur les réseaux sociaux.',
+    };
+
+    await rawDataRepository.add(jsonEncode([content1, content2, content3, content4, content5]));
+    await rawDataRepository.syncData();
 
     final wraps = await wrapRepository.findMany(1, 10);
   });

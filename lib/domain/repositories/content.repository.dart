@@ -9,13 +9,18 @@ import 'package:poc_street_path/domain/models/contents/content.model.dart';
 ///   Ne dépend d'aucune technologie spécifique.
 /// ------------------------------------------------------------
 abstract class ContentRepository {
+  /// Ajoute dans la DB un nouveau [Content].
+  /// [Content] est un modèle abstrait, ce qui veut dire que l'implémentation doit vérifier ce qu'étend vraiment la valeur content.
+  Future<void> upsert(Content content);
+
   /// Recherche le plus de contenu possible dans la base de données.
   /// Les valeurs retournées [Content] sont abstraites et doivent-être identifiés.
   ///
   /// limit [int] le nombre max d'éléments à récupérer.
   /// minTime [int] le temps de création minimum des contenus.
   /// maxTime [int] le temps de création maximum des contenus.
-  /// flows [List] de [String] permet de filtrer par àFlows.
+  /// flows [List] de [String] permet de filtrer par Flows.
+  ///
   /// Retourne : [List] de [Content].
   Future<List<Content>> findMany({int? limit, int? minTime, int? maxTime, List<String>? flows});
 }

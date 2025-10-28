@@ -4,6 +4,7 @@ import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
 import 'package:poc_street_path/domain/repositories/wrap.repository.dart';
+import 'package:uuid/uuid.dart';
 
 class AddReaction extends Usecase<AddReactionParams, bool> {
   final ReactionRepository _reactionRepository;
@@ -17,7 +18,14 @@ class AddReaction extends Usecase<AddReactionParams, bool> {
       if (await _wrapRepository.exists(params.contentId) == false) {
         return Success(false);
       }
-      await _reactionRepository.add(params.contentId, params.authorName, params.flag);
+      final newReaction = Reaction(
+        contentId: params.contentId,
+        id: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: params.authorName,
+        flag: params.flag,
+      );
+      await _reactionRepository.upsert(newReaction);
       return Success(true);
     } catch (err, stack) {
       SpLog().e('FindContents: Une exception a été levée.', err, stack: stack);

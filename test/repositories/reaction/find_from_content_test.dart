@@ -43,15 +43,18 @@ void main() {
   test(
     "Comment Repository: On ajoute un commentaire avec le repository. On doit retrouver le commentaire à partir de l'id du contenu qu'il représente.",
     () async {
+      final id = Uuid().v4();
       final authorName = 'Michel Michel';
       final reaction = ReactionType.like;
       final contentId = Uuid().v4();
-      final idCreated = await reactionRepository.add(contentId, authorName, reaction);
+      await reactionRepository.upsert(
+        Reaction(contentId: contentId, id: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, flag: reaction),
+      );
 
       final comment = await reactionRepository.findFromContent(contentId);
       expect(comment, isNotEmpty);
       expect(comment.length, 1);
-      expect(comment[0].id, idCreated);
+      expect(comment[0].id, id);
       expect(comment[0].authorName, authorName);
       expect(comment[0].flag, reaction);
       expect(comment[0].contentId, contentId);

@@ -1,3 +1,4 @@
+import 'package:poc_street_path/domain/models/contents/comment.model.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/comment_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
@@ -42,15 +43,19 @@ void main() {
   test(
     "Comment Repository: On ajoute un commentaire avec le repository. On doit retrouver le commentaire à partir de l'id du contenu qu'il représente.",
     () async {
+      final id = Uuid().v4();
       final authorName = 'Michel Michel';
       final text = "Pas d'accord avec ce post";
       final contentId = Uuid().v4();
-      final idCreated = await commentRepository.add(contentId, authorName, text);
+
+      await commentRepository.upsert(
+        Comment(id: id, contentId: contentId, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, text: text),
+      );
 
       final comment = await commentRepository.findFromContent(contentId);
       expect(comment, isNotEmpty);
       expect(comment.length, 1);
-      expect(comment[0].id, idCreated);
+      expect(comment[0].id, id);
       expect(comment[0].authorName, authorName);
       expect(comment[0].text, text);
       expect(comment[0].contentId, contentId);

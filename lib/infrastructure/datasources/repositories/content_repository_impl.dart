@@ -1,4 +1,7 @@
 import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/contents/content_link.model.dart';
+import 'package:poc_street_path/domain/models/contents/content_media.model.dart';
+import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_link_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_media_entity.dart';
@@ -17,6 +20,26 @@ class ContentRepositoryImpl implements ContentRepository {
     _boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
     _boxContentLink = objectboxGateway.getConnector()!.box<ContentLinkEntity>();
     _boxContentMedia = objectboxGateway.getConnector()!.box<ContentMediaEntity>();
+  }
+
+  @override
+  Future<void> upsert(Content content) async {
+    if (content is ContentText) {
+      _boxContentText.put(ContentTextEntity.fromModel(content));
+      return;
+    }
+
+    if (content is ContentLink) {
+      _boxContentLink.put(ContentLinkEntity.fromModel(content));
+      return;
+    }
+
+    if (content is ContentMedia) {
+      _boxContentMedia.put(ContentMediaEntity.fromModel(content));
+      return;
+    }
+
+    throw FormatException('Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.', content);
   }
 
   @override

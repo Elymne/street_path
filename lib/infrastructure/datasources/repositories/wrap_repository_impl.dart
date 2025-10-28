@@ -28,6 +28,12 @@ class WrapRepositoryImpl extends WrapRepository {
   }
 
   @override
+  Future<bool> create(String contentId, StorageMode storageMode, ShippingMode shippingMode) {
+    // TODO: implement add
+    throw UnimplementedError();
+  }
+
+  @override
   Future<Wrap?> findUnique(String contentId) async {
     final List<Object?> contentsRes = await Future.wait([
       _boxContentText.query(ContentTextEntity_.id.equals(contentId)).build().findFirstAsync(),

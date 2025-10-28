@@ -12,6 +12,12 @@ import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
 ///   Ne dépend d'aucune technologie spécifique.
 /// ------------------------------------------------------------
 abstract class WrapRepository {
+  /// Créer un [Wrap] autour d'un identifiant de contenu.
+  /// Le [Wrap] ne peut pas être créé si un wrap est déjà lié à un contenu.
+  ///
+  /// Retourne un [bool] en fonction du résultat.
+  Future<bool> create(String contentId, StorageMode storageMode, ShippingMode shippingMode);
+
   /// Change le mode de transfert d'un [Wrap]
   ///
   /// Return [bool] true si changement, false sinon.

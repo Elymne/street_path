@@ -42,12 +42,15 @@ void main() {
   test(
     'Comment Repository: On ajoute une réaction avec le repository. On doit retrouver ce commentaire dans la base de données.',
     () async {
+      final id = Uuid().v4();
       final authorName = 'Michel Michel';
       final reaction = ReactionType.like;
       final contentId = Uuid().v4();
-      final idCreated = await reactionRepository.add(contentId, authorName, reaction);
+      await reactionRepository.upsert(
+        Reaction(contentId: contentId, id: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, flag: reaction),
+      );
 
-      final reactionEntity = boxReaction.query(ReactionEntity_.id.equals(idCreated)).build().findFirst();
+      final reactionEntity = boxReaction.query(ReactionEntity_.id.equals(id)).build().findFirst();
       expect(reactionEntity, isNotNull);
       expect(reactionEntity!.authorName, authorName);
       expect(reactionEntity.flag, reaction.value);
