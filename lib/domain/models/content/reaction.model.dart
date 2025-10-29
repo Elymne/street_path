@@ -1,6 +1,6 @@
 import 'package:poc_street_path/core/model.dart';
 
-class Reaction extends Model {
+class Reaction extends DataModel {
   static final Map<String, Type> allowed = {'id': String, 'contentId': String, 'createdAt': int, 'authorName': String, 'flag': int};
 
   final String contentId;

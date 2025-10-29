@@ -1,7 +1,7 @@
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/content/content.model.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 
 class FindContents extends Usecase<FindContentParams, List<Content>> {
@@ -12,7 +12,16 @@ class FindContents extends Usecase<FindContentParams, List<Content>> {
   @override
   Future<Result<List<Content>>> execute(FindContentParams params) async {
     try {
-      final contents = await _contentRepository.findMany(minTime: params.createWhile, flows: params.flows);
+      final contents = await _contentRepository.findMany(
+        params.chunk,
+        params.chunkSize,
+        createdWhile: params.createdWhile,
+        createdAfter: params.createdAfter,
+        flows: params.flows,
+        storageModes: params.storageModes,
+        shippingModes: params.shippingModes,
+      );
+
       return Success(contents);
     } catch (err, stack) {
       SpLog().e('FindContents: Une exception a été levée.', err, stack: stack);
@@ -22,7 +31,22 @@ class FindContents extends Usecase<FindContentParams, List<Content>> {
 }
 
 class FindContentParams {
-  final int? createWhile;
+  final int chunk;
+  final int chunkSize;
+
+  final int? createdWhile;
+  final int? createdAfter;
   final List<String>? flows;
-  FindContentParams({this.createWhile, this.flows});
+  final List<StorageMode> storageModes;
+  final List<ShippingMode> shippingModes;
+
+  FindContentParams(
+    this.chunk,
+    this.chunkSize, {
+    required this.createdWhile,
+    required this.createdAfter,
+    required this.flows,
+    required this.storageModes,
+    required this.shippingModes,
+  });
 }

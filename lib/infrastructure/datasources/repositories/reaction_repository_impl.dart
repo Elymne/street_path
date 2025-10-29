@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
+import 'package:poc_street_path/domain/models/content/reaction.model.dart';
 import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/reaction_entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
@@ -20,5 +20,11 @@ class ReactionRepositoryImpl implements ReactionRepository {
   Future<List<Reaction>> findFromContent(String contentId) async {
     final condition = ReactionEntity_.contentId.equals(contentId);
     return _boxReaction.query(condition).build().find().map((elem) => elem.toModel()).toList();
+  }
+
+  @override
+  Future<int> deleteMany(List<String> ids) async {
+    final reactions = _boxReaction.query(ReactionEntity_.id.oneOf(ids)).build().find();
+    return _boxReaction.removeMany(reactions.map((elem) => elem.obId).toList());
   }
 }

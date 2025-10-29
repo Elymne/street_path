@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/contents/comment.model.dart';
+import 'package:poc_street_path/domain/models/content/comment.model.dart';
 
 /// ------------------------------------------------------------
 /// Interface: CommentRepository
@@ -16,4 +16,8 @@ abstract class CommentRepository {
   /// Récupère tous les commentaires d'un contenu.
   /// Les commentaires doivent-être récupérable à partir de l'id [String] du contneu en question.
   Future<List<Comment>> findFromContent(String contentId);
+
+  /// Supprimes tous les [Comment] en fonction de la liste d'ids [String] fournit en paramètres.
+  /// returne : [int] Le nombre de wrap supprimés.
+  Future<int> deleteMany(List<String> ids);
 }

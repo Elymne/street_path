@@ -2,7 +2,7 @@ import 'package:poc_street_path/infrastructure/datasources/repositories/reaction
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/reaction_entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
-import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
+import 'package:poc_street_path/domain/models/content/reaction.model.dart';
 import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:flutter_test/flutter_test.dart';

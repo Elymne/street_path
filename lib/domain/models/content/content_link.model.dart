@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/content/content.model.dart';
 
 class ContentLink extends Content {
   static final Map<String, Type> allowed = {
@@ -18,27 +18,35 @@ class ContentLink extends Content {
   ContentLink({
     required super.id,
     required super.createdAt,
+    required super.receivedAt,
     required super.authorName,
     required super.bounces,
     required super.flowName,
     required super.title,
+    required super.storageMode,
+    required super.shippingMode,
     required this.ref,
     required this.description,
   });
 
+  /// todo : Ne devrait pas être ici imo.
   factory ContentLink.fromJson(Map<String, dynamic> json) {
     return ContentLink(
       id: json['id'] as String,
       createdAt: json['createdAt'] as int,
+      receivedAt: json['receivedAt'] as int,
       authorName: json['authorName'] as String,
       bounces: json['bounces'] as int,
       flowName: json['flowName'] as String,
       title: json['title'] as String,
+      shippingMode: ShippingMode.normal,
+      storageMode: StorageMode.normal,
       ref: json['ref'] as String,
       description: json['description'] as String,
     );
   }
 
+  /// Utile lors du transfert de données à d'autres utilisateurs.
   Map<String, dynamic> toJson() {
     return {
       'id': id,

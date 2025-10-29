@@ -1,21 +1,21 @@
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
-import 'package:poc_street_path/domain/models/contents/comment.model.dart';
+import 'package:poc_street_path/domain/models/content/comment.model.dart';
 import 'package:poc_street_path/domain/repositories/comment.repository.dart';
-import 'package:poc_street_path/domain/repositories/wrap.repository.dart';
+import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:uuid/uuid.dart';
 
 class AddComment extends Usecase<AddCommentParams, bool> {
+  final ContentRepository _contentRepository;
   final CommentRepository _commentRepository;
-  final WrapRepository _wrapRepository;
 
-  AddComment(this._commentRepository, this._wrapRepository);
+  AddComment(this._contentRepository, this._commentRepository);
 
   @override
   Future<Result<bool>> execute(AddCommentParams params) async {
     try {
-      if (await _wrapRepository.exists(params.contentId) == false) {
+      if (await _contentRepository.exists(params.contentId) == false) {
         return Success(false);
       }
 

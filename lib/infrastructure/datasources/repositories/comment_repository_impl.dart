@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/contents/comment.model.dart';
+import 'package:poc_street_path/domain/models/content/comment.model.dart';
 import 'package:poc_street_path/domain/repositories/comment.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
@@ -20,5 +20,11 @@ class CommentRepositoryImpl implements CommentRepository {
   Future<List<Comment>> findFromContent(String contentId) async {
     final idCondition = CommentEntity_.contentId.equals(contentId);
     return _boxComment.query(idCondition).build().find().map((elem) => elem.toModel()).toList();
+  }
+
+  @override
+  Future<int> deleteMany(List<String> ids) async {
+    final comments = _boxComment.query(CommentEntity_.id.oneOf(ids)).build().find();
+    return _boxComment.removeMany(comments.map((elem) => elem.obId).toList());
   }
 }

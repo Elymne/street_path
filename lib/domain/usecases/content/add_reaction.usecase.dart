@@ -1,21 +1,21 @@
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
-import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
+import 'package:poc_street_path/domain/models/content/reaction.model.dart';
+import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
-import 'package:poc_street_path/domain/repositories/wrap.repository.dart';
 import 'package:uuid/uuid.dart';
 
 class AddReaction extends Usecase<AddReactionParams, bool> {
+  final ContentRepository _contentRepository;
   final ReactionRepository _reactionRepository;
-  final WrapRepository _wrapRepository;
 
-  AddReaction(this._reactionRepository, this._wrapRepository);
+  AddReaction(this._reactionRepository, this._contentRepository);
 
   @override
   Future<Result<bool>> execute(AddReactionParams params) async {
     try {
-      if (await _wrapRepository.exists(params.contentId) == false) {
+      if (await _contentRepository.exists(params.contentId) == false) {
         return Success(false);
       }
       final newReaction = Reaction(

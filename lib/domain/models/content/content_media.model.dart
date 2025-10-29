@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/content/content.model.dart';
 
 class ContentMedia extends Content {
   static final Map<String, Type> allowed = {
@@ -18,10 +18,13 @@ class ContentMedia extends Content {
   ContentMedia({
     required super.id,
     required super.createdAt,
+    required super.receivedAt,
     required super.authorName,
     required super.bounces,
     required super.flowName,
     required super.title,
+    required super.storageMode,
+    required super.shippingMode,
     required this.path,
     required this.description,
   });
@@ -30,10 +33,13 @@ class ContentMedia extends Content {
     return ContentMedia(
       id: json['id'] as String,
       createdAt: json['createdAt'] as int,
+      receivedAt: json['createdAt'] as int,
       authorName: json['authorName'] as String,
       bounces: json['bounces'] as int,
       flowName: json['flowName'] as String,
       title: json['title'] as String,
+      shippingMode: ShippingMode.normal,
+      storageMode: StorageMode.normal,
       path: json['path'] as String,
       description: json['description'] as String,
     );

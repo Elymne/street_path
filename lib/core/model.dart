@@ -1,6 +1,6 @@
-abstract class Model {
+abstract class DataModel {
   final String id;
   final int createdAt;
 
-  Model({required this.id, required this.createdAt});
+  DataModel({required this.id, required this.createdAt});
 }

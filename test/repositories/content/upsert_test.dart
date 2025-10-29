@@ -1,7 +1,7 @@
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
-import 'package:poc_street_path/domain/models/contents/content_link.model.dart';
-import 'package:poc_street_path/domain/models/contents/content_media.model.dart';
-import 'package:poc_street_path/domain/models/contents/content_text.model.dart';
+import 'package:poc_street_path/domain/models/content/content.model.dart';
+import 'package:poc_street_path/domain/models/content/content_link.model.dart';
+import 'package:poc_street_path/domain/models/content/content_media.model.dart';
+import 'package:poc_street_path/domain/models/content/content_text.model.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_link_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_media_entity.dart';

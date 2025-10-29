@@ -1,40 +1,39 @@
 import 'package:poc_street_path/core/model.dart';
-import 'package:poc_street_path/domain/models/contents/comment.model.dart';
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
-import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
 
 /// ------------------------------------------------------------
 /// Class: Flow
 /// Layer: Domain/Model
 ///
 /// Description:
-///   Représente une sorte d'enveloppe d'un contenu visible uniquement pour l'utilisateur.
-///   Elle merge les commentaires et réaction du contenu.
-///   Elle lui permet de définir l'importance du contenu et de permettre à la logique métier de déterminer si :
-///     - On peut supprimer le contenu au bout d'un moment.
-///     - Comment le contenu doit-être transféré via le service de StreetPath.
+///   Représente un post dans la base de données.
+///   C'est la données de base de l'application.
+///   Celle que les utilisateurs vont s'échanger passivement via le service de StreetPath.
 /// ------------------------------------------------------------
 /// Propriétés:
-/// - content [Content]: Référence à un contenu.
-/// - reaction [List]: Liste des réactions.
-/// - comments [List]: Liste des commentaires.
-/// - storageMode [int]: Code de mode de stockage.
-/// - shippingMode [int]: Code de mode de propagation.
+/// - authorName [String]: Référence à l'id du créateur du post. L'application est anonyme, le authorName est simplement un nom choisie par l'utilisateur.
+/// - flowName [String]: Nom du flux représentant le post.
+/// - bounces [int]: Le nombre de fois que le post a été échangé avant d'être reçu par un utilisateur.
+/// - reactions [List]: La liste des réactions au post par différents utilisateurs.
+/// - subposts [List]: La liste des commentaires du post par différents utilisateurs.
 /// ------------------------------------------------------------
-class Wrap extends Model {
-  final Content content;
-  final List<Reaction> reaction;
-  final List<Comment> comments;
+abstract class Content extends DataModel {
+  final int receivedAt;
+  final String authorName;
+  final String flowName;
+  final int bounces;
+  final String title;
 
   final StorageMode storageMode;
   final ShippingMode shippingMode;
 
-  Wrap({
+  Content({
     required super.id,
     required super.createdAt,
-    required this.content,
-    required this.reaction,
-    required this.comments,
+    required this.receivedAt,
+    required this.authorName,
+    required this.bounces,
+    required this.flowName,
+    required this.title,
     required this.storageMode,
     required this.shippingMode,
   });

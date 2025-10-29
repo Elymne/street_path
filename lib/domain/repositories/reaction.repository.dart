@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/contents/reaction.model.dart';
+import 'package:poc_street_path/domain/models/content/reaction.model.dart';
 
 /// ------------------------------------------------------------
 /// Interface: ReactionRepository
@@ -16,4 +16,8 @@ abstract class ReactionRepository {
   /// Récupère toutes les réactions d'un contenu.
   /// Les réactions doivent-être récupérable à partir de l'id [String] du contneu en question.
   Future<List<Reaction>> findFromContent(String contentId);
+
+  /// Supprimes tous les [Reaction] en fonction de la liste d'ids [String] fournit en paramètres.
+  /// returne : [int] Le nombre de wrap supprimés.
+  Future<int> deleteMany(List<String> ids);
 }

@@ -1,25 +1,18 @@
-import 'package:poc_street_path/domain/models/contents/content.model.dart';
+import 'package:poc_street_path/domain/models/content/content.model.dart';
 
 class ContentText extends Content {
-  static final Map<String, Type> allowed = {
-    'id': String,
-    'createdAt': int,
-    'authorName': String,
-    'bounces': int,
-    'flowName': String,
-    'title': String,
-    'text': String,
-  };
-
   final String text;
 
   ContentText({
     required super.id,
     required super.createdAt,
+    required super.receivedAt,
     required super.authorName,
     required super.bounces,
     required super.flowName,
     required super.title,
+    required super.storageMode,
+    required super.shippingMode,
     required this.text,
   });
 
@@ -27,10 +20,13 @@ class ContentText extends Content {
     return ContentText(
       id: json['id'] as String,
       createdAt: json['createdAt'] as int,
+      receivedAt: json['createdAt'] as int,
       authorName: json['authorName'] as String,
       bounces: json['bounces'] as int,
       flowName: json['flowName'] as String,
       title: json['title'] as String,
+      shippingMode: ShippingMode.normal,
+      storageMode: StorageMode.normal,
       text: json['text'] as String,
     );
   }
@@ -46,6 +42,16 @@ class ContentText extends Content {
       'text': text,
     };
   }
+
+  static const allowed = {
+    'id': String,
+    'createdAt': int,
+    'authorName': String,
+    'bounces': int,
+    'flowName': String,
+    'title': String,
+    'text': String,
+  };
 
   static bool isValidJson(Map<String, dynamic> json) {
     final allowedKey = allowed.keys.toSet();

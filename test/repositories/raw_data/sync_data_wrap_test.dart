@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:poc_street_path/domain/gateways/path.gateway.dart';
-import 'package:poc_street_path/domain/models/contents/wrap.model.dart';
+import 'package:poc_street_path/domain/models/content/wrap.model.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_text_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/caches/raw_data_entity.dart';

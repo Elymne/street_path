@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/caches/raw_data.model.dart';
+import 'package:poc_street_path/domain/models/cache/raw_data.model.dart';
 
 /// ------------------------------------------------------------
 /// Interface: RawDataRepository
@@ -10,15 +10,9 @@ import 'package:poc_street_path/domain/models/caches/raw_data.model.dart';
 /// ------------------------------------------------------------
 abstract class RawDataRepository {
   /// Ajoute une nouvelle donnée brute en base de données.
-  /// Retourne : [String] L'id généré par la création d'une data brute.
-  Future<String> add(String data);
+  Future<void> add(RawData rawData);
 
-  /// Synchronise les données brutes correspondant à du contenu abstrait ??? T'es con mec.
-  /// Supprime les données brutes synchronisés.
-  /// Retourne : [int] Nombre d'éléments synchronisés.
-  Future<int> syncData();
-
-  /// Retourne les données partageable via le streetpath sous format JSON.
-  /// L'ordre de prio dépend du status des contenues.
-  Future<String> findShareableData(int dataLimit, int dayLimit);
+  /// Récupère la totalité des données brutes enregistré en base de données.
+  /// Retourne une [List] de [RawData].
+  Future<List<RawData>> findAll();
 }

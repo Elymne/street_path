@@ -1,6 +1,6 @@
 import 'package:poc_street_path/core/model.dart';
 
-class Comment extends Model {
+class Comment extends DataModel {
   static final Map<String, Type> allowed = {'id': String, 'createdAt': int, 'contentId': String, 'authorName': String, 'text': String};
 
   final String contentId;

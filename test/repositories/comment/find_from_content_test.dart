@@ -1,4 +1,4 @@
-import 'package:poc_street_path/domain/models/contents/comment.model.dart';
+import 'package:poc_street_path/domain/models/content/comment.model.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/comment.entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/comment_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
