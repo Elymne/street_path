@@ -1,20 +1,24 @@
-import 'dart:async';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:poc_street_path/core/logger/sp_log.dart';
-import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/domain/usecases/sync/get_shareable_posts.usecase.dart';
 import 'package:poc_street_path/domain/usecases/database/connectToDatabase.usecase.dart';
 import 'package:poc_street_path/domain/usecases/database/disconnectToDatabase.usecase.dart';
-import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_repository_impl.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/comment_repository_impl.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/content_repository_impl.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/reaction_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/infrastructure/gateways/path_provider_impl.gateway.dart';
 import 'package:poc_street_path/presentation/services/nearby_service_impl.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:poc_street_path/core/logger/sp_log.dart';
+import 'package:poc_street_path/core/result.dart';
+import 'dart:async';
 
 class StreetPathTaskHandler extends TaskHandler {
   late final _pathProviderGatewayImpl = PathProviderGatewayImpl();
   late final _objectBoxGateway = ObjectBoxGateway(_pathProviderGatewayImpl);
-  late final _rawDataRepository = RawDataRepositoryImpl(_objectBoxGateway);
-  late final _getShareableContents = GetShareableContents(_rawDataRepository);
+  late final _contentRepository = ContentRepositoryImpl(_objectBoxGateway);
+  late final _commentRepository = CommentRepositoryImpl(_objectBoxGateway);
+  late final _reactionRepository = ReactionRepositoryImpl(_objectBoxGateway);
+  late final _getShareableContents = GetShareableContents(_contentRepository, _commentRepository, _reactionRepository);
   late final _connectToDatabase = ConnectToDatabase(_objectBoxGateway);
   late final _disconnectToDatabase = DisconnectToDatabase(_objectBoxGateway);
 
@@ -39,7 +43,7 @@ class StreetPathTaskHandler extends TaskHandler {
 
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
-    final result = await _getShareableContents.execute(GetShareableContentsParams(dataLimit: 10, dayLimit: 7));
+    final result = await _getShareableContents.execute(GetShareableContentsParams());
     if (result is Failure) {
       SpLog().w('Streetpath Service: Error catched while using GetShareableContents.');
       return;

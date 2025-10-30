@@ -25,41 +25,4 @@ class RawDataRepositoryImpl implements RawDataRepository {
   Future<void> clear() async {
     _boxRawData.removeAll();
   }
-
-  // @override
-  // Future<String> findShareableData(int dataLimit, int dayLimit) async {
-  //   final List<String> ids = [];
-  //   final List<Object> data = [];
-
-  //   final query = WrapEntity_.shippingMode.equals(ShippingMode.creator.value);
-  //   final contents = (_boxWrap.query(query).order(WrapEntity_.createdAt).build()..limit = 10).find();
-  //   ids.addAll(contents.map((elem) => elem.contentId));
-
-  //   if (ids.length < dataLimit) {
-  //     final query = WrapEntity_.shippingMode.equals(ShippingMode.important.value);
-  //     final contents = (_boxWrap.query(query).build()..limit = 10 - ids.length).find();
-  //     ids.addAll(contents.map((elem) => elem.contentId));
-  //   }
-
-  //   if (ids.length < dataLimit) {
-  //     final query = WrapEntity_.shippingMode.equals(ShippingMode.normal.value);
-  //     final contents = (_boxWrap.query(query).build()..limit = 10 - ids.length).find();
-  //     ids.addAll(contents.map((elem) => elem.contentId));
-  //   }
-
-  //   final textContents = _boxContentText.query(ContentTextEntity_.id.oneOf(ids)).build().find().map((elem) => elem.toModel());
-  //   data.addAll(textContents);
-  //   final linkContents = _boxContentLink.query(ContentLinkEntity_.id.oneOf(ids)).build().find().map((elem) => elem.toModel());
-  //   data.addAll(linkContents);
-  //   final mediaContents = _boxContentMedia.query(ContentMediaEntity_.id.oneOf(ids)).build().find().map((elem) => elem.toModel());
-  //   data.addAll(mediaContents);
-
-  //   final reactions = _boxReaction.query(ReactionEntity_.contentId.oneOf(ids)).build().find().map((elem) => elem.toModel());
-  //   data.addAll(reactions);
-
-  //   final comments = _boxComment.query(CommentEntity_.contentId.oneOf(ids)).build().find().map((elem) => elem.toModel());
-  //   data.addAll(comments);
-
-  //   return jsonEncode(data);
-  // }
 }
