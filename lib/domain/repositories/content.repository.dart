@@ -34,6 +34,7 @@ abstract class ContentRepository {
     List<String>? flows,
     List<StorageMode>? storageModes,
     List<ShippingMode>? shippingModes,
+    List<ContentOrderBy>? orderBy,
   });
 
   /// Récupère un [Wrap] dans la base de données.
@@ -46,3 +47,5 @@ abstract class ContentRepository {
   /// returne : [int] Le nombre de wrap supprimés.
   Future<int> deleteMany(List<String> ids);
 }
+
+enum ContentOrderBy { newest, oldest }

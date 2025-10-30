@@ -12,6 +12,12 @@ class CommentRepositoryImpl implements CommentRepository {
   }
 
   @override
+  Future<bool> exists(String id) async {
+    final comment = _boxComment.query(CommentEntity_.id.equals(id)).build().findFirst();
+    return comment != null;
+  }
+
+  @override
   Future<void> upsert(Comment comment) async {
     _boxComment.put(CommentEntity.fromModel(comment));
   }

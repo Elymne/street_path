@@ -9,6 +9,9 @@ import 'package:poc_street_path/domain/models/content/reaction.model.dart';
 ///   Ne dépend d'aucune technologie spécifique.
 /// ------------------------------------------------------------
 abstract class ReactionRepository {
+  /// Permet de savoir si une reaction existe déjà en DB.
+  Future<bool> exists(String id);
+
   /// Permet d'ajouter une nouvelle réaction.
   /// La réaction sera ajouté peut-importe si le contenu existe ou non. C'est au usecase de gérer cela.
   Future<void> upsert(Reaction reaction);

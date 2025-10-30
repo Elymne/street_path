@@ -12,6 +12,12 @@ class ReactionRepositoryImpl implements ReactionRepository {
   }
 
   @override
+  Future<bool> exists(String id) async {
+    final reaction = _boxReaction.query(ReactionEntity_.id.equals(id)).build().findFirst();
+    return reaction != null;
+  }
+
+  @override
   Future<void> upsert(Reaction reaction) async {
     _boxReaction.put(ReactionEntity.fromModel(reaction));
   }

@@ -9,6 +9,9 @@ import 'package:poc_street_path/domain/models/content/comment.model.dart';
 ///   Ne dépend d'aucune technologie spécifique.
 /// ------------------------------------------------------------
 abstract class CommentRepository {
+  /// Permet de savoir si un commentaire existe déjà en DB.
+  Future<bool> exists(String id);
+
   /// Permet d'ajouter un [Comment] en base de données.
   /// Le commentaire sera ajouté peut-importe si le contenu existe ou non. C'est au usecase de gérer cela.
   Future<void> upsert(Comment comment);

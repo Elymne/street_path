@@ -87,7 +87,7 @@ class NearbyServiceImpl {
     _receivedDataSubscription = _nearbySevice.dataReceivedSubscription(
       callback: (data) {
         SpLog().i('Data fetched from device : ${jsonEncode(data)}');
-        _addRawData.execute(AddRawDataParams(stringyData: jsonEncode(data)));
+        _addRawData.execute(AddRawDataParams(jsonEncode(data)));
         SpLog().i('Data injected into device');
       },
     );

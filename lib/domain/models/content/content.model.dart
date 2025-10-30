@@ -40,9 +40,17 @@ abstract class Content extends DataModel {
 }
 
 enum ShippingMode {
+  /// Données non priorisé par défaut lors des échanges. C'est en général cet état que l'on va retrouver lorsque des données sont transférés.
   normal(0),
+
+  /// Priorité moyenne. Cas d'usage lorsqu'un utilisateur trouve un contenu intéressant de partager en priorité.
   important(1),
+
+  /// Priorité maximum sur les transferts puisque c'est du contenu utilisateur.
+  /// Un contenu sera automatiquement mit en mode "bloqué" au bout d'un certain temps pour éviter qu'un même contenu soit transféré.
   creator(2),
+
+  /// Contenu bloqué par l'utilisateur. Dans le cas où l'utilisateur n'est pas sûr de si il veut que son contenu soit transférable imédiatement ou non.
   blocked(3);
 
   final int value;
@@ -57,7 +65,11 @@ enum ShippingMode {
 }
 
 enum StorageMode {
+  /// Sera supprimé au bout d'une certaine durée ou si il y a trop de données sur l'app.
   normal(0),
+
+  /// Toujours sauvegardé, jamais supprimé sauf par action de l'utilisateur.
+  /// Concerne en général les contenus créés par l'utilisateur ou des contenus que l'utilisateur aurait choisi de sauvegarder pour des raisons personnelles.
   save(1);
 
   final int value;

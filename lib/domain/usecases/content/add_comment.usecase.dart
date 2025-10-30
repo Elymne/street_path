@@ -26,6 +26,7 @@ class AddComment extends Usecase<AddCommentParams, bool> {
         authorName: params.authorName,
         text: params.text,
       );
+
       await _commentRepository.upsert(newComment);
 
       return Success(true);

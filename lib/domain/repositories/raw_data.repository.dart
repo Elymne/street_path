@@ -15,4 +15,7 @@ abstract class RawDataRepository {
   /// Récupère la totalité des données brutes enregistré en base de données.
   /// Retourne une [List] de [RawData].
   Future<List<RawData>> findAll();
+
+  /// Vide totalement les données.
+  Future<void> clear();
 }

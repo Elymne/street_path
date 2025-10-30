@@ -89,6 +89,7 @@ class ContentRepositoryImpl implements ContentRepository {
     List<String>? flows,
     List<StorageMode>? storageModes,
     List<ShippingMode>? shippingModes,
+    List<ContentOrderBy>? orderBy,
   }) async {
     final List<Content> contents = [];
 
