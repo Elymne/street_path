@@ -16,6 +16,29 @@ class ContentText extends Content {
     required this.text,
   });
 
+  static const allowed = {
+    'id': String,
+    'createdAt': int,
+    'authorName': String,
+    'bounces': int,
+    'flowName': String,
+    'title': String,
+    'text': String,
+  };
+
+  @override
+  Map<String, Object> toRaw() {
+    return {
+      'id': id,
+      'createdAt': createdAt,
+      'authorName': authorName,
+      'bounces': bounces,
+      'flowName': flowName,
+      'title': title,
+      'text': text,
+    };
+  }
+
   ContentText clone({
     String? id,
     int? createdAt,
@@ -55,52 +78,5 @@ class ContentText extends Content {
       storageMode: StorageMode.normal,
       text: json['text'] as String,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'createdAt': createdAt,
-      'authorName': authorName,
-      'bounces': bounces,
-      'flowName': flowName,
-      'title': title,
-      'text': text,
-    };
-  }
-
-  static const allowed = {
-    'id': String,
-    'createdAt': int,
-    'authorName': String,
-    'bounces': int,
-    'flowName': String,
-    'title': String,
-    'text': String,
-  };
-
-  static bool isValidJson(Map<String, dynamic> json) {
-    final allowedKey = allowed.keys.toSet();
-    final jsonKeys = json.keys.toSet();
-
-    if (allowedKey.length != jsonKeys.length) {
-      return false;
-    }
-
-    final extraKeys = jsonKeys.difference(allowedKey);
-    if (extraKeys.isNotEmpty) {
-      return false;
-    }
-
-    for (final key in allowedKey.intersection(jsonKeys)) {
-      final expectedType = allowed[key];
-      final value = json[key];
-
-      if (value != null && value.runtimeType != expectedType) {
-        return false;
-      }
-    }
-
-    return true;
   }
 }

@@ -24,5 +24,5 @@ const int defaultDbDataTime = 86_400_000 * 2; // 2 jours.
 // * La taille max (octets) par defaut que l'application peut stocker sur le téléphone de l'utilisateur. Cette valeur est utilisé si l'utilisateur ne définie pas une taille maximum.
 const int defaultDbLimitSize = 2_000_000_000; // 2go
 
-// * Le nombre d'éléments supprimés automatiquement avant chaque vérification du poid des données de l'application.
-const int chunkDeleteCount = 10;
+// * Le nombre d'éléments partageable par transfert de données.
+const int maxSync = 10;

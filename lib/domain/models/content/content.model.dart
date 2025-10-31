@@ -1,4 +1,4 @@
-import 'package:poc_street_path/core/model.dart';
+import 'package:poc_street_path/core/data_model.dart';
 
 /// ------------------------------------------------------------
 /// Class: Flow
@@ -37,6 +37,11 @@ abstract class Content extends DataModel {
     required this.storageMode,
     required this.shippingMode,
   });
+
+  /// Fonction abstraite à implémenter.
+  /// Elle doit être utilisé lors des transferts de données entre appareils.
+  /// Elle permet d'être facilement transformé en contenu JSON.
+  Map<String, Object> toRaw();
 }
 
 enum ShippingMode {

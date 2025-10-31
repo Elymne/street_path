@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
@@ -18,15 +17,18 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
   @override
   Future<Result<String>> execute(GetShareableContentsParams params) async {
     try {
+      final List<Object> data = [];
       final List<Content> contents = [];
 
-      contents.addAll(await _contentRepository.findMany(10, 1, shippingModes: [ShippingMode.creator], orderBy: [ContentOrderBy.newest]));
+      contents.addAll(
+        await _contentRepository.findMany(maxSync, 0, shippingModes: [ShippingMode.creator], orderBy: [ContentOrderBy.newest]),
+      );
 
       if (contents.length < 10) {
         contents.addAll(
           await _contentRepository.findMany(
-            10 - contents.length,
-            1,
+            maxSync - contents.length,
+            0,
             createdWhile: defaultDbDataTime,
             shippingModes: [ShippingMode.important],
             orderBy: [ContentOrderBy.newest],
@@ -37,8 +39,8 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
       if (contents.length < 10) {
         contents.addAll(
           await _contentRepository.findMany(
-            10 - contents.length,
-            1,
+            maxSync - contents.length,
+            0,
             shippingModes: [ShippingMode.normal],
             orderBy: [ContentOrderBy.newest],
           ),
@@ -46,9 +48,8 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
       }
 
       for (final content in contents) {
-        if (kDebugMode) {
-          print(content);
-        }
+        final res = await Future.wait([_commentRepository.findFromContent(content.id), _reactionRepository.findFromContent(content.id)]);
+        data.addAll([content, ...res[0], ...res[1]]);
       }
 
       return Success('');

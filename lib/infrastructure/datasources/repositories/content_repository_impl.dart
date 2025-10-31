@@ -100,7 +100,7 @@ class ContentRepositoryImpl implements ContentRepository {
 
   @override
   Future<List<Content>> findMany(
-    int chunk,
+    int chunkIndex,
     int chunkSize, {
     int? createdWhile,
     int? createdAfter,
@@ -151,15 +151,15 @@ class ContentRepositoryImpl implements ContentRepository {
 
     final List<List<Object>> bigFetch = await Future.wait([
       (_boxContentText.query(contentTextCondition).build()
-            ..offset = chunk
+            ..offset = chunkIndex * chunkSize
             ..limit = chunkSize)
           .findAsync(),
       (_boxContentLink.query(contentLinkCondition).build()
-            ..offset = chunk
+            ..offset = chunkIndex * chunkSize
             ..limit = chunkSize)
           .findAsync(),
       (_boxContentMedia.query(contentMediaCondition).build()
-            ..offset = chunk
+            ..offset = chunkIndex * chunkSize
             ..limit = chunkSize)
           .findAsync(),
     ]);

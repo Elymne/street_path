@@ -13,7 +13,7 @@ class FindContents extends Usecase<FindContentParams, List<Content>> {
   Future<Result<List<Content>>> execute(FindContentParams params) async {
     try {
       final contents = await _contentRepository.findMany(
-        params.chunk,
+        params.chunkIndex,
         params.chunkSize,
         createdWhile: params.createdWhile,
         createdAfter: params.createdAfter,
@@ -31,7 +31,7 @@ class FindContents extends Usecase<FindContentParams, List<Content>> {
 }
 
 class FindContentParams {
-  final int chunk;
+  final int chunkIndex;
   final int chunkSize;
 
   final int? createdWhile;
@@ -41,7 +41,7 @@ class FindContentParams {
   final List<ShippingMode> shippingModes;
 
   FindContentParams(
-    this.chunk,
+    this.chunkIndex,
     this.chunkSize, {
     required this.createdWhile,
     required this.createdAfter,

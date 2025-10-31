@@ -31,7 +31,7 @@ abstract class ContentRepository {
   ///
   /// Retourne : [List] de [Content].
   Future<List<Content>> findMany(
-    int chunk,
+    int chunkIndex,
     int chunkSize, {
     int? createdWhile,
     int? createdAfter,

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
+import 'package:poc_street_path/core/utils/json_utils.dart';
 import 'package:poc_street_path/domain/models/content/comment.model.dart';
 import 'package:poc_street_path/domain/models/content/content_link.model.dart';
 import 'package:poc_street_path/domain/models/content/content_media.model.dart';
@@ -36,7 +37,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
 
         for (final json in jsonList) {
           // * Check [ContentText]
-          if (ContentText.isValidJson(json)) {
+          if (isValidJson(json, ContentText.allowed)) {
             if (await _contentRepository.exists(json['id'])) {
               continue;
             }
@@ -45,7 +46,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
           }
 
           // * Check [ContentLink]
-          if (ContentLink.isValidJson(json)) {
+          if (isValidJson(json, ContentLink.allowed)) {
             if (await _contentRepository.exists(json['id'])) {
               continue;
             }
@@ -56,7 +57,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
           }
 
           // * Check [ContentMedia]
-          if (ContentMedia.isValidJson(json)) {
+          if (isValidJson(json, ContentMedia.allowed)) {
             if (await _contentRepository.exists(json['id'])) {
               continue;
             }
@@ -66,7 +67,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
           }
 
           // * Check [Comment]
-          if (Comment.isValidJson(json)) {
+          if (isValidJson(json, Comment.allowed)) {
             if (await _commentRepository.exists(json['id'])) {
               continue;
             }
@@ -75,7 +76,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
           }
 
           // * Check [Reaction]
-          if (Reaction.isValidJson(json)) {
+          if (isValidJson(json, Reaction.allowed)) {
             if (await _reactionRepository.exists(json['id'])) {
               continue;
             }
