@@ -23,15 +23,15 @@ class ContentRepositoryImpl implements ContentRepository {
   @override
   Future<void> insert(Content content) async {
     if (content is ContentText) {
-      _boxContentText.put(ContentTextEntity.fromModel(content));
+      _boxContentText.put(ContentTextEntity.fromModel(content), mode: PutMode.insert);
       return;
     }
     if (content is ContentLink) {
-      _boxContentLink.put(ContentLinkEntity.fromModel(content));
+      _boxContentLink.put(ContentLinkEntity.fromModel(content), mode: PutMode.insert);
       return;
     }
     if (content is ContentMedia) {
-      _boxContentMedia.put(ContentMediaEntity.fromModel(content));
+      _boxContentMedia.put(ContentMediaEntity.fromModel(content), mode: PutMode.insert);
       return;
     }
 
@@ -42,18 +42,15 @@ class ContentRepositoryImpl implements ContentRepository {
   Future<void> update(Content content) async {
     if (content is ContentText) {
       final contentEntity = _boxContentText.query(ContentTextEntity_.id.equals(content.id)).build().findFirst();
-      if (contentEntity == null) throw ObjectBoxException('Trying to update a content that do not exists');
-      _boxContentText.put(ContentTextEntity.fromModel(content)..obId = contentEntity.obId);
+      _boxContentText.put(ContentTextEntity.fromModel(content)..obId = contentEntity!.obId, mode: PutMode.update);
     }
     if (content is ContentLink) {
       final contentEntity = _boxContentLink.query(ContentLinkEntity_.id.equals(content.id)).build().findFirst();
-      if (contentEntity == null) throw ObjectBoxException('Trying to update a content that do not exists');
-      _boxContentLink.put(ContentLinkEntity.fromModel(content)..obId = contentEntity.obId);
+      _boxContentLink.put(ContentLinkEntity.fromModel(content)..obId = contentEntity!.obId, mode: PutMode.update);
     }
     if (content is ContentMedia) {
       final contentEntity = _boxContentMedia.query(ContentMediaEntity_.id.equals(content.id)).build().findFirst();
-      if (contentEntity == null) throw ObjectBoxException('Trying to update a content that do not exists');
-      _boxContentMedia.put(ContentMediaEntity.fromModel(content)..obId = contentEntity.obId);
+      _boxContentMedia.put(ContentMediaEntity.fromModel(content)..obId = contentEntity!.obId, mode: PutMode.update);
     }
 
     throw FormatException('Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.', content);
