@@ -7,16 +7,14 @@ import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:uuid/uuid.dart';
 import 'dart:io';
+import 'package:uuid/uuid.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
   late final PathGateway pathGateway;
   late final ObjectBoxGateway objectboxGateway;
   late final CommentRepository commentRepository;
-
   late final Box<CommentEntity> boxComment;
 
   setUpAll(() async {
@@ -30,17 +28,17 @@ void main() {
     boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
   });
 
-  setUp(() {
-    boxComment.removeAll();
-    expect(boxComment.getAll().isEmpty, true, reason: 'Empty on start');
-  });
-
   tearDownAll(() async {
     boxComment.removeAll();
     await objectboxGateway.disconnect();
   });
 
-  test("CommentRepository.commentRepository.findFromContent(): Récupération de commentaires vai l'id d'un contenu.", () async {
+  setUp(() {
+    boxComment.removeAll();
+    expect(boxComment.getAll().isEmpty, true, reason: 'Clear data.');
+  });
+
+  test('CommentRepository.insert(): données valides et retrouvables.', () async {
     final id = Uuid().v4();
     final authorName = 'Michel Michel';
     final text = "Pas d'accord avec ce post";
@@ -50,13 +48,11 @@ void main() {
       Comment(id: id, contentId: contentId, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, text: text),
     );
 
-    final comment = await commentRepository.findFromContent(contentId);
-    expect(comment, isNotEmpty);
-    expect(comment.length, 1);
-    expect(comment[0].id, id);
-    expect(comment[0].authorName, authorName);
-    expect(comment[0].text, text);
-    expect(comment[0].contentId, contentId);
+    final commentEntity = boxComment.query(CommentEntity_.id.equals(id)).build().findFirst();
+    expect(commentEntity, isNotNull);
+    expect(commentEntity!.authorName, authorName);
+    expect(commentEntity.text, text);
+    expect(commentEntity.contentId, contentId);
   });
 }
 

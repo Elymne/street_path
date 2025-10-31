@@ -12,11 +12,9 @@ import 'dart:io';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
   late final PathGateway pathGateway;
   late final ObjectBoxGateway objectboxGateway;
   late final CommentRepository commentRepository;
-
   late final Box<CommentEntity> boxComment;
 
   setUpAll(() async {
@@ -40,23 +38,44 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test("CommentRepository.commentRepository.findFromContent(): Récupération de commentaires vai l'id d'un contenu.", () async {
+  test('CommentRepository.commentRepository.deleteMany(): Suppression de plusieurs commentaires.', () async {
     final id = Uuid().v4();
-    final authorName = 'Michel Michel';
-    final text = "Pas d'accord avec ce post";
-    final contentId = Uuid().v4();
-
+    final id2 = Uuid().v4();
     await commentRepository.insert(
-      Comment(id: id, contentId: contentId, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, text: text),
+      Comment(
+        id: id,
+        contentId: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: 'Michel Michel',
+        text: "Pas d'accord avec ce post",
+      ),
     );
 
-    final comment = await commentRepository.findFromContent(contentId);
-    expect(comment, isNotEmpty);
-    expect(comment.length, 1);
-    expect(comment[0].id, id);
-    expect(comment[0].authorName, authorName);
-    expect(comment[0].text, text);
-    expect(comment[0].contentId, contentId);
+    await commentRepository.insert(
+      Comment(
+        id: id2,
+        contentId: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: 'Michel Michel',
+        text: "Pas d'accord avec ce post",
+      ),
+    );
+
+    await commentRepository.insert(
+      Comment(
+        id: Uuid().v4(),
+        contentId: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: 'Michel Michel',
+        text: "Pas d'accord avec ce post",
+      ),
+    );
+
+    await commentRepository.deleteMany([id, id2]);
+
+    final comments = boxComment.getAll();
+    expect(comments, isNotEmpty);
+    expect(comments.length, 1);
   });
 }
 

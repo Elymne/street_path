@@ -12,7 +12,6 @@ import 'package:uuid/uuid.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
   late final PathGateway pathGateway;
   late final ObjectBoxGateway objectboxGateway;
   late final CommentRepository commentRepository;
@@ -29,35 +28,31 @@ void main() {
     boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
   });
 
-  setUp(() {
-    boxComment.removeAll();
-    expect(boxComment.getAll().isEmpty, true, reason: 'Empty on start');
-  });
-
   tearDownAll(() async {
     boxComment.removeAll();
     await objectboxGateway.disconnect();
   });
 
-  test(
-    'Comment Repository: On ajoute un commentaire avec le repository. On doit retrouver ce commentaire dans la base de données.',
-    () async {
-      final id = Uuid().v4();
-      final authorName = 'Michel Michel';
-      final text = "Pas d'accord avec ce post";
-      final contentId = Uuid().v4();
+  setUp(() {
+    boxComment.removeAll();
+    expect(boxComment.getAll().isEmpty, true, reason: 'Clear data.');
+  });
 
-      await commentRepository.insert(
-        Comment(id: id, contentId: contentId, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, text: text),
-      );
+  test("CommentRepository.exists(): données inséré et vérification qu'elle existe.", () async {
+    final id = Uuid().v4();
+    await commentRepository.insert(
+      Comment(
+        id: id,
+        contentId: Uuid().v4(),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: 'Michel Michel',
+        text: "Pas d'accord avec ce post",
+      ),
+    );
 
-      final commentEntity = boxComment.query(CommentEntity_.id.equals(id)).build().findFirst();
-      expect(commentEntity, isNotNull);
-      expect(commentEntity!.authorName, authorName);
-      expect(commentEntity.text, text);
-      expect(commentEntity.contentId, contentId);
-    },
-  );
+    expect(await commentRepository.exists(Uuid().v4()), false);
+    expect(await commentRepository.exists(id), true);
+  });
 }
 
 class _MockPathGateway extends Mock implements PathGateway {}

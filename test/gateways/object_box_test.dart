@@ -12,16 +12,16 @@ void main() {
 
   setUpAll(() async {
     final dir = Directory.systemTemp.createTempSync('object_box_test')..path;
-    when(() => pathGateway.getBaseDir()).thenAnswer((maleficumInvocationDelaMuerteJeSaisPasAQuoiSertCeTruc) async => dir.path);
+    when(() => pathGateway.getBaseDir()).thenAnswer((_) async => dir.path);
     objectboxGateway = ObjectBoxGateway(pathGateway);
   });
 
-  test('Connexion à la base de données. On doit avoir accès au connector.', () async {
+  test('Le connector disponible suite à une connexion.', () async {
     await objectboxGateway.connect();
     expect(objectboxGateway.getConnector(), isNotNull);
   });
 
-  test('Connexion puis déconnexion à la base de donnée. On ne doit plus avoir au connector.', () async {
+  test('Le connector indisponible suite à une deconnexion.', () async {
     await objectboxGateway.connect();
     await objectboxGateway.disconnect();
     expect(objectboxGateway.getConnector(), isNull);
