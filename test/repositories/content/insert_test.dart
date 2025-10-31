@@ -12,13 +12,11 @@ import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'dart:io';
-
 import 'package:uuid/uuid.dart';
+import 'dart:io';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
   late final PathGateway pathGateway;
   late final ObjectBoxGateway objectboxGateway;
   late final ContentRepository contentRepository;
@@ -41,6 +39,13 @@ void main() {
     boxContentMedia = objectboxGateway.getConnector()!.box<ContentMediaEntity>();
   });
 
+  tearDownAll(() async {
+    boxContentText.removeAll();
+    boxContentLink.removeAll();
+    boxContentMedia.removeAll();
+    await objectboxGateway.disconnect();
+  });
+
   setUp(() {
     boxContentText.removeAll();
     boxContentLink.removeAll();
@@ -51,42 +56,86 @@ void main() {
     expect(boxContentMedia.getAll().isEmpty, true, reason: 'Empty on start');
   });
 
-  tearDownAll(() async {
-    boxContentText.removeAll();
-    boxContentLink.removeAll();
-    boxContentMedia.removeAll();
-    await objectboxGateway.disconnect();
-  });
-
-  test("ContentRepository: Ajout d'un type de contenu qui n'est pas géré par le repository", () async {
-    final id = Uuid().v4();
-    final createdAt = DateTime.now().millisecondsSinceEpoch;
-    final authorName = 'Test Author';
-    final bounces = 0;
-    final flowName = 'onboarding_flow';
-    final title = 'Test content title';
-
+  test('ContentRepository.insert() Erreur Type Content inconnu', () async {
     expect(() async {
       await contentRepository.insert(
-        _FakeContent(id: id, createdAt: createdAt, authorName: authorName, bounces: bounces, flowName: flowName, title: title),
+        _FakeContent(
+          id: Uuid().v4(),
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          receivedAt: DateTime.now().millisecondsSinceEpoch,
+          authorName: 'Test Author',
+          bounces: 0,
+          flowName: 'onboarding_flow',
+          title: 'Test content title',
+          shippingMode: ShippingMode.normal,
+          storageMode: StorageMode.normal,
+        ),
       );
     }, throwsException);
   });
 
-  test("ContentRepository: Ajout d'un contenu de type ContentText", () async {
+  test('ContentRepository.insert() Erreur Duplication ID', () async {
+    final id = Uuid().v4();
+    await contentRepository.insert(
+      ContentText(
+        id: id,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        receivedAt: DateTime.now().millisecondsSinceEpoch,
+        authorName: 'Test Author',
+        bounces: 0,
+        flowName: 'onboarding_flow',
+        title: 'Test content title',
+        storageMode: StorageMode.normal,
+        shippingMode: ShippingMode.normal,
+        text: 'This is a sample ContentText body used for unit testing purposes.',
+      ),
+    );
+
+    expect(() async {
+      await contentRepository.insert(
+        ContentText(
+          id: id,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          receivedAt: DateTime.now().millisecondsSinceEpoch,
+          authorName: 'Test Author',
+          bounces: 0,
+          flowName: 'onboarding_flow',
+          title: 'Test content title',
+          storageMode: StorageMode.normal,
+          shippingMode: ShippingMode.normal,
+          text: 'This is a sample ContentText body used for unit testing purposes.',
+        ),
+      );
+    }, throwsException);
+  });
+
+  test('ContentRepository.insert() ContentText', () async {
     final id = Uuid().v4();
     final createdAt = DateTime.now().millisecondsSinceEpoch;
+    final receivedAt = DateTime.now().millisecondsSinceEpoch;
     final authorName = 'Test Author';
     final bounces = 0;
     final flowName = 'onboarding_flow';
     final title = 'Test content title';
+    final storageMode = StorageMode.normal;
+    final shippingMode = ShippingMode.normal;
     final text = 'This is a sample ContentText body used for unit testing purposes.';
     await contentRepository.insert(
-      ContentText(id: id, createdAt: createdAt, authorName: authorName, bounces: bounces, flowName: flowName, title: title, text: text),
+      ContentText(
+        id: id,
+        createdAt: createdAt,
+        receivedAt: receivedAt,
+        authorName: authorName,
+        bounces: bounces,
+        flowName: flowName,
+        title: title,
+        storageMode: storageMode,
+        shippingMode: shippingMode,
+        text: text,
+      ),
     );
 
     final contentEntity = boxContentText.query(ContentTextEntity_.id.equals(id)).build().findFirst();
-
     expect(contentEntity, isNotNull);
     expect(contentEntity!.bounces, 0);
     expect(contentEntity.title, title);
@@ -95,31 +144,35 @@ void main() {
     expect(contentEntity.flowName, flowName);
   });
 
-  test("ContentRepository: Ajout d'un contenu de type ContentLink", () async {
+  test('ContentRepository.insert() ContentLink', () async {
     final id = Uuid().v4();
     final createdAt = DateTime.now().millisecondsSinceEpoch;
+    final receivedAt = DateTime.now().millisecondsSinceEpoch;
     final authorName = 'Link Author';
     final bounces = 1;
     final flowName = 'promo_flow';
     final title = 'Visit example';
+    final storageMode = StorageMode.normal;
+    final shippingMode = ShippingMode.normal;
     final ref = 'https://example.com';
     final description = 'description';
-
     await contentRepository.insert(
       ContentLink(
         id: id,
         createdAt: createdAt,
+        receivedAt: receivedAt,
         authorName: authorName,
         bounces: bounces,
         flowName: flowName,
         title: title,
+        storageMode: storageMode,
+        shippingMode: shippingMode,
         ref: ref,
         description: description,
       ),
     );
 
     final contentEntity = boxContentLink.query(ContentLinkEntity_.id.equals(id)).build().findFirst();
-
     expect(contentEntity, isNotNull);
     expect(contentEntity!.bounces, bounces);
     expect(contentEntity.title, title);
@@ -129,13 +182,16 @@ void main() {
     expect(contentEntity.description, description);
   });
 
-  test("ContentRepository: Ajout d'un contenu de type ContentMedia", () async {
+  test('ContentRepository.insert() ContentMedia', () async {
     final id = Uuid().v4();
     final createdAt = DateTime.now().millisecondsSinceEpoch;
+    final receivedAt = DateTime.now().millisecondsSinceEpoch;
     final authorName = 'Link Author';
     final bounces = 1;
     final flowName = 'promo_flow';
     final title = 'Visit example';
+    final storageMode = StorageMode.normal;
+    final shippingMode = ShippingMode.normal;
     final path = 'path/to/dir';
     final description = 'description';
 
@@ -143,17 +199,19 @@ void main() {
       ContentMedia(
         id: id,
         createdAt: createdAt,
+        receivedAt: receivedAt,
         authorName: authorName,
         bounces: bounces,
         flowName: flowName,
         title: title,
+        storageMode: storageMode,
+        shippingMode: shippingMode,
         path: path,
         description: description,
       ),
     );
 
     final contentEntity = boxContentMedia.query(ContentMediaEntity_.id.equals(id)).build().findFirst();
-
     expect(contentEntity, isNotNull);
     expect(contentEntity!.bounces, bounces);
     expect(contentEntity.title, title);
@@ -170,9 +228,18 @@ class _FakeContent extends Content {
   _FakeContent({
     required super.id,
     required super.createdAt,
+    required super.receivedAt,
     required super.authorName,
     required super.bounces,
     required super.flowName,
     required super.title,
+    required super.shippingMode,
+    required super.storageMode,
   });
+
+  @override
+  Map<String, Object> toRaw() {
+    // TODO: implement toRaw
+    throw UnimplementedError();
+  }
 }

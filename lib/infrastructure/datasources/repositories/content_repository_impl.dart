@@ -43,14 +43,17 @@ class ContentRepositoryImpl implements ContentRepository {
     if (content is ContentText) {
       final contentEntity = _boxContentText.query(ContentTextEntity_.id.equals(content.id)).build().findFirst();
       _boxContentText.put(ContentTextEntity.fromModel(content)..obId = contentEntity!.obId, mode: PutMode.update);
+      return;
     }
     if (content is ContentLink) {
       final contentEntity = _boxContentLink.query(ContentLinkEntity_.id.equals(content.id)).build().findFirst();
       _boxContentLink.put(ContentLinkEntity.fromModel(content)..obId = contentEntity!.obId, mode: PutMode.update);
+      return;
     }
     if (content is ContentMedia) {
       final contentEntity = _boxContentMedia.query(ContentMediaEntity_.id.equals(content.id)).build().findFirst();
       _boxContentMedia.put(ContentMediaEntity.fromModel(content)..obId = contentEntity!.obId, mode: PutMode.update);
+      return;
     }
 
     throw FormatException('Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.', content);
