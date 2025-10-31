@@ -1,22 +1,19 @@
-import 'package:poc_street_path/infrastructure/datasources/repositories/reaction_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/reaction_entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/reaction_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
-import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
 import 'package:poc_street_path/domain/models/content/reaction.model.dart';
 import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:uuid/uuid.dart';
 import 'dart:io';
+import 'package:uuid/uuid.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
   late final PathGateway pathGateway;
   late final ObjectBoxGateway objectboxGateway;
-  late final ReactionRepository reactionRepository;
-
+  late final ReactionRepositoryImpl reactionRepository;
   late final Box<ReactionEntity> boxReaction;
 
   setUpAll(() async {
@@ -40,7 +37,7 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test('CommentRepository.findFromContent()', () async {
+  test('CommentRepository.insert()', () async {
     final id = Uuid().v4();
     final authorName = 'Michel Michel';
     final reaction = ReactionType.like;
@@ -49,13 +46,11 @@ void main() {
       Reaction(contentId: contentId, id: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, flag: reaction),
     );
 
-    final comment = await reactionRepository.findFromContent(contentId);
-    expect(comment, isNotEmpty);
-    expect(comment.length, 1);
-    expect(comment[0].id, id);
-    expect(comment[0].authorName, authorName);
-    expect(comment[0].flag, reaction);
-    expect(comment[0].contentId, contentId);
+    final reactionEntity = boxReaction.query(ReactionEntity_.id.equals(id)).build().findFirst();
+    expect(reactionEntity, isNotNull);
+    expect(reactionEntity!.authorName, authorName);
+    expect(reactionEntity.flag, reaction.value);
+    expect(reactionEntity.contentId, contentId);
   });
 }
 

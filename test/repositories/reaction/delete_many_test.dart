@@ -1,8 +1,8 @@
-import 'package:poc_street_path/domain/models/content/comment.model.dart';
-import 'package:poc_street_path/infrastructure/datasources/entities/contents/comment.entity.dart';
-import 'package:poc_street_path/infrastructure/datasources/repositories/comment_repository_impl.dart';
+import 'package:poc_street_path/domain/models/content/reaction.model.dart';
+import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
+import 'package:poc_street_path/infrastructure/datasources/entities/contents/reaction_entity.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/reaction_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
-import 'package:poc_street_path/domain/repositories/comment.repository.dart';
 import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,8 +14,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late final PathGateway pathGateway;
   late final ObjectBoxGateway objectboxGateway;
-  late final CommentRepository commentRepository;
-  late final Box<CommentEntity> boxComment;
+  late final ReactionRepository reactionRepository;
+  late final Box<ReactionEntity> boxReaction;
 
   setUpAll(() async {
     pathGateway = _MockPathGateway();
@@ -24,58 +24,58 @@ void main() {
     objectboxGateway = ObjectBoxGateway(pathGateway);
     await objectboxGateway.connect();
 
-    commentRepository = CommentRepositoryImpl(objectboxGateway);
-    boxComment = objectboxGateway.getConnector()!.box<CommentEntity>();
+    reactionRepository = ReactionRepositoryImpl(objectboxGateway);
+    boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
   });
 
   setUp(() {
-    boxComment.removeAll();
-    expect(boxComment.getAll().isEmpty, true, reason: 'Empty on start');
+    boxReaction.removeAll();
+    expect(boxReaction.getAll().isEmpty, true, reason: 'Empty on start');
   });
 
   tearDownAll(() async {
-    boxComment.removeAll();
+    boxReaction.removeAll();
     await objectboxGateway.disconnect();
   });
 
   test('CommentRepository.commentRepository.deleteMany()', () async {
     final id = Uuid().v4();
     final id2 = Uuid().v4();
-    await commentRepository.insert(
-      Comment(
+    await reactionRepository.insert(
+      Reaction(
         id: id,
         contentId: Uuid().v4(),
         createdAt: DateTime.now().millisecondsSinceEpoch,
         authorName: 'Michel Michel',
-        text: "Pas d'accord avec ce post",
+        flag: ReactionType.like,
       ),
     );
 
-    await commentRepository.insert(
-      Comment(
+    await reactionRepository.insert(
+      Reaction(
         id: id2,
         contentId: Uuid().v4(),
         createdAt: DateTime.now().millisecondsSinceEpoch,
         authorName: 'Michel Michel',
-        text: "Pas d'accord avec ce post",
+        flag: ReactionType.like,
       ),
     );
 
-    await commentRepository.insert(
-      Comment(
+    await reactionRepository.insert(
+      Reaction(
         id: Uuid().v4(),
         contentId: Uuid().v4(),
         createdAt: DateTime.now().millisecondsSinceEpoch,
         authorName: 'Michel Michel',
-        text: "Pas d'accord avec ce post",
+        flag: ReactionType.like,
       ),
     );
 
-    await commentRepository.deleteMany([id, id2]);
+    await reactionRepository.deleteMany([id, id2]);
 
-    final comments = boxComment.getAll();
-    expect(comments, isNotEmpty);
-    expect(comments.length, 1);
+    final reactions = boxReaction.getAll();
+    expect(reactions, isNotEmpty);
+    expect(reactions.length, 1);
   });
 }
 

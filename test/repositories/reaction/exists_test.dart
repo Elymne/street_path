@@ -11,11 +11,9 @@ import 'package:uuid/uuid.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
   late final PathGateway pathGateway;
   late final ObjectBoxGateway objectboxGateway;
   late final ReactionRepositoryImpl reactionRepository;
-
   late final Box<ReactionEntity> boxReaction;
 
   setUpAll(() async {
@@ -39,24 +37,20 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test(
-    'Comment Repository: On ajoute une réaction avec le repository. On doit retrouver ce commentaire dans la base de données.',
-    () async {
-      final id = Uuid().v4();
-      final authorName = 'Michel Michel';
-      final reaction = ReactionType.like;
-      final contentId = Uuid().v4();
-      await reactionRepository.insert(
-        Reaction(contentId: contentId, id: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, flag: reaction),
-      );
+  test('CommentRepository.exists()', () async {
+    final id = Uuid().v4();
+    final authorName = 'Michel Michel';
+    final reactionType = ReactionType.like;
+    final contentId = Uuid().v4();
+    await reactionRepository.insert(
+      Reaction(contentId: contentId, id: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, flag: reactionType),
+    );
 
-      final reactionEntity = boxReaction.query(ReactionEntity_.id.equals(id)).build().findFirst();
-      expect(reactionEntity, isNotNull);
-      expect(reactionEntity!.authorName, authorName);
-      expect(reactionEntity.flag, reaction.value);
-      expect(reactionEntity.contentId, contentId);
-    },
-  );
+    final exists1 = await reactionRepository.exists(id);
+    final exists2 = await reactionRepository.exists(Uuid().v4());
+    expect(exists1, true);
+    expect(exists2, false);
+  });
 }
 
 class _MockPathGateway extends Mock implements PathGateway {}

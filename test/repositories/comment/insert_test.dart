@@ -38,7 +38,7 @@ void main() {
     expect(boxComment.getAll().isEmpty, true, reason: 'Clear data.');
   });
 
-  test('CommentRepository.insert(): données valides et retrouvables.', () async {
+  test('CommentRepository.insert()', () async {
     final id = Uuid().v4();
     final authorName = 'Michel Michel';
     final text = "Pas d'accord avec ce post";

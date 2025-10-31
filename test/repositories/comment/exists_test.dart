@@ -38,7 +38,7 @@ void main() {
     expect(boxComment.getAll().isEmpty, true, reason: 'Clear data.');
   });
 
-  test("CommentRepository.exists(): données inséré et vérification qu'elle existe.", () async {
+  test('CommentRepository.exists()', () async {
     final id = Uuid().v4();
     await commentRepository.insert(
       Comment(

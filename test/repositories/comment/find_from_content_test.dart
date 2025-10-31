@@ -40,7 +40,7 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test("CommentRepository.commentRepository.findFromContent(): Récupération de commentaires vai l'id d'un contenu.", () async {
+  test('CommentRepository.findFromContent()', () async {
     final id = Uuid().v4();
     final authorName = 'Michel Michel';
     final text = "Pas d'accord avec ce post";
