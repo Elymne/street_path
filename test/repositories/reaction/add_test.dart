@@ -46,7 +46,7 @@ void main() {
       final authorName = 'Michel Michel';
       final reaction = ReactionType.like;
       final contentId = Uuid().v4();
-      await reactionRepository.upsert(
+      await reactionRepository.insert(
         Reaction(contentId: contentId, id: id, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, flag: reaction),
       );
 

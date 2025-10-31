@@ -40,7 +40,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
             if (await _contentRepository.exists(json['id'])) {
               continue;
             }
-            await _contentRepository.upsert(ContentText.fromJson(json));
+            await _contentRepository.insert(ContentText.fromJson(json));
             count++;
           }
 
@@ -51,7 +51,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
             }
             // TODO: Vérif de la provenance du lien, et si il est bien construit.
             // Possibilité de gestion d'une blacklist de sites imo pour l'utilisateur.
-            await _contentRepository.upsert(ContentLink.fromJson(json));
+            await _contentRepository.insert(ContentLink.fromJson(json));
             count++;
           }
 
@@ -61,7 +61,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
               continue;
             }
             // TODO: Vérif du média, de son type, et de son enregistrement sur le tel.
-            await _contentRepository.upsert(ContentMedia.fromJson(json));
+            await _contentRepository.insert(ContentMedia.fromJson(json));
             count++;
           }
 
@@ -70,7 +70,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
             if (await _commentRepository.exists(json['id'])) {
               continue;
             }
-            await _commentRepository.upsert(Comment.fromJson(json));
+            await _commentRepository.insert(Comment.fromJson(json));
             count++;
           }
 
@@ -79,7 +79,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
             if (await _reactionRepository.exists(json['id'])) {
               continue;
             }
-            await _reactionRepository.upsert(Reaction.fromJson(json));
+            await _reactionRepository.insert(Reaction.fromJson(json));
             count++;
           }
         }

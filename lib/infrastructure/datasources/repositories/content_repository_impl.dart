@@ -21,7 +21,7 @@ class ContentRepositoryImpl implements ContentRepository {
   }
 
   @override
-  Future<void> upsert(Content content) async {
+  Future<void> insert(Content content) async {
     if (content is ContentText) {
       _boxContentText.put(ContentTextEntity.fromModel(content));
       return;
@@ -33,6 +33,27 @@ class ContentRepositoryImpl implements ContentRepository {
     if (content is ContentMedia) {
       _boxContentMedia.put(ContentMediaEntity.fromModel(content));
       return;
+    }
+
+    throw FormatException('Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.', content);
+  }
+
+  @override
+  Future<void> update(Content content) async {
+    if (content is ContentText) {
+      final contentEntity = _boxContentText.query(ContentTextEntity_.id.equals(content.id)).build().findFirst();
+      if (contentEntity == null) throw ObjectBoxException('Trying to update a content that do not exists');
+      _boxContentText.put(ContentTextEntity.fromModel(content)..obId = contentEntity.obId);
+    }
+    if (content is ContentLink) {
+      final contentEntity = _boxContentLink.query(ContentLinkEntity_.id.equals(content.id)).build().findFirst();
+      if (contentEntity == null) throw ObjectBoxException('Trying to update a content that do not exists');
+      _boxContentLink.put(ContentLinkEntity.fromModel(content)..obId = contentEntity.obId);
+    }
+    if (content is ContentMedia) {
+      final contentEntity = _boxContentMedia.query(ContentMediaEntity_.id.equals(content.id)).build().findFirst();
+      if (contentEntity == null) throw ObjectBoxException('Trying to update a content that do not exists');
+      _boxContentMedia.put(ContentMediaEntity.fromModel(content)..obId = contentEntity.obId);
     }
 
     throw FormatException('Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.', content);

@@ -67,7 +67,7 @@ void main() {
     final title = 'Test content title';
 
     expect(() async {
-      await contentRepository.upsert(
+      await contentRepository.insert(
         _FakeContent(id: id, createdAt: createdAt, authorName: authorName, bounces: bounces, flowName: flowName, title: title),
       );
     }, throwsException);
@@ -81,7 +81,7 @@ void main() {
     final flowName = 'onboarding_flow';
     final title = 'Test content title';
     final text = 'This is a sample ContentText body used for unit testing purposes.';
-    await contentRepository.upsert(
+    await contentRepository.insert(
       ContentText(id: id, createdAt: createdAt, authorName: authorName, bounces: bounces, flowName: flowName, title: title, text: text),
     );
 
@@ -105,7 +105,7 @@ void main() {
     final ref = 'https://example.com';
     final description = 'description';
 
-    await contentRepository.upsert(
+    await contentRepository.insert(
       ContentLink(
         id: id,
         createdAt: createdAt,
@@ -139,7 +139,7 @@ void main() {
     final path = 'path/to/dir';
     final description = 'description';
 
-    await contentRepository.upsert(
+    await contentRepository.insert(
       ContentMedia(
         id: id,
         createdAt: createdAt,

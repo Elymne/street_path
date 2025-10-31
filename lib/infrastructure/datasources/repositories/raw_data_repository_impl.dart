@@ -12,7 +12,7 @@ class RawDataRepositoryImpl implements RawDataRepository {
   }
 
   @override
-  Future<void> add(RawData rawData) async {
+  Future<void> insert(RawData rawData) async {
     _boxRawData.put(RawDataEntity.fromModel(rawData), mode: PutMode.insert);
   }
 

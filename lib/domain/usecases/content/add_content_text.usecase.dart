@@ -27,7 +27,7 @@ class AddContentText extends Usecase<AddContentTextParams, bool> {
         text: params.text,
       );
 
-      await _contentRepository.upsert(newContent);
+      await _contentRepository.insert(newContent);
 
       return Success(true);
     } catch (err, stack) {

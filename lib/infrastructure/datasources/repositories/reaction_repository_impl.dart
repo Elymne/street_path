@@ -18,7 +18,7 @@ class ReactionRepositoryImpl implements ReactionRepository {
   }
 
   @override
-  Future<void> upsert(Reaction reaction) async {
+  Future<void> insert(Reaction reaction) async {
     _boxReaction.put(ReactionEntity.fromModel(reaction));
   }
 

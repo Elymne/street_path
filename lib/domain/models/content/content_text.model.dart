@@ -16,6 +16,32 @@ class ContentText extends Content {
     required this.text,
   });
 
+  ContentText clone({
+    String? id,
+    int? createdAt,
+    int? receivedAt,
+    String? authorName,
+    int? bounces,
+    String? flowName,
+    String? title,
+    StorageMode? storageMode,
+    ShippingMode? shippingMode,
+    String? text,
+  }) {
+    return ContentText(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      receivedAt: receivedAt ?? this.receivedAt,
+      authorName: authorName ?? this.authorName,
+      bounces: bounces ?? this.bounces,
+      flowName: flowName ?? this.flowName,
+      title: title ?? this.title,
+      storageMode: storageMode ?? this.storageMode,
+      shippingMode: shippingMode ?? this.shippingMode,
+      text: text ?? this.text,
+    );
+  }
+
   factory ContentText.fromJson(Map<String, dynamic> json) {
     return ContentText(
       id: json['id'] as String,

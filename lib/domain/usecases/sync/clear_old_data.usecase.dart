@@ -32,8 +32,8 @@ class ClearOldData extends Usecase<ClearOldDataParams, int> {
       ]);
       deleteCount += deletedRes[0] + deletedRes[1] + deletedRes[2];
 
-      int safer = 0;
-      while (defaultDbLimitSize <= await _databaseGateway.getCurrentSize() || safer < 10) {
+      int safeCheckIncr = 0;
+      while (defaultDbLimitSize <= await _databaseGateway.getCurrentSize() || safeCheckIncr < 10) {
         final expiredContents = await _contentRepository.findMany(20, 1, orderBy: [ContentOrderBy.oldest]);
         final expiredIds = expiredContents.map((content) => content.id).toList();
         final deletedRes = await Future.wait([
@@ -42,7 +42,7 @@ class ClearOldData extends Usecase<ClearOldDataParams, int> {
           _reactionRepository.deleteMany(expiredIds),
         ]);
         deleteCount += deletedRes[0] + deletedRes[1] + deletedRes[2];
-        safer++;
+        safeCheckIncr++;
       }
 
       return Success(deleteCount);

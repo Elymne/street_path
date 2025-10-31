@@ -29,6 +29,34 @@ class ContentMedia extends Content {
     required this.description,
   });
 
+  ContentMedia clone({
+    String? id,
+    int? createdAt,
+    int? receivedAt,
+    String? authorName,
+    int? bounces,
+    String? flowName,
+    String? title,
+    StorageMode? storageMode,
+    ShippingMode? shippingMode,
+    String? path,
+    String? description,
+  }) {
+    return ContentMedia(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      receivedAt: receivedAt ?? this.receivedAt,
+      authorName: authorName ?? this.authorName,
+      bounces: bounces ?? this.bounces,
+      flowName: flowName ?? this.flowName,
+      title: title ?? this.title,
+      storageMode: storageMode ?? this.storageMode,
+      shippingMode: shippingMode ?? this.shippingMode,
+      path: path ?? this.path,
+      description: description ?? this.description,
+    );
+  }
+
   factory ContentMedia.fromJson(Map<String, dynamic> json) {
     return ContentMedia(
       id: json['id'] as String,

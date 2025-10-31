@@ -17,7 +17,11 @@ abstract class ContentRepository {
 
   /// Ajoute dans la DB un nouveau [Content].
   /// [Content] est un modèle abstrait, ce qui veut dire que l'implémentation doit vérifier ce qu'étend vraiment la valeur content.
-  Future<void> upsert(Content content);
+  Future<void> insert(Content content);
+
+  /// Modifie dans la DB un [Content]. Par du principe que le [Content] en param existe déjà en DB.
+  /// [Content] est un modèle abstrait, ce qui veut dire que l'implémentation doit vérifier ce qu'étend vraiment la valeur content.
+  Future<void> update(Content content);
 
   /// Recherche le plus de contenu possible dans la base de données.
   /// Les valeurs retournées [Content] sont abstraites et doivent-être identifiés.

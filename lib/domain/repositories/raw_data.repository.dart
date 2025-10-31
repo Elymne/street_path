@@ -10,7 +10,7 @@ import 'package:poc_street_path/domain/models/cache/raw_data.model.dart';
 /// ------------------------------------------------------------
 abstract class RawDataRepository {
   /// Ajoute une nouvelle donnée brute en base de données.
-  Future<void> add(RawData rawData);
+  Future<void> insert(RawData rawData);
 
   /// Récupère la totalité des données brutes enregistré en base de données.
   /// Retourne une [List] de [RawData].

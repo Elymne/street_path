@@ -25,7 +25,7 @@ class AddReaction extends Usecase<AddReactionParams, bool> {
         authorName: params.authorName,
         flag: params.flag,
       );
-      await _reactionRepository.upsert(newReaction);
+      await _reactionRepository.insert(newReaction);
       return Success(true);
     } catch (err, stack) {
       SpLog().e('FindContents: Une exception a été levée.', err, stack: stack);

@@ -48,7 +48,7 @@ void main() {
       final text = "Pas d'accord avec ce post";
       final contentId = Uuid().v4();
 
-      await commentRepository.upsert(
+      await commentRepository.insert(
         Comment(id: id, contentId: contentId, createdAt: DateTime.now().millisecondsSinceEpoch, authorName: authorName, text: text),
       );
 
