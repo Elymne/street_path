@@ -38,7 +38,7 @@ abstract class ContentRepository {
     List<String>? flows,
     List<StorageMode>? storageModes,
     List<ShippingMode>? shippingModes,
-    List<ContentOrderBy>? orderBy,
+    List<ContentOrderBy>? orderByList,
   });
 
   /// Récupère un [Wrap] dans la base de données.
@@ -52,4 +52,5 @@ abstract class ContentRepository {
   Future<int> deleteMany(List<String> ids);
 }
 
-enum ContentOrderBy { newest, oldest }
+/// Data are always fetched by the newest by default, that why the enum doesn't exists here.
+enum ContentOrderBy { oldest }

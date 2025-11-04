@@ -110,7 +110,7 @@ class ContentRepositoryImpl implements ContentRepository {
     List<String>? flows,
     List<StorageMode>? storageModes,
     List<ShippingMode>? shippingModes,
-    List<ContentOrderBy>? orderBy,
+    List<ContentOrderBy>? orderByList,
   }) async {
     final List<Content> contents = [];
 
@@ -152,19 +152,41 @@ class ContentRepositoryImpl implements ContentRepository {
       contentMediaCondition = contentMediaCondition.and(ContentMediaEntity_.shippingMode.oneOf(comparator));
     }
 
+    var contentTextQueryBuilder = _boxContentText.query(contentTextCondition);
+    var contentLinkQueryBuilder = _boxContentLink.query(contentLinkCondition);
+    var contentMediaQueryBuilder = _boxContentMedia.query(contentMediaCondition);
+
+    contentTextQueryBuilder = contentTextQueryBuilder.order(ContentTextEntity_.createdAt);
+    contentLinkQueryBuilder = contentLinkQueryBuilder.order(ContentLinkEntity_.createdAt);
+    contentMediaQueryBuilder = contentMediaQueryBuilder.order(ContentMediaEntity_.createdAt);
+
+    // * Fetch order by some values.
+    if (orderByList != null) {
+      for (final orderBy in orderByList) {
+        if (orderBy == ContentOrderBy.oldest) {
+          contentTextQueryBuilder = contentTextQueryBuilder.order(ContentTextEntity_.createdAt, flags: Order.descending);
+          contentLinkQueryBuilder = contentLinkQueryBuilder.order(ContentLinkEntity_.createdAt, flags: Order.descending);
+          contentMediaQueryBuilder = contentMediaQueryBuilder.order(ContentMediaEntity_.createdAt, flags: Order.descending);
+        }
+      }
+    }
+
+    final contentTextQuery = contentTextQueryBuilder.build();
+    contentTextQuery.offset = chunkIndex * chunkSize;
+    contentTextQuery.limit = chunkSize;
+
+    final contentLinkQuery = contentLinkQueryBuilder.build();
+    contentLinkQuery.offset = chunkIndex * chunkSize;
+    contentLinkQuery.limit = chunkSize;
+
+    final contentMediaQuery = contentMediaQueryBuilder.build();
+    contentMediaQuery.offset = chunkIndex * chunkSize;
+    contentMediaQuery.limit = chunkSize;
+
     final List<List<Object>> bigFetch = await Future.wait([
-      (_boxContentText.query(contentTextCondition).build()
-            ..offset = chunkIndex * chunkSize
-            ..limit = chunkSize)
-          .findAsync(),
-      (_boxContentLink.query(contentLinkCondition).build()
-            ..offset = chunkIndex * chunkSize
-            ..limit = chunkSize)
-          .findAsync(),
-      (_boxContentMedia.query(contentMediaCondition).build()
-            ..offset = chunkIndex * chunkSize
-            ..limit = chunkSize)
-          .findAsync(),
+      contentTextQuery.findAsync(),
+      contentLinkQuery.findAsync(),
+      contentMediaQuery.findAsync(),
     ]);
 
     for (final element in bigFetch[0] as List<ContentTextEntity>) {
@@ -177,6 +199,16 @@ class ContentRepositoryImpl implements ContentRepository {
 
     for (final element in bigFetch[2] as List<ContentMediaEntity>) {
       contents.add(element.toModel());
+    }
+
+    contents.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    // * Reorder the last part after merging all.
+    if (orderByList != null) {
+      for (final orderBy in orderByList) {
+        if (orderBy == ContentOrderBy.oldest) {
+          contents.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        }
+      }
     }
 
     return contents;

@@ -8,9 +8,8 @@ import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'dart:io';
-
 import 'data/entities.dart';
+import 'dart:io';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +47,34 @@ void main() {
     await objectboxGateway.disconnect();
   });
 
-  test('ContentRepository.findMany()', () async {});
+  test('ContentRepository.findMany(): Full data', () async {
+    final contents = await contentRepository.findMany(0, 0);
+    expect(contents.length, 13);
+  });
+
+  test('ContentRepository.findMany(): 2 elements of each data type', () async {
+    // * Il y a 3 types de contenus, donc (3 * 2) * 1 = 6.
+    final contents = await contentRepository.findMany(0, 2);
+    expect(contents.length, 6);
+  });
+
+  test('ContentRepository.findMany(): 2 elements of each data type page 2', () async {
+    // * Il y a 3 types de contenus, donc (3 * 2) * 2 = 6.
+    final contents = await contentRepository.findMany(1, 2);
+    expect(contents.length, 6);
+  });
+
+  test('ContentRepository.findMany(): 2 elements of each data type page 3', () async {
+    // * Il y a 3 types de contenus, donc (3 * 2) * 3 = 6.
+    final contents = await contentRepository.findMany(2, 2);
+    expect(contents.length, 1);
+  });
+
+  test('ContentRepository.findMany(): Flow = Morning Brief', () async {
+    // * Fetch a maximum of 10 elements with Morning Brief flow name. Should be one
+    final contents = await contentRepository.findMany(0, 0, flows: ['resources']);
+    expect(contents.length, 1);
+  });
 }
 
 class _MockPathGateway extends Mock implements PathGateway {}

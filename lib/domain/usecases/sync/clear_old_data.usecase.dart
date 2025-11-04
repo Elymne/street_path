@@ -34,7 +34,7 @@ class ClearOldData extends Usecase<ClearOldDataParams, int> {
 
       int safeCheckIncr = 0;
       while (defaultDbLimitSize <= await _databaseGateway.getCurrentSize() || safeCheckIncr < 10) {
-        final expiredContents = await _contentRepository.findMany(20, 1, orderBy: [ContentOrderBy.oldest]);
+        final expiredContents = await _contentRepository.findMany(20, 1, orderByList: [ContentOrderBy.oldest]);
         final expiredIds = expiredContents.map((content) => content.id).toList();
         final deletedRes = await Future.wait([
           _contentRepository.deleteMany(expiredIds),

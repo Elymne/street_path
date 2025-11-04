@@ -23,9 +23,7 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
       final List<Map<String, Object>> data = [];
       final List<Content> contents = [];
 
-      contents.addAll(
-        await _contentRepository.findMany(maxSync, 0, shippingModes: [ShippingMode.creator], orderBy: [ContentOrderBy.newest]),
-      );
+      contents.addAll(await _contentRepository.findMany(maxSync, 0, shippingModes: [ShippingMode.creator]));
 
       if (contents.length < 10) {
         contents.addAll(
@@ -34,20 +32,12 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
             0,
             createdWhile: defaultDbDataTime,
             shippingModes: [ShippingMode.important],
-            orderBy: [ContentOrderBy.newest],
           ),
         );
       }
 
       if (contents.length < 10) {
-        contents.addAll(
-          await _contentRepository.findMany(
-            maxSync - contents.length,
-            0,
-            shippingModes: [ShippingMode.normal],
-            orderBy: [ContentOrderBy.newest],
-          ),
-        );
+        contents.addAll(await _contentRepository.findMany(maxSync - contents.length, 0, shippingModes: [ShippingMode.normal]));
       }
 
       for (final content in contents) {
