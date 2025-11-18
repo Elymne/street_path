@@ -1,3 +1,4 @@
+import 'package:poc_street_path/domain/models/content/content.model.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_link_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_media_entity.dart';
@@ -53,26 +54,32 @@ void main() {
   });
 
   test('ContentRepository.findMany(): 2 elements of each data type', () async {
-    // * Il y a 3 types de contenus, donc (3 * 2) * 1 = 6.
     final contents = await contentRepository.findMany(0, 2);
     expect(contents.length, 6);
   });
 
   test('ContentRepository.findMany(): 2 elements of each data type page 2', () async {
-    // * Il y a 3 types de contenus, donc (3 * 2) * 2 = 6.
     final contents = await contentRepository.findMany(1, 2);
     expect(contents.length, 6);
   });
 
   test('ContentRepository.findMany(): 2 elements of each data type page 3', () async {
-    // * Il y a 3 types de contenus, donc (3 * 2) * 3 = 6.
     final contents = await contentRepository.findMany(2, 2);
     expect(contents.length, 1);
   });
 
-  test('ContentRepository.findMany(): Flow = Morning Brief', () async {
-    // * Fetch a maximum of 10 elements with Morning Brief flow name. Should be one
+  test('ContentRepository.findMany(): Flow = resources', () async {
     final contents = await contentRepository.findMany(0, 0, flows: ['resources']);
+    expect(contents.length, 1);
+  });
+
+  test('ContentRepository.findMany(): Flow = updates, resources', () async {
+    final contents = await contentRepository.findMany(0, 0, flows: ['updates', 'resources']);
+    expect(contents.length, 2);
+  });
+
+  test('ContentRepository.findMany(): Flow = updates, resources', () async {
+    final contents = await contentRepository.findMany(0, 0, shippingModes: [ShippingMode.creator]);
     expect(contents.length, 1);
   });
 }

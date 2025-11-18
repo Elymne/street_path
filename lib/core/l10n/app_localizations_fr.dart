@@ -9,5 +9,6 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get street_path_channel_description => 'Cette notification est là car le service StreetPath est actif.';
+  String get street_path_channel_description =>
+      'Cette notification est là car le service StreetPath est actif.';
 }
