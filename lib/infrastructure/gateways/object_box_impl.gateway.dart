@@ -1,10 +1,16 @@
-import 'dart:io';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/domain/gateways/path.gateway.dart';
+import 'package:poc_street_path/infrastructure/gateways/path_provider_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:path/path.dart' as p;
+import 'dart:io';
+
+final objectBoxGatewayProvider = Provider<DatabaseGateway<Store>>((ref) {
+  final pathGateway = ref.read(pathProviderGatewayProvider);
+  return ObjectBoxGateway(pathGateway);
+});
 
 class ObjectBoxGateway implements DatabaseGateway<Store> {
   late final PathGateway _pathGateway;

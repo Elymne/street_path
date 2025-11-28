@@ -1,8 +1,11 @@
-import 'dart:io';
-import 'package:poc_street_path/core/globals.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
 import 'package:poc_street_path/presentation/services/street_path_task_handler.dart';
+import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poc_street_path/core/globals.dart';
+import 'dart:io';
+
+final streetPathGatewayProvider = Provider<StreetPathGateway>((ref) => StreetPathGatewayImpl());
 
 class StreetPathGatewayImpl implements StreetPathGateway {
   @override
@@ -43,7 +46,11 @@ class StreetPathGatewayImpl implements StreetPathGateway {
       notificationIcon: null,
       notificationButtons: [],
       notificationInitialRoute: null,
-      serviceTypes: [ForegroundServiceTypes.connectedDevice, ForegroundServiceTypes.dataSync, ForegroundServiceTypes.remoteMessaging],
+      serviceTypes: [
+        ForegroundServiceTypes.connectedDevice,
+        ForegroundServiceTypes.dataSync,
+        ForegroundServiceTypes.remoteMessaging,
+      ],
       callback: streetPathTaskHandlerCallback,
     );
   }

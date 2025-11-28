@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_link_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_media_entity.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/content_text_entity.dart';
@@ -9,12 +11,17 @@ import 'package:poc_street_path/domain/models/content/content_text.model.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 
+final contentRepositoryProvider = Provider<ContentRepository>((ref) {
+  final objectBox = ref.read(objectBoxGatewayProvider);
+  return ContentRepositoryImpl(objectBox);
+});
+
 class ContentRepositoryImpl implements ContentRepository {
   late final Box<ContentTextEntity> _boxContentText;
   late final Box<ContentLinkEntity> _boxContentLink;
   late final Box<ContentMediaEntity> _boxContentMedia;
 
-  ContentRepositoryImpl(ObjectBoxGateway objectboxGateway) {
+  ContentRepositoryImpl(DatabaseGateway objectboxGateway) {
     _boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();
     _boxContentLink = objectboxGateway.getConnector()!.box<ContentLinkEntity>();
     _boxContentMedia = objectboxGateway.getConnector()!.box<ContentMediaEntity>();
@@ -35,7 +42,10 @@ class ContentRepositoryImpl implements ContentRepository {
       return;
     }
 
-    throw FormatException('Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.', content);
+    throw FormatException(
+      'Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.',
+      content,
+    );
   }
 
   @override
@@ -56,7 +66,10 @@ class ContentRepositoryImpl implements ContentRepository {
       return;
     }
 
-    throw FormatException('Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.', content);
+    throw FormatException(
+      'Content type not recognized: should be either a ContentText, a ContentLink or a ContentMedia.',
+      content,
+    );
   }
 
   @override
@@ -164,9 +177,18 @@ class ContentRepositoryImpl implements ContentRepository {
     if (orderByList != null) {
       for (final orderBy in orderByList) {
         if (orderBy == ContentOrderBy.oldest) {
-          contentTextQueryBuilder = contentTextQueryBuilder.order(ContentTextEntity_.createdAt, flags: Order.descending);
-          contentLinkQueryBuilder = contentLinkQueryBuilder.order(ContentLinkEntity_.createdAt, flags: Order.descending);
-          contentMediaQueryBuilder = contentMediaQueryBuilder.order(ContentMediaEntity_.createdAt, flags: Order.descending);
+          contentTextQueryBuilder = contentTextQueryBuilder.order(
+            ContentTextEntity_.createdAt,
+            flags: Order.descending,
+          );
+          contentLinkQueryBuilder = contentLinkQueryBuilder.order(
+            ContentLinkEntity_.createdAt,
+            flags: Order.descending,
+          );
+          contentMediaQueryBuilder = contentMediaQueryBuilder.order(
+            ContentMediaEntity_.createdAt,
+            flags: Order.descending,
+          );
         }
       }
     }

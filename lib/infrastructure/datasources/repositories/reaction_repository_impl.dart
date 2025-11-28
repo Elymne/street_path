@@ -1,13 +1,20 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poc_street_path/domain/gateways/database.gateway.dart';
 import 'package:poc_street_path/domain/models/content/reaction.model.dart';
 import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/contents/reaction_entity.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 
+final reactionRepositoryProvider = Provider<ReactionRepository>((ref) {
+  final objectBox = ref.read(objectBoxGatewayProvider);
+  return ReactionRepositoryImpl(objectBox);
+});
+
 class ReactionRepositoryImpl implements ReactionRepository {
   late final Box<ReactionEntity> _boxReaction;
 
-  ReactionRepositoryImpl(ObjectBoxGateway objectboxGateway) {
+  ReactionRepositoryImpl(DatabaseGateway objectboxGateway) {
     _boxReaction = objectboxGateway.getConnector()!.box<ReactionEntity>();
   }
 

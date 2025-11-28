@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
@@ -12,6 +13,18 @@ import 'package:poc_street_path/domain/repositories/comment.repository.dart';
 import 'package:poc_street_path/domain/repositories/content.repository.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/domain/repositories/reaction.repository.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/comment_repository_impl.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/content_repository_impl.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_repository_impl.dart';
+import 'package:poc_street_path/infrastructure/datasources/repositories/reaction_repository_impl.dart';
+
+final syncPostProvider = Provider<SyncPost>((ref) {
+  final rawDataRepo = ref.read(rawDataRepositoryProvider);
+  final contentRepo = ref.read(contentRepositoryProvider);
+  final commentRepo = ref.read(commentRepositoryProvider);
+  final reactionRepo = ref.read(reactionRepositoryProvider);
+  return SyncPost(rawDataRepo, contentRepo, commentRepo, reactionRepo);
+});
 
 class SyncPost extends Usecase<SyncPostParams, int> {
   final RawDataRepository _rawDataRepository;
