@@ -41,7 +41,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
             if (await _contentRepository.exists(json['id'])) {
               continue;
             }
-            await _contentRepository.insert(ContentText.fromJson(json));
+            await _contentRepository.insert(ContentText.fromJson(json).clone(bounces: (json['bounces'] as int) + 1));
             count++;
           }
 
@@ -50,9 +50,17 @@ class SyncPost extends Usecase<SyncPostParams, int> {
             if (await _contentRepository.exists(json['id'])) {
               continue;
             }
-            // TODO: Vérif de la provenance du lien, et si il est bien construit.
-            // Possibilité de gestion d'une blacklist de sites imo pour l'utilisateur.
-            await _contentRepository.insert(ContentLink.fromJson(json));
+            final uri = Uri.parse(json['ref'] as String);
+            if (!uri.isAbsolute) {
+              continue;
+            }
+            // todo: Create an internal database for filtered domain for users.
+            final fakeList = ['mongolien.org'];
+            if (fakeList.contains(uri.host)) {
+              continue;
+            }
+
+            await _contentRepository.insert(ContentLink.fromJson(json).clone(bounces: (json['bounces'] as int) + 1));
             count++;
           }
 
@@ -62,7 +70,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
               continue;
             }
             // TODO: Vérif du média, de son type, et de son enregistrement sur le tel.
-            await _contentRepository.insert(ContentMedia.fromJson(json));
+            await _contentRepository.insert(ContentMedia.fromJson(json).clone(bounces: (json['bounces'] as int) + 1));
             count++;
           }
 

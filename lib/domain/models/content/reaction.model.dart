@@ -5,9 +5,21 @@ class Reaction extends DataModel {
   final String authorName;
   final ReactionType flag;
 
-  Reaction({required this.contentId, required super.id, required super.createdAt, required this.authorName, required this.flag});
+  Reaction({
+    required this.contentId,
+    required super.id,
+    required super.createdAt,
+    required this.authorName,
+    required this.flag,
+  });
 
-  static final Map<String, Type> allowed = {'id': String, 'createdAt': int, 'authorName': String, 'contentId': String, 'flag': int};
+  static final Map<String, Type> allowed = {
+    'id': String,
+    'createdAt': int,
+    'authorName': String,
+    'contentId': String,
+    'flag': int,
+  };
 
   Map<String, Object> toRaw() {
     return {'id': id, 'createdAt': createdAt, 'authorName': authorName, 'contentId': contentId, 'flag': flag};
@@ -33,7 +45,10 @@ enum ReactionType {
   const ReactionType(this.value);
 
   static ReactionType fromValue(int value) {
-    final reactionType = ReactionType.values.firstWhere((type) => type.value == value, orElse: () => ReactionType.unknown);
+    final reactionType = ReactionType.values.firstWhere(
+      (type) => type.value == value,
+      orElse: () => ReactionType.unknown,
+    );
     return reactionType;
   }
 }

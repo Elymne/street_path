@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:poc_street_path/domain/models/cache/raw_data.model.dart';
 import 'package:poc_street_path/domain/repositories/raw_data.repository.dart';
 import 'package:poc_street_path/infrastructure/datasources/entities/caches/raw_data_entity.dart';
@@ -9,8 +7,9 @@ import 'package:poc_street_path/domain/gateways/path.gateway.dart';
 import 'package:poc_street_path/objectbox.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'dart:io';
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
+import 'dart:io';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

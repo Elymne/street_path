@@ -75,7 +75,7 @@ class ContentMedia extends Content {
     return ContentMedia(
       id: json['id'] as String,
       createdAt: json['createdAt'] as int,
-      receivedAt: json['createdAt'] as int,
+      receivedAt: DateTime.now().millisecondsSinceEpoch,
       authorName: json['authorName'] as String,
       bounces: json['bounces'] as int,
       flowName: json['flowName'] as String,

@@ -6,8 +6,8 @@ import 'package:poc_street_path/core/l10n/app_localizations.dart';
 import 'package:poc_street_path/core/themes/light_theme.dart';
 import 'package:poc_street_path/presentation/application/screens/splash_screen/splash_screen.dart';
 
-class MobileApp extends StatelessWidget {
-  const MobileApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
