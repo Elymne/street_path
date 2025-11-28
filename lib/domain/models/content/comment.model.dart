@@ -5,21 +5,9 @@ class Comment extends DataModel {
   final String authorName;
   final String text;
 
-  Comment({
-    required super.id,
-    required this.contentId,
-    required super.createdAt,
-    required this.authorName,
-    required this.text,
-  });
+  Comment({required super.id, required this.contentId, required super.createdAt, required this.authorName, required this.text});
 
-  static final Map<String, Type> allowed = {
-    'id': String,
-    'createdAt': int,
-    'contentId': String,
-    'authorName': String,
-    'text': String,
-  };
+  static final Map<String, Type> allowed = {'id': String, 'createdAt': int, 'contentId': String, 'authorName': String, 'text': String};
 
   Map<String, Object> toRaw() {
     return {'id': id, 'createdAt': createdAt, 'contentId': contentId, 'authorName': authorName, 'text': text};

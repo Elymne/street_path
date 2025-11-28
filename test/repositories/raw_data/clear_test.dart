@@ -44,15 +44,9 @@ void main() {
     final data2 = jsonEncode('Un autre texte');
     final data3 = jsonEncode('Un autre texte');
 
-    await rawDataRepository.insert(
-      RawData(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, data: data),
-    );
-    await rawDataRepository.insert(
-      RawData(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, data: data2),
-    );
-    await rawDataRepository.insert(
-      RawData(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, data: data3),
-    );
+    await rawDataRepository.insert(RawData(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, data: data));
+    await rawDataRepository.insert(RawData(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, data: data2));
+    await rawDataRepository.insert(RawData(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, data: data3));
 
     final result = await rawDataRepository.findAll();
     expect(result, isNotEmpty);
