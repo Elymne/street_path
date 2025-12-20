@@ -1,4 +1,3 @@
-import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/domain/usecases/sync/add_raw_data.usecase.dart';
@@ -53,7 +52,9 @@ class NearbyServiceImpl {
       callback: (devicesList) {
         final seensId = _seenDevices.map((elem) => elem.deviceId);
         for (final device in devicesList) {
-          SpLog().i('Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}');
+          SpLog().i(
+            'Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}',
+          );
 
           if (seensId.contains(device.deviceId)) {
             continue; // * Déjà vu, on skip.

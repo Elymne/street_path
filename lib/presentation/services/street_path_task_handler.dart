@@ -13,6 +13,7 @@ import 'package:poc_street_path/core/result.dart';
 import 'dart:async';
 
 class StreetPathTaskHandler extends TaskHandler {
+  // * Pas d'injection via Riverpod possible ici.
   late final _pathProviderGatewayImpl = PathProviderGatewayImpl();
   late final _objectBoxGateway = ObjectBoxGateway(_pathProviderGatewayImpl);
   late final _contentRepository = ContentRepositoryImpl(_objectBoxGateway);
