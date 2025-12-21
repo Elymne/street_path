@@ -11,11 +11,13 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _State extends ConsumerState<SplashScreen> with TickerProviderStateMixin {
+  late final initAppNotifier = ref.read(initAppNotifier.notifier);
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ref.read(initAppNotifier.notifier).syncData();
+      initAppNotifier.syncData();
     });
   }
 

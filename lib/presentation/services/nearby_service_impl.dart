@@ -1,3 +1,4 @@
+import 'package:nearby_service/nearby_service.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/domain/usecases/sync/add_raw_data.usecase.dart';
@@ -9,19 +10,20 @@ import 'dart:convert';
 import 'dart:async';
 
 /// ! Riverpod est inutilisable dans ce contexte : vous ne pouvez pas utiliser de Provider !
+/// ! J'ai mal compris le fonctionnement du WIFI car je suis con. Il ne peut bien évidement n'y avoir qu'une seule connexion à la fois.
 class NearbyServiceImpl {
-  late final NearbyService _nearbySevice = NearbyService();
+  late final NearbyService _nearbyService = NearbyService.getInstance();
 
   late final _pathProviderGatewayImpl = PathProviderGatewayImpl();
   late final _databaseGateway = ObjectBoxGateway(_pathProviderGatewayImpl);
   late final _rawDataRepository = RawDataRepositoryImpl(_databaseGateway);
   late final _addRawData = AddRawData(_rawDataRepository);
 
-  late final StreamSubscription _subscription;
-  late final StreamSubscription _receivedDataSubscription;
-  final List<_SeenDevice> _seenDevices = [];
-
   late final Timer dutyCycler; // *  http://iot-strasbourg.strataggem.com/ref/duty-cycle.html
+
+  late final NearbyServiceMessagesListener _nearbyServiceMessageListener;
+  late Null _connectedDevice = null;
+  final List<_SeenDevice> _seenDevices = [];
 
   String _shareableData = jsonEncode([]); // * Data à share.
 
@@ -31,85 +33,126 @@ class NearbyServiceImpl {
     _shareableData = contentData;
   }
 
-  Future init() async {
+  /// Simple vérification des permissions Android et du statut du WIFI.
+  /// J'en ai besoin pour être sûr que je peux démarrer l'écoute des appareils à proximité.
+  Future<bool> check() async {
     SpLog().i('StreetPath scan starting…');
-    await _nearbySevice.init(
-      serviceType: 'com.cyneila.streetpath',
-      strategy: Strategy.P2P_CLUSTER,
-      deviceName: '$streetPathSignatureName:${Uuid().v4()}',
-      callback: (dynamic _) async {
-        SpLog().i('StreetPath scan has started.');
-      },
-    );
+    await _nearbyService.initialize();
+
+    final granted = await _nearbyService.android?.requestPermissions() ?? false;
+    if (granted == false) {
+      return false;
+    }
+
+    final isWifiEnabled = await _nearbyService.android?.checkWifiService() ?? false;
+    if (isWifiEnabled == false) {
+      return false;
+    }
+
+    SpLog().i('StreetPath initialised.');
+    return true;
   }
 
   /// Fait pas mal de trucs :
   /// - Commence l'écoutes les changements lorsque des appareils avec le BLE/WIFI d'activité sont détecté par l'appareil.
   /// - Tentes des connections sur les appareils reconnu.
   /// - Tentes de transférer de la data sur les appareils reconnu et connecté.
-  Future run() async {
-    _subscription = _nearbySevice.stateChangedSubscription(
-      callback: (devicesList) {
-        final seensId = _seenDevices.map((elem) => elem.deviceId);
-        for (final device in devicesList) {
-          SpLog().i(
-            'Device WIFI/BLE detected : deviceId: ${device.deviceId} | deviceName: ${device.deviceName} | state: ${device.state}',
-          );
+  ///
+  /// Si il s'avère que l'écoute ne peut pas être lancé, on retourne false pour permettre à mon service de relancer ou non la détection.
+  Future<bool> start() async {
+    // * Démarre impossible, problème lié au check au dessus.
+    if (await _nearbyService.discover() == false) {
+      return false;
+    }
 
-          if (seensId.contains(device.deviceId)) {
-            continue; // * Déjà vu, on skip.
-          }
+    // * Ecoute des appareils à côté.
+    _nearbyService.getPeersStream().listen((event) async {
+      // * On a juste besoin des ids identifiés précédement.
+      final seensId = _seenDevices.map((elem) => elem.deviceId);
 
-          if (device.state == SessionState.connecting) {
-            continue; // * En cours de connexion, on skip en attendant le prochain event.
-          }
+      for (final device in event) {
+        SpLog().i(
+          'Device WIFI/BLE detected : deviceId: ${device.info.id} | deviceName: ${device.info.displayName} | state: }',
+        );
 
-          final signature = device.deviceName.split(':')[0];
-          if (signature != streetPathSignatureName) {
-            _seenDevices.add(_SeenDevice(deviceId: device.deviceId, at: DateTime.now().millisecondsSinceEpoch));
-            continue; // * Mauvaise signature. On ajoute aux déjà vu et on skip.
-          }
+        if (seensId.contains(device.info.id)) {
+          continue; // * Déjà vu, on skip.
+        }
 
-          if (device.state == SessionState.notConnected) {
-            _nearbySevice.invitePeer(deviceID: device.deviceId, deviceName: device.deviceName);
-            continue; // * On s'est jamais connecté. On tente et on skip.
-          }
+        if (device.status == NearbyDeviceStatus.connecting) {
+          continue; // * En cours de connexion, on skip en attendant le prochain event.
+        }
 
-          if (device.state == SessionState.connected) {
-            _nearbySevice.sendMessage(device.deviceId, _shareableData);
-            _seenDevices.add(_SeenDevice(deviceId: device.deviceId, at: DateTime.now().millisecondsSinceEpoch));
-            continue; // * On est connecté. On envoie la data qu'on peut en fonction du mode d'envoie puis on ajoute aux déjà vu et on skip.
+        final signature = device.info.displayName.split(':')[0];
+        if (signature != streetPathSignatureName) {
+          _seenDevices.add(_SeenDevice(deviceId: device.info.id, at: DateTime.now().millisecondsSinceEpoch));
+          continue; // * Mauvaise signature. On ajoute aux déjà vu et on skip.
+        }
+
+        if (device.status == NearbyDeviceStatus.available) {
+          if (await _nearbyService.connectById(device.info.id) == false) {
+            _seenDevices.add(_SeenDevice(deviceId: device.info.id, at: DateTime.now().millisecondsSinceEpoch));
+            continue; // * On n'a pas réussi à se connecter. On retentera une prochaine fois.
           }
         }
-      },
-    );
+
+        if (device.status == NearbyDeviceStatus.connected) {
+          _nearbyService.send(
+            OutgoingNearbyMessage(
+              content: NearbyMessageTextRequest.create(value: _shareableData),
+              receiver: device.info,
+            ),
+          );
+          _seenDevices.add(_SeenDevice(deviceId: device.info.id, at: DateTime.now().millisecondsSinceEpoch));
+          continue; // * Content envoyé, on se barre.
+        }
+      }
+    });
 
     // * Reception de data.
-    _receivedDataSubscription = _nearbySevice.dataReceivedSubscription(
-      callback: (data) {
-        SpLog().i('Data fetched from device : ${jsonEncode(data)}');
-        _addRawData.execute(AddRawDataParams(jsonEncode(data)));
-        SpLog().i('Data injected into device');
+    _nearbyServiceMessageListener = NearbyServiceMessagesListener(
+      onData: (message) {
+        if (message.content is NearbyMessageTextRequest) {
+          SpLog().i('New Data received from ${message.sender.id}');
+
+          _addRawData.execute(AddRawDataParams(jsonEncode(message.content)));
+          _nearbyService.send(
+            OutgoingNearbyMessage(receiver: message.sender, content: NearbyMessageTextResponse(id: message.content.id)),
+          );
+          return;
+        }
+
+        if (message.content is NearbyMessageTextResponse) {}
       },
     );
 
+    // _connectedDeviceSubscription = _nearbyService.getConnectedDeviceStreamById(deviceId).listen((event) async {
+    //   final wasConnected = connectedDevice?.status.isConnected ?? false;
+    //   final nowConnected = event?.status.isConnected ?? false;
+    //   if (wasConnected && !nowConnected) {
+    //     // return to the discovery state
+    //   }
+    //   connectedDevice = event;
+    // });
+
     // * Duty Cycler.
-    dutyCycler = Timer.periodic(Duration(seconds: 30), (timer) async {
-      _nearbySevice.startBrowsingForPeers();
-      _nearbySevice.startAdvertisingPeer();
-      Future.delayed(Duration(seconds: 5), () {
-        _nearbySevice.stopBrowsingForPeers();
-        _nearbySevice.stopAdvertisingPeer();
-      });
-    });
+    // dutyCycler = Timer.periodic(Duration(seconds: 30), (timer) async {
+    //   _nearbySevice.startBrowsingForPeers();
+    //   _nearbySevice.startAdvertisingPeer();
+    //   Future.delayed(Duration(seconds: 5), () {
+    //     _nearbySevice.stopBrowsingForPeers();
+    //     _nearbySevice.stopAdvertisingPeer();
+    //   });
+    // });
+    return true;
   }
 
-  Future stop() async {
-    await _nearbySevice.stopBrowsingForPeers();
-    await _nearbySevice.stopAdvertisingPeer();
-    await Future.wait([_subscription.cancel(), _receivedDataSubscription.cancel()]);
-    dutyCycler.cancel();
-  }
+  // Future stop() async {
+  //   await _nearbySevice.stopBrowsingForPeers();
+  //   await _nearbySevice.stopAdvertisingPeer();
+  //   await Future.wait([_subscription.cancel(), _nearbyServiceMessageListener.cancel()]);
+  //   dutyCycler.cancel();
+  // }
 }
 
 class _SeenDevice {

@@ -30,7 +30,9 @@ class StartStreetPath extends Usecase<StartStreetPathParams, void> {
   Future<Result<void>> execute(StartStreetPathParams params) async {
     try {
       if (await _streetPathGateway.getStatus() == StreetPathStatus.active) {
-        SpLog().w("StartStreetPath: Quelque chose a tenté de démarrer le service StreetPath alors qu'il tournait déjà.");
+        SpLog().w(
+          "StartStreetPath: Quelque chose a tenté de démarrer le service StreetPath alors qu'il tournait déjà.",
+        );
         return Failure('Le StreetPath tourne déjà');
       }
       await _streetPathGateway.start(params.notificationText, params.notificationTitle);

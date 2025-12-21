@@ -29,9 +29,9 @@ class StreetPathTaskHandler extends TaskHandler {
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     SpLog().i('Streetpath Service: Initialize…');
     await _connectToDatabase.execute(ConnectToDatabaseParams());
-    await _nearbyServiceImpl.init();
+    await _nearbyServiceImpl.check();
     SpLog().i('Streetpath Service: Started.');
-    await _nearbyServiceImpl.run();
+    await _nearbyServiceImpl.start();
     SpLog().i('Streetpath Service: Running.');
   }
 
