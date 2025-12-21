@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:poc_street_path/presentation/application/notifiers/init_app_notifier.dart';
-import 'package:poc_street_path/presentation/application/widgets/shakles/shakle_text.dart';
+import 'package:poc_street_path/application/notifiers/init_app_notifier.dart';
+import 'package:poc_street_path/application/widgets/shakles/shakle_text.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});

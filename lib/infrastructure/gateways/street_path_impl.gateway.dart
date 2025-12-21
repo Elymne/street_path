@@ -1,4 +1,4 @@
-import 'package:poc_street_path/presentation/services/street_path_task_handler.dart';
+import 'package:poc_street_path/services/street_path_task_handler.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

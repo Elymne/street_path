@@ -33,7 +33,11 @@ dependencies:
   objectbox_flutter_libs: any # Data storage for flutter.
 
   flutter_foreground_task: any # Background service runner (Android).
-  nearby_service: ^0.2.1 # Communication for my StreetPath.
+  
+  # Data transfert solution
+  flutter_ble_peripheral: ^2.0.1
+  flutter_reactive_ble: ^5.4.0
+  permission_handler: ^12.0.1
 
 dev_dependencies:
   build_runner: any # dart build runner (code gen).

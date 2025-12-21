@@ -1,3 +1,4 @@
+import 'package:permission_handler/permission_handler.dart';
 import 'package:poc_street_path/domain/usecases/sync/get_shareable_posts.usecase.dart';
 import 'package:poc_street_path/domain/usecases/database/connectToDatabase.usecase.dart';
 import 'package:poc_street_path/domain/usecases/database/disconnectToDatabase.usecase.dart';
@@ -6,8 +7,9 @@ import 'package:poc_street_path/infrastructure/datasources/repositories/content_
 import 'package:poc_street_path/infrastructure/datasources/repositories/reaction_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
 import 'package:poc_street_path/infrastructure/gateways/path_provider_impl.gateway.dart';
-import 'package:poc_street_path/presentation/services/nearby_service_impl.dart';
+import 'package:poc_street_path/services/ble/broadcast_service.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:poc_street_path/services/ble/scan_service.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'dart:async';
@@ -23,22 +25,33 @@ class StreetPathTaskHandler extends TaskHandler {
   late final _connectToDatabase = ConnectToDatabase(_objectBoxGateway);
   late final _disconnectToDatabase = DisconnectToDatabase(_objectBoxGateway);
 
-  late final _nearbyServiceImpl = NearbyServiceImpl();
+  /// Mes deux services BLE.
+  late final _broadcastService = BroadcastService();
+  late final _scanService = ScanService();
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    SpLog().i('Streetpath Service: Initialize…');
+    /// Je devrais faire ça à partir d'un usecase surement mais pour la simplicité, j'fais ça là.
+    /// A mettre plus tard dans un usecase pour mieux découper et éviter que cette classe n'est trop de dépendances.
+    /// TODO: En vrai, ça pue du cul de faire ça ici.
+    await [
+      Permission.bluetoothScan,
+      Permission.bluetoothAdvertise,
+      Permission.bluetoothConnect,
+      Permission.locationWhenInUse,
+    ].request();
+
+    SpLog().i('Streetpath Service: Connection to database.');
     await _connectToDatabase.execute(ConnectToDatabaseParams());
-    await _nearbyServiceImpl.check();
-    SpLog().i('Streetpath Service: Started.');
-    await _nearbyServiceImpl.start();
-    SpLog().i('Streetpath Service: Running.');
+
+    SpLog().i('Streetpath Service: Scanning….');
+    _scanService.startListening((message) {});
   }
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
     await _disconnectToDatabase.execute(DisconnectToDatabaseParams());
-    await _nearbyServiceImpl.stop();
+    _scanService.stopListening();
     SpLog().i('StreetPath Service: Stoped');
   }
 
@@ -49,7 +62,7 @@ class StreetPathTaskHandler extends TaskHandler {
       SpLog().w('Streetpath Service: Error catched while using GetShareableContents.');
       return;
     }
-    _nearbyServiceImpl.setShareableData((result as Success<String>).data);
+    _broadcastService.broadcastMessages('[]');
   }
 
   @override

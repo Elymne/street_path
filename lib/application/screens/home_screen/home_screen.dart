@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_street_path/core/globals.dart';
-import 'package:poc_street_path/presentation/application/widgets/backgrounds/waves_background.dart';
-import 'package:poc_street_path/presentation/application/widgets/shakles/shakle_home_item.dart';
+import 'package:poc_street_path/application/widgets/backgrounds/waves_background.dart';
+import 'package:poc_street_path/application/widgets/shakles/shakle_home_item.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -61,15 +61,21 @@ class _State extends ConsumerState<HomeScreen> {
                           ),
                         ),
                         SizedBox(width: 10),
-                        Expanded(child: ShakleHomeItem(iconData: Icons.person_search_outlined, title: '', onTap: () {})),
+                        Expanded(
+                          child: ShakleHomeItem(iconData: Icons.person_search_outlined, title: '', onTap: () {}),
+                        ),
                       ],
                     ),
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        Expanded(child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: '', onTap: () {})),
+                        Expanded(
+                          child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: '', onTap: () {}),
+                        ),
                         SizedBox(width: 10),
-                        Expanded(child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: '', onTap: () {})),
+                        Expanded(
+                          child: ShakleHomeItem(iconData: Icons.perm_camera_mic_outlined, title: '', onTap: () {}),
+                        ),
                       ],
                     ),
                     Expanded(child: SizedBox()),

@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:poc_street_path/presentation/application/app.dart';
+import 'package:poc_street_path/application/app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
