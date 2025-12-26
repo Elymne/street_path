@@ -13,11 +13,13 @@ class AddRawData extends Usecase<AddRawDataParams, void> {
   @override
   Future<Result<void>> execute(AddRawDataParams params) async {
     try {
-      await _rawDataRepository.insert(RawData(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, data: params.stringyData));
+      await _rawDataRepository.insert(
+        RawData(id: Uuid().v4(), createdAt: DateTime.now().millisecondsSinceEpoch, data: params.stringyData),
+      );
       return Success(null);
     } catch (err, stack) {
       SpLog().e('AddRawData: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors de l'ajout d'une données brute en base de données.");
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }

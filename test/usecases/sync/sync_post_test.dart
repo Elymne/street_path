@@ -36,7 +36,7 @@ void main() {
   late final ReactionRepository reactionRepository;
 
   late final AddRawData addRawData;
-  late final SyncPost syncPost;
+  late final SyncContent syncPost;
 
   // * Accès direct aux tables pour les tests.
   late final Box<RawDataEntity> boxRawData;
@@ -59,7 +59,7 @@ void main() {
     reactionRepository = ReactionRepositoryImpl(objectboxGateway);
 
     addRawData = AddRawData(rawDataRepository);
-    syncPost = SyncPost(rawDataRepository, contentRepository, commentRepository, reactionRepository);
+    syncPost = SyncContent(rawDataRepository, contentRepository, commentRepository, reactionRepository);
 
     boxRawData = objectboxGateway.getConnector()!.box<RawDataEntity>();
     boxContentText = objectboxGateway.getConnector()!.box<ContentTextEntity>();

@@ -14,7 +14,7 @@ class GetStreetPathStatus extends Usecase<GetStreetPathStatusParams, StreetPathS
       return Success(await _streetPathGateway.getStatus());
     } catch (err, stack) {
       SpLog().e('GetStreetPathStatus: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors de la recherche du StreetPath…");
+      return Failure(FailureCode.serviceFailure);
     }
   }
 }

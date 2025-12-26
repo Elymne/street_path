@@ -22,12 +22,15 @@ class FindUniqueContent extends Usecase<FindUniqueContentParams, Wrap?> {
       if (content == null) {
         return Success(null);
       }
-      final res = await Future.wait([_reactionRepository.findFromContent(params.id), _commentRepository.findFromContent(params.id)]);
+      final res = await Future.wait([
+        _reactionRepository.findFromContent(params.id),
+        _commentRepository.findFromContent(params.id),
+      ]);
 
       return Success(Wrap(content: content, reactions: res[0] as List<Reaction>, comments: res[1] as List<Comment>));
     } catch (err, stack) {
-      SpLog().e('FindContents: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors de la récupération de la liste de contenu classique.");
+      SpLog().e('FindUniqueContent: Une exception a été levée.', err, stack: stack);
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }

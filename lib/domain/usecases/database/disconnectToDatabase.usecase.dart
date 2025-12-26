@@ -15,7 +15,7 @@ class DisconnectToDatabase extends Usecase<DisconnectToDatabaseParams, void> {
       return Success(null);
     } catch (err, stack) {
       SpLog().e('DisconnectToDatabase: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors de la déconnexion à la base de données.");
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }

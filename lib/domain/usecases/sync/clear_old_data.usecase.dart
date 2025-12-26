@@ -22,7 +22,12 @@ class ClearOldData extends Usecase<ClearOldDataParams, int> {
       int deleteCount = 0;
 
       // * Récupération des contenus "périmés".
-      final expiredContents = await _contentRepository.findMany(0, 0, createdAfter: defaultDbDataTime, storageModes: [StorageMode.normal]);
+      final expiredContents = await _contentRepository.findMany(
+        0,
+        0,
+        createdAfter: defaultDbDataTime,
+        storageModes: [StorageMode.normal],
+      );
       final expiredIds = expiredContents.map((content) => content.id).toList();
 
       final deletedRes = await Future.wait([
@@ -48,7 +53,7 @@ class ClearOldData extends Usecase<ClearOldDataParams, int> {
       return Success(deleteCount);
     } catch (err, stack) {
       SpLog().e('ClearOldData: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors la suppression automatique des contenus…");
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }

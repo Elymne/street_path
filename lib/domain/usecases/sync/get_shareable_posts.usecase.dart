@@ -37,11 +37,16 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
       }
 
       if (contents.length < 10) {
-        contents.addAll(await _contentRepository.findMany(maxSync - contents.length, 0, shippingModes: [ShippingMode.normal]));
+        contents.addAll(
+          await _contentRepository.findMany(maxSync - contents.length, 0, shippingModes: [ShippingMode.normal]),
+        );
       }
 
       for (final content in contents) {
-        final res = await Future.wait([_commentRepository.findFromContent(content.id), _reactionRepository.findFromContent(content.id)]);
+        final res = await Future.wait([
+          _commentRepository.findFromContent(content.id),
+          _reactionRepository.findFromContent(content.id),
+        ]);
         data.addAll([
           content.toRaw(),
           ...(res[0] as List<Comment>).map((elem) => elem.toRaw()),
@@ -52,7 +57,7 @@ class GetShareableContents extends Usecase<GetShareableContentsParams, String> {
       return Success(jsonEncode(data));
     } catch (err, stack) {
       SpLog().e('GetShareablePosts: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite en voulant récupérer les posts partageables…");
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }

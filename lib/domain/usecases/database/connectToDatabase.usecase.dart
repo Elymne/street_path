@@ -15,7 +15,7 @@ class ConnectToDatabase extends Usecase<ConnectToDatabaseParams, void> {
       return Success(null);
     } catch (err, stack) {
       SpLog().e('ConnectToDatabase: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors de la connexion à la base de données.");
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }

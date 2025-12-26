@@ -31,7 +31,7 @@ class StreetPathGatewayImpl implements StreetPathGateway {
         onlyAlertOnce: true,
       ),
       foregroundTaskOptions: ForegroundTaskOptions(
-        eventAction: ForegroundTaskEventAction.repeat(1_200_000),
+        eventAction: ForegroundTaskEventAction.repeat(5_000),
         autoRunOnBoot: true,
         autoRunOnMyPackageReplaced: true,
         allowWakeLock: true,

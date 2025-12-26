@@ -16,28 +16,36 @@ class UpdateContent extends Usecase<UpdateContentParams, void> {
       final content = await _contentRepository.findUnique(params.id);
 
       if (content == null) {
-        return Failure("Le contenu ${params.id} n'existe pas. La modification est impossible.");
+        SpLog().w("UpdateContent: Le contenu à modifier n'existe pas.");
+        return Failure(FailureCode.notFound);
       }
 
       if (content is ContentText) {
-        await _contentRepository.update(content.clone(shippingMode: params.shippingMode, storageMode: params.storageMode));
+        await _contentRepository.update(
+          content.clone(shippingMode: params.shippingMode, storageMode: params.storageMode),
+        );
         return Success(null);
       }
 
       if (content is ContentText) {
-        await _contentRepository.update(content.clone(shippingMode: params.shippingMode, storageMode: params.storageMode));
+        await _contentRepository.update(
+          content.clone(shippingMode: params.shippingMode, storageMode: params.storageMode),
+        );
         return Success(null);
       }
 
       if (content is ContentText) {
-        await _contentRepository.update(content.clone(shippingMode: params.shippingMode, storageMode: params.storageMode));
+        await _contentRepository.update(
+          content.clone(shippingMode: params.shippingMode, storageMode: params.storageMode),
+        );
         return Success(null);
       }
 
-      return Failure("Le type du contenu en cours de modification n'est pas prit en charge par le usecase.");
+      SpLog().w("UpdateContent: Le type contenu à modifier n'est pas prit en compte.");
+      return Failure(FailureCode.invalidData);
     } catch (err, stack) {
-      SpLog().e('FindContents: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors de la récupération de la liste de contenu classique.");
+      SpLog().e('UpdateContent: Une exception a été levée.', err, stack: stack);
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }

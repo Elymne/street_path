@@ -18,21 +18,21 @@ import 'package:poc_street_path/infrastructure/datasources/repositories/content_
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/reaction_repository_impl.dart';
 
-final syncPostProvider = Provider<SyncPost>((ref) {
+final syncContentProvider = Provider<SyncContent>((ref) {
   final rawDataRepo = ref.read(rawDataRepositoryProvider);
   final contentRepo = ref.read(contentRepositoryProvider);
   final commentRepo = ref.read(commentRepositoryProvider);
   final reactionRepo = ref.read(reactionRepositoryProvider);
-  return SyncPost(rawDataRepo, contentRepo, commentRepo, reactionRepo);
+  return SyncContent(rawDataRepo, contentRepo, commentRepo, reactionRepo);
 });
 
-class SyncPost extends Usecase<SyncPostParams, int> {
+class SyncContent extends Usecase<SyncPostParams, int> {
   final RawDataRepository _rawDataRepository;
   final ContentRepository _contentRepository;
   final CommentRepository _commentRepository;
   final ReactionRepository _reactionRepository;
 
-  SyncPost(this._rawDataRepository, this._contentRepository, this._commentRepository, this._reactionRepository);
+  SyncContent(this._rawDataRepository, this._contentRepository, this._commentRepository, this._reactionRepository);
 
   @override
   Future<Result<int>> execute(SyncPostParams params) async {
@@ -72,7 +72,6 @@ class SyncPost extends Usecase<SyncPostParams, int> {
             if (fakeList.contains(uri.host)) {
               continue;
             }
-
             await _contentRepository.insert(ContentLink.fromJson(json).clone(bounces: (json['bounces'] as int) + 1));
             count++;
           }
@@ -113,7 +112,7 @@ class SyncPost extends Usecase<SyncPostParams, int> {
       return Success(count);
     } catch (err, stack) {
       SpLog().e('SyncPost: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors de la synchronisation des données BLE/WIFI…");
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }

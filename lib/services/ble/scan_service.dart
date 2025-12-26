@@ -1,9 +1,5 @@
 import 'package:poc_street_path/services/ble/ble_conf.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:poc_street_path/domain/usecases/sync/add_raw_data.usecase.dart';
-import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_repository_impl.dart';
-import 'package:poc_street_path/infrastructure/gateways/object_box_impl.gateway.dart';
-import 'package:poc_street_path/infrastructure/gateways/path_provider_impl.gateway.dart';
 import 'package:poc_street_path/services/ble/assembly_buffer.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
@@ -11,12 +7,6 @@ import 'dart:async';
 
 class ScanService {
   ScanService();
-
-  /// Dépendances (pas de riverpod dans cet env).
-  final _pathProviderGatewayImpl = PathProviderGatewayImpl();
-  late final _databaseGateway = ObjectBoxGateway(_pathProviderGatewayImpl);
-  late final _rawDataRepository = RawDataRepositoryImpl(_databaseGateway);
-  late final _addRawData = AddRawData(_rawDataRepository);
 
   // BLE
   final FlutterReactiveBle _ble = FlutterReactiveBle();
@@ -42,6 +32,7 @@ class ScanService {
       final receivedProtoId = data[1];
       final type = data[2]; // todo : a utiliser plus tard surement.
       final msgId = (data[3] << 8) | data[4];
+
       final chunkIndex = data[5];
       final totalChunks = data[6];
       final payload = data.sublist(7);

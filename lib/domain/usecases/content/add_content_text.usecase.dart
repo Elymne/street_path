@@ -32,7 +32,7 @@ class AddContentText extends Usecase<AddContentTextParams, bool> {
       return Success(true);
     } catch (err, stack) {
       SpLog().e('AddRawData: Une exception a été levée.', err, stack: stack);
-      return Failure("Une erreur s'est produite lors de l'ajout d'une données brute.");
+      return Failure(FailureCode.databaseFailure);
     }
   }
 }
