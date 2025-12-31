@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  file_selector_windows
   flutter_ble_peripheral
   objectbox_flutter_libs
   permission_handler_windows

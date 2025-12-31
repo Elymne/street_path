@@ -3,7 +3,7 @@
 // * Configuration. Signature de l'envoyeur spécifique à mon app.
 final int bleManufacturerId = 0xbedb35;
 
-// * Identifiant ble service.
+// * Identifiant ble service (UUID v4).
 final String bleServiceId = '3d38905c-4ae9-427e-80be-f6e4f7c6d012';
 
 // * ======================================================================
