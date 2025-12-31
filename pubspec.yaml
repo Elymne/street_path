@@ -16,23 +16,22 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   intl: any # To manage string data.
-  dio: any # To make http request.
-  flutter_dotenv: any # Env manager.
+  dio: ^5.9.0 # To make http request.
 
-  logger: any
-  mocktail: any
+  logger: ^2.6.2
+  mocktail: ^1.0.4
 
-  path_provider: any
-  path: any
+  path_provider: ^2.1.5
+  path: ^1.9.1
 
-  uuid: any
+  uuid: ^4.5.2
 
-  flutter_riverpod: any # To manage state and DI.
+  flutter_riverpod: ^3.1.0 # To manage state and DI.
 
-  objectbox: any # NAtive dart Data storage.
-  objectbox_flutter_libs: any # Data storage for flutter.
+  objectbox: ^5.0.0 # NAtive dart Data storage.
+  objectbox_flutter_libs: ^5.0.0 # Data storage for flutter.
 
-  flutter_foreground_task: any # Background service runner (Android).
+  flutter_foreground_task: ^9.2.0 # Background service runner (Android).
   
   # Data transfert solution
   flutter_ble_peripheral: ^2.0.1
@@ -40,8 +39,8 @@ dependencies:
   permission_handler: ^12.0.1
 
 dev_dependencies:
-  build_runner: any # dart build runner (code gen).
-  objectbox_generator: any # Data storage gen.
+  build_runner: ^2.7.1 # dart build runner (code gen).
+  objectbox_generator: ^5.0.0 # Data storage gen.
   flutter_lints: ^6.0.0
   flutter_test:
       sdk: flutter

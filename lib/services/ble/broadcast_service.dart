@@ -14,10 +14,7 @@ class BroadcastService {
   /// Lance un envoi de messages fragmentés
   Future<void> broadcastMessages(String data) async {
     // Convertir la String JSON en bytes UTF-8
-    final payloadBytes = _encodeMessage(data);
-
-    // Créer les fragments (Uint8List) pour BLE
-    final chunks = _createFragments(Uint8List.fromList(payloadBytes));
+    final chunks = createMessageFragments(data);
 
     for (final chunk in chunks) {
       final advertiseData = AdvertiseData(
@@ -37,70 +34,41 @@ class BroadcastService {
     }
   }
 
-  /// Informations importantes : format du message.
-  ///  *[VERSION 1B][PROTO_ID 1B][TYPE 1B][DATA_ID 2B][CHUNK_INDEX 1B][TOTAL_CHUNKS 1B][PAYLOAD JSON]
-  List<int> _encodeMessage(String message) {
-    final jsonBytes = utf8.encode(jsonEncode(message));
-    final dataId = Random().nextInt(65535);
-    return [
-      /// * [VERSION 1B]
-      blePayloadVersion,
+  /// Crée des fragments BLE à partir d'un message JSON.
+  /// Chaque fragment contient un en-tête :
+  /// [VERSION 1B][PROTO_ID 1B][TYPE 1B][DATA_ID 2B][CHUNK_INDEX 1B][TOTAL_CHUNKS 1B][PAYLOAD JSON]
+  List<Uint8List> createMessageFragments(String message, {int chunkSize = 18}) {
+    // Encode le message JSON en bytes
+    final fullPayload = utf8.encode(jsonEncode(message));
 
-      /// * [PROTO_ID 1B]
-      bleProtocolId,
-
-      /// * [TYPE 1B]
-      bleTypeContents,
-
-      /// * [DATA_ID 2B]
-      (dataId >> 8) & 0xFF,
-      dataId & 0xFF,
-
-      /// ! Y a rien car ce truc est mal fait
-      /// TODO : Refaire cette fonction, voir la partie en entière. Ne devrait-être qu'une seule fonction imo : CreateFragment et c'est tout.
-
-      /// * [PAYLOAD JSON]
-      ...jsonBytes,
-    ];
-  }
-
-  /// Permet de découper le contenu en chunks sinon c'est trop gros.
-  List<Uint8List> _createFragments(Uint8List fullPayload, {int chunkSize = 18}) {
-    //  * On doit retirer la taille de l'en-tête que l'on va injecter pour chaque chunk
-    //  * [VERSION 1B] [PROTO_ID 1B] [TYPE 1B] [MSG_ID 2B] [CHUNK_INDEX 1B] [TOTAL_CHUNKS 1B] = 7
-    final headerSize = 7;
+    // ID unique du message (2 octets)
     final dataId = Random().nextInt(65535);
 
+    // Taille de l'en-tête fixe pour chaque chunk
+    const headerSize = 7;
+
+    // Payload maximum par chunk
     final maxChunkPayload = chunkSize - headerSize;
+
+    // Nombre total de chunks
     final totalChunks = (fullPayload.length / maxChunkPayload).ceil();
+
     final chunks = <Uint8List>[];
 
     for (int i = 0; i < totalChunks; i++) {
+      // Extraction du fragment de payload
       final chunkData = fullPayload.skip(i * maxChunkPayload).take(maxChunkPayload).toList();
 
-      // Préfixe : version, protoId, type, msgId (4 ou 5 octets selon ton format), + chunkIndex + totalChunks
+      // Construction du header + payload
       final chunkWithHeader = [
-        /// * [VERSION 1B]
-        blePayloadVersion,
-
-        /// * [PROTO_ID 1B]
-        bleProtocolId,
-
-        /// * [TYPE 1B]
-        bleTypeContents,
-
-        /// * [DATA_ID 2B]
-        (dataId >> 8) & 0xFF,
-        dataId & 0xFF,
-
-        /// * [CHUNK_INDEX 1B]
-        i,
-
-        /// * [TOTAL_CHUNKS 1B]
-        totalChunks,
-
-        /// * [PAYLOAD JSON]
-        ...chunkData,
+        blePayloadVersion, // VERSION
+        bleProtocolId, // PROTO_ID
+        bleTypeIdContents, // TYPE
+        (dataId >> 8) & 0xFF, // DATA_ID high
+        dataId & 0xFF, // DATA_ID low
+        i, // CHUNK_INDEX
+        totalChunks, // TOTAL_CHUNKS
+        ...chunkData, // PAYLOAD JSON
       ];
 
       chunks.add(Uint8List.fromList(chunkWithHeader));
