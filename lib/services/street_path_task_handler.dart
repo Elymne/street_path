@@ -44,8 +44,11 @@ class StreetPathTaskHandler extends TaskHandler {
     SpLog().i('Streetpath Service: Connection to database.');
     await _connectToDatabase.execute(ConnectToDatabaseParams());
 
+    SpLog().i('Streetpath Service: Broadcasting…');
+    // _broadcastService.broadcastMessages();
+
     SpLog().i('Streetpath Service: Scanning….');
-    _scanService.startListening((message) {});
+    // _scanService.startListening((message) {});
   }
 
   @override

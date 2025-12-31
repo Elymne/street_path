@@ -17,26 +17,28 @@ dependencies:
 
   intl: any # To manage string data.
   dio: ^5.9.0 # To make http request.
-
-  logger: ^2.6.2
-  mocktail: ^1.0.4
-
+  logger: ^2.6.2 # Logger.
+  mocktail: ^1.0.4 # Mocker.
   path_provider: ^2.1.5
   path: ^1.9.1
-
-  uuid: ^4.5.2
-
+  uuid: ^4.5.2 # UUID generator.
   flutter_riverpod: ^3.1.0 # To manage state and DI.
+
+  freezed: ^3.0.4 # Complete manipulation of data class.
+  freezed_annotation: ^3.1.0
 
   objectbox: ^5.0.0 # NAtive dart Data storage.
   objectbox_flutter_libs: ^5.0.0 # Data storage for flutter.
 
   flutter_foreground_task: ^9.2.0 # Background service runner (Android).
-  
-  # Data transfert solution
+
+  # Data transfert solution BLE
   flutter_ble_peripheral: ^2.0.1
   flutter_reactive_ble: ^5.4.0
   permission_handler: ^12.0.1
+
+  # Data transfert solution ZIFI
+
 
 dev_dependencies:
   build_runner: ^2.7.1 # dart build runner (code gen).
