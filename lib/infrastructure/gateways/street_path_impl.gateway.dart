@@ -5,6 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_street_path/core/globals.dart';
 import 'dart:io';
 
+@pragma('vm:entry-point')
+void streetPathTaskHandlerCallback() {
+  FlutterForegroundTask.setTaskHandler(StreetPathTaskHandler());
+}
+
 final streetPathGatewayProvider = Provider<StreetPathGateway>((ref) => StreetPathGatewayImpl());
 
 class StreetPathGatewayImpl implements StreetPathGateway {
@@ -14,14 +19,17 @@ class StreetPathGatewayImpl implements StreetPathGateway {
       FlutterForegroundTask.restartService();
       return;
     }
+
     FlutterForegroundTask.initCommunicationPort();
     final NotificationPermission notifPerms = await FlutterForegroundTask.checkNotificationPermission();
     if (notifPerms != NotificationPermission.granted) {
       await FlutterForegroundTask.requestNotificationPermission();
     }
+
     if (Platform.isAndroid && !await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
       await FlutterForegroundTask.requestIgnoreBatteryOptimization();
     }
+
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: streetPathServiceName,
@@ -39,6 +47,7 @@ class StreetPathGatewayImpl implements StreetPathGateway {
       ),
       iosNotificationOptions: const IOSNotificationOptions(showNotification: false, playSound: false),
     );
+
     FlutterForegroundTask.startService(
       serviceId: streetPathServiceId,
       notificationTitle: notificationTitle,
@@ -65,9 +74,4 @@ class StreetPathGatewayImpl implements StreetPathGateway {
     if (await FlutterForegroundTask.isRunningService) return StreetPathStatus.active;
     return StreetPathStatus.inactive;
   }
-}
-
-@pragma('vm:entry-point')
-void streetPathTaskHandlerCallback() {
-  FlutterForegroundTask.setTaskHandler(StreetPathTaskHandler());
 }

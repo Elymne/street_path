@@ -53,7 +53,11 @@ class _State extends State<ShakleText> with TickerProviderStateMixin {
           builder: (context, child) {
             return Transform.translate(
               offset: Offset(_backgroundAnim.value * widget.force, 0),
-              child: Text(widget.text, style: widget.style?.copyWith(color: Theme.of(context).colorScheme.primary)),
+              child: Text(
+                widget.text,
+                textAlign: TextAlign.center,
+                style: widget.style?.copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
             );
           },
         ),
@@ -62,7 +66,7 @@ class _State extends State<ShakleText> with TickerProviderStateMixin {
           builder: (context, child) {
             return Transform.translate(
               offset: Offset(_foregroundAnim.value * widget.force, 0),
-              child: Text(widget.text, style: widget.style),
+              child: Text(widget.text, textAlign: TextAlign.center, style: widget.style),
             );
           },
         ),

@@ -18,14 +18,6 @@ import 'package:poc_street_path/infrastructure/datasources/repositories/content_
 import 'package:poc_street_path/infrastructure/datasources/repositories/raw_data_repository_impl.dart';
 import 'package:poc_street_path/infrastructure/datasources/repositories/reaction_repository_impl.dart';
 
-final syncContentProvider = Provider<SyncContent>((ref) {
-  final rawDataRepo = ref.read(rawDataRepositoryProvider);
-  final contentRepo = ref.read(contentRepositoryProvider);
-  final commentRepo = ref.read(commentRepositoryProvider);
-  final reactionRepo = ref.read(reactionRepositoryProvider);
-  return SyncContent(rawDataRepo, contentRepo, commentRepo, reactionRepo);
-});
-
 class SyncContent extends Usecase<SyncPostParams, int> {
   final RawDataRepository _rawDataRepository;
   final ContentRepository _contentRepository;
@@ -118,3 +110,11 @@ class SyncContent extends Usecase<SyncPostParams, int> {
 }
 
 class SyncPostParams {}
+
+final syncContentProvider = Provider<SyncContent>((ref) {
+  final rawDataRepo = ref.read(rawDataRepositoryProvider);
+  final contentRepo = ref.read(contentRepositoryProvider);
+  final commentRepo = ref.read(commentRepositoryProvider);
+  final reactionRepo = ref.read(reactionRepositoryProvider);
+  return SyncContent(rawDataRepo, contentRepo, commentRepo, reactionRepo);
+});

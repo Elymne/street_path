@@ -1,7 +1,9 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
+import 'package:poc_street_path/infrastructure/gateways/street_path_impl.gateway.dart';
 
 /// ------------------------------------------------------------
 /// Class: StartStreetPath
@@ -49,3 +51,8 @@ class StartStreetPathParams {
   final String notificationTitle;
   StartStreetPathParams({required this.notificationText, required this.notificationTitle});
 }
+
+final stratStreetPathProvider = Provider<StartStreetPath>((ref) {
+  final streetPathGateway = ref.read(streetPathGatewayProvider);
+  return StartStreetPath(streetPathGateway);
+});

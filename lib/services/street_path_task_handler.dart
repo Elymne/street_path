@@ -54,7 +54,8 @@ class StreetPathTaskHandler extends TaskHandler {
     SpLog().i('Streetpath Service: Scanning nearby beacons');
     await _beaconScan.start((streetpathId) {
       /// todo : Detected, now let's start transfert
-      SpLog().w('Streetpath Service: BEACON DETECTED');
+      SpLog().w('Streetpath Service: BEACON DETECTED $streetpathId');
+      FlutterForegroundTask.sendDataToMain(streetpathId);
     });
   }
 

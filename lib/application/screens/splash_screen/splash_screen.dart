@@ -2,6 +2,10 @@ import 'package:poc_street_path/application/notifiers/sync_content_notifier.dart
 import 'package:poc_street_path/application/widgets/shakles/shakle_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
+
+import 'package:poc_street_path/domain/usecases/street_path/start_street_path.usecase.dart';
+import 'package:poc_street_path/domain/usecases/street_path/stop_street_path.usecase.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -11,27 +15,38 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _State extends ConsumerState<SplashScreen> with TickerProviderStateMixin {
+  final List<String> randomEmote = ['(๑꒪▿꒪)*', '(≧∇≦*)', '(*´꒳`*)', '٩(ˊᗜˋ*)و'];
+  late final _startStreetPath = ref.read(stratStreetPathProvider);
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      ref.read(initAppNotifier.notifier).syncData();
-    });
+    _startStreetPath.execute(
+      StartStreetPathParams(notificationText: 'Ca démarre wallah', notificationTitle: 'Bah ? Oui ?'),
+    );
+    // Future.microtask(() {
+    //   ref.read(initAppNotifier.notifier).syncData();
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     ref.watch(initAppNotifier).whenData((value) {
-      if (value == false) return;
+      if (value == SyncContentState.failure) {
+        // todo : Une erreur s'est produite lors du chargement des données niveau app.
+        // Proposer de retry ou bloquer l'app.
+        return;
+      }
       // todo : access to HomePage.
     });
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [ShakleText('BedBug', style: Theme.of(context).textTheme.displayLarge)],
+        child: Center(
+          child: ShakleText(
+            'BedBug \n${randomEmote[Random().nextInt(randomEmote.length)]}',
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
         ),
       ),
     );

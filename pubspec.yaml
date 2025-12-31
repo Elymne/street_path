@@ -37,7 +37,7 @@ dependencies:
   flutter_reactive_ble: ^5.4.0
 
   # Data transfert solution ZIFI
-  wifi_direct_plugin: ^0.1.7
+  # wifi_direct_plugin: ^0.1.7
 
 
 dev_dependencies:
