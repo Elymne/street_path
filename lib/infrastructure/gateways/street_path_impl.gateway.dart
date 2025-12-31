@@ -56,9 +56,9 @@ class StreetPathGatewayImpl implements StreetPathGateway {
       notificationButtons: [],
       notificationInitialRoute: null,
       serviceTypes: [
-        ForegroundServiceTypes.connectedDevice,
         ForegroundServiceTypes.dataSync,
         ForegroundServiceTypes.remoteMessaging,
+        ForegroundServiceTypes.connectedDevice,
       ],
       callback: streetPathTaskHandlerCallback,
     );
