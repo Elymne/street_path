@@ -1,3 +1,5 @@
+import 'package:flutter_ble_peripheral/flutter_ble_peripheral.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:poc_street_path/services/street_path_task_handler.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -13,6 +15,27 @@ void streetPathTaskHandlerCallback() {
 final streetPathGatewayProvider = Provider<StreetPathGateway>((ref) => StreetPathGatewayImpl());
 
 class StreetPathGatewayImpl implements StreetPathGateway {
+  @override
+  Future<bool> canRun() async {
+    // todo : La fonction a l'air stupide mais il ets possible que j'ai plusieurs vérification à chain.
+    final isSupported = await FlutterBlePeripheral().isSupported;
+    if (!isSupported) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @override
+  Future<bool> checkPermissions() async {
+    final permissions = [Permission.bluetooth, Permission.bluetoothConnect, Permission.bluetoothAdvertise];
+    final statuses = await permissions.request();
+    if (statuses.values.any((s) => !s.isGranted)) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   Future start(String notificationTitle, String notificationText) async {
     if (await FlutterForegroundTask.isRunningService) {

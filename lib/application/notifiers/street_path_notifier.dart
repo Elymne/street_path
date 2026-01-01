@@ -1,26 +1,34 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_street_path/core/result.dart';
-import 'package:poc_street_path/domain/usecases/sync/sync_posts.dart';
+import 'package:poc_street_path/domain/usecases/street_path/can_run_street_path.useacse.dart';
+import 'package:poc_street_path/domain/usecases/street_path/check_street_path_permissions.usecase.dart';
+import 'package:poc_street_path/domain/usecases/street_path/start_street_path.usecase.dart';
 
-/// Notifier de synchro des contenus brutes stockés via le système de street path.
-/// Permet de savoir en direct combien de contenus ont été ajoutés en DB.
-/// -1 lorsque une erreur s'est produite.
-class StreetPathNotifier extends AsyncNotifier<int> {
-  late final SyncContent _syncContent = ref.read(syncContentProvider);
+/// Le notifier principal pour gérer le service de streetpath de manière globale.
+/// J'aimerais beaucoup que les erreurs issus du foreground passe par ici pour que n'importe quelle vue qui utilise ce notifier soit notifié.
+/// todo : faire un truc clean.
+class StreetPathNotifier extends AsyncNotifier<StreetPathStatus> {
+  late final _canRunStreetPath = ref.read(canRunStreetPathProvider);
+  late final _checkStreetPathPermissions = ref.read(checkStreetPathPermissionsProvider);
+  late final _startStreetPath = ref.read(stratStreetPathProvider);
 
   @override
-  int build() => 0;
+  StreetPathStatus build() => StreetPathStatus.notRunning;
 
-  Future<void> syncData() async {
-    state = AsyncLoading();
-
-    final syncPostResult = await _syncContent.execute(SyncPostParams());
-    if (syncPostResult is Failure) {
-      state = AsyncData(1);
+  Future<void> canRunStreetPath() async {
+    final canRunResult = await _canRunStreetPath.execute();
+    if (canRunResult is Failure) {
+      state = AsyncData(StreetPathStatus.crashed);
       return;
     }
-    state = AsyncData(1);
+
+    final canRun = (canRunResult as Success<bool>).data;
+    if (!canRun) {
+      state = AsyncData(StreetPathStatus.cantRun);
+    }
   }
 }
 
-final initAppNotifier = AsyncNotifierProvider.autoDispose<StreetPathNotifier, int>(StreetPathNotifier.new);
+enum StreetPathStatus { notRunning, crashed, cantRun, permissionsNotValidated, running }
+
+final initAppNotifier = AsyncNotifierProvider.autoDispose<StreetPathNotifier, StreetPathStatus>(StreetPathNotifier.new);

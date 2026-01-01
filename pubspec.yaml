@@ -30,6 +30,8 @@ dependencies:
   objectbox: ^5.0.0 # NAtive dart Data storage.
   objectbox_flutter_libs: ^5.0.0 # Data storage for flutter.
 
+  permission_handler: ^11.3.0 # Mandatory to manage BLE, services, etc.
+
   flutter_foreground_task: ^9.2.0 # Background service runner (Android).
 
   # Data transfert solution BLE

@@ -9,11 +9,11 @@ import 'package:poc_street_path/infrastructure/gateways/path_provider_impl.gatew
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
-import 'dart:async';
 
 import 'package:poc_street_path/services/ble/beacon_broadcast.dart';
 import 'package:poc_street_path/services/ble/beacon_scan.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:async';
 
 class StreetPathTaskHandler extends TaskHandler {
   /// * Pas d'injection via Riverpod possible ici.
@@ -36,8 +36,6 @@ class StreetPathTaskHandler extends TaskHandler {
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    SpLog().i('Streetpath Service: Checking permissions…');
-
     SpLog().i('Streetpath Service: Connection to database…');
     await _connectToDatabase.execute(ConnectToDatabaseParams());
 

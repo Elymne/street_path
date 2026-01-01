@@ -8,6 +8,16 @@
 ///   Elle peut utiliser n'importe quelle librairie.
 /// ------------------------------------------------------------
 abstract class StreetPathGateway {
+  /// Vérifie que l'utilisateur peut bien faire tourner l'app.
+  /// Doit checker que le BLE marche, le WIFI marche, que tout est bien activé.
+  /// Il est très important de valider cette fonction avant de lancer start.
+  Future<bool> canRun();
+
+  /// Vérifie que l'utilisateur a bien validé les permissions.
+  /// Il y a les permissions BLE, et WIFI à valider.
+  /// Il est très important de valider cette fonction avant de lancer start.
+  Future<bool> checkPermissions();
+
   /// Démarre le service StreetPath.
   /// La manière dont le service est créé et tourne ne concerne pas la partie domaine.
   Future start(String notificationTitle, String notificationText);

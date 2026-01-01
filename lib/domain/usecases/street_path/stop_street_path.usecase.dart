@@ -1,7 +1,9 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poc_street_path/core/logger/sp_log.dart';
 import 'package:poc_street_path/core/result.dart';
 import 'package:poc_street_path/core/usecase.dart';
 import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
+import 'package:poc_street_path/infrastructure/gateways/street_path_impl.gateway.dart';
 
 /// ------------------------------------------------------------
 /// Class: StopStreetPath
@@ -20,13 +22,13 @@ import 'package:poc_street_path/domain/gateways/street_path.gateway.dart';
 /// Étapes métier:
 /// 1. Coupe le StreetPath.
 /// ------------------------------------------------------------
-class StopStreetPath extends Usecase<StopStreetPathParams, void> {
+class StopStreetPath extends UsecaseNoParams<void> {
   final StreetPathGateway _streetPathGateway;
 
   StopStreetPath(this._streetPathGateway);
 
   @override
-  Future<Result<void>> execute(StopStreetPathParams params) async {
+  Future<Result<void>> execute() async {
     try {
       await _streetPathGateway.stop();
       return Success(null);
@@ -37,4 +39,7 @@ class StopStreetPath extends Usecase<StopStreetPathParams, void> {
   }
 }
 
-class StopStreetPathParams {}
+final stopStreetPathProvider = Provider<StopStreetPath>((ref) {
+  final streetPathGateway = ref.read(streetPathGatewayProvider);
+  return StopStreetPath(streetPathGateway);
+});

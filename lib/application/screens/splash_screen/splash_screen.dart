@@ -1,11 +1,11 @@
+import 'package:poc_street_path/domain/usecases/street_path/can_run_street_path.useacse.dart';
+import 'package:poc_street_path/domain/usecases/street_path/check_street_path_permissions.usecase.dart';
+import 'package:poc_street_path/domain/usecases/street_path/start_street_path.usecase.dart';
 import 'package:poc_street_path/application/notifiers/sync_content_notifier.dart';
 import 'package:poc_street_path/application/widgets/shakles/shakle_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
-import 'package:poc_street_path/domain/usecases/street_path/start_street_path.usecase.dart';
-import 'package:poc_street_path/domain/usecases/street_path/stop_street_path.usecase.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -16,17 +16,21 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _State extends ConsumerState<SplashScreen> with TickerProviderStateMixin {
   final List<String> randomEmote = ['(๑꒪▿꒪)*', '(≧∇≦*)', '(*´꒳`*)', '٩(ˊᗜˋ*)و'];
+
+  late final _canRunStreetPath = ref.read(canRunStreetPathProvider);
+  late final _checkStreetPathPermissions = ref.read(checkStreetPathPermissionsProvider);
   late final _startStreetPath = ref.read(stratStreetPathProvider);
 
   @override
   void initState() {
     super.initState();
-    _startStreetPath.execute(
-      StartStreetPathParams(notificationText: 'Ca démarre wallah', notificationTitle: 'Bah ? Oui ?'),
-    );
-    // Future.microtask(() {
-    //   ref.read(initAppNotifier.notifier).syncData();
-    // });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // ref.read(initAppNotifier.notifier).syncData();
+      await _startStreetPath.execute(
+        StartStreetPathParams(notificationText: 'Ca démarre wallah', notificationTitle: 'Bah ? Oui ?'),
+      );
+    });
   }
 
   @override
